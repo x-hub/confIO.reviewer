@@ -1,17 +1,15 @@
 import React, { Component } from 'react';
-import { createStore } from 'redux';
 import { Provider } from 'react-redux';
 import { StackNavigator } from 'react-navigation';
 import {
-  Platform,
-  StyleSheet,
-  Text,
-  View
+    Platform,
+    StyleSheet,
+    Text,
+    View
 } from 'react-native';
 import Home from 'app/Home';
 import Login from 'app/Login';
-
-const store = createStore(() => {});
+import store from './app.store';
 
 const Navigator = StackNavigator({
     Login: {

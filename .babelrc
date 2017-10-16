@@ -3,6 +3,8 @@
   "plugins": [
     ["module-alias", [
       { "src": "./src", "expose": "app" },
+      { "src": "./assets", "expose": "assets" },
+      { "src": "./shared", "expose": "shared" },
     ]]
   ]
 }
