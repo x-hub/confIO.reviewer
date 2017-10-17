@@ -5,6 +5,6 @@ import {
 
 export default (props) => {
     return (
-        <Text>Hello from Login</Text>
+        <Text>Helloo from Login xx</Text>
     );
 }

@@ -2,14 +2,9 @@ import React, { Component } from 'react';
 import { createStore } from 'redux';
 import { Provider } from 'react-redux';
 import { StackNavigator } from 'react-navigation';
-import {
-  Platform,
-  StyleSheet,
-  Text,
-  View
-} from 'react-native';
 import Home from 'app/Home';
 import Login from 'app/Login';
+import TalkDetail from 'app/TalkDetail';
 
 const store = createStore(() => {});
 
@@ -19,9 +14,12 @@ const Navigator = StackNavigator({
     },
     Home: {
         screen: Home,
+    },
+    Detail:{
+        screen: TalkDetail,
     }
 }, {
-    initialRouteName: 'Login',
+    initialRouteName: 'Home',
     headerMode: 'none'
 });
 
@@ -29,6 +27,7 @@ const Navigator = StackNavigator({
 export default class App extends Component {
 
     render() {
+
         return (
             <Provider store={ store } >
                 <Navigator />
