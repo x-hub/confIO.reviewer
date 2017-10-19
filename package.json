@@ -11,6 +11,8 @@
     "native-base": "^2.3.2",
     "react": "16.0.0-beta.5",
     "react-native": "0.49.3",
+    "react-native-camera": "^0.10.0",
+    "react-native-qrcode-scanner": "0.0.22",
     "react-native-vector-icons": "^4.4.2",
     "react-navigation": "^1.0.0-beta.13",
     "react-redux": "^5.0.6",

@@ -5,6 +5,7 @@
       { "src": "./src", "expose": "app" },
       { "src": "./assets", "expose": "assets" },
       { "src": "./shared", "expose": "shared" },
+      { "src": "./native-base-theme", "expose": "nb-theme" },
     ]]
   ]
 }
