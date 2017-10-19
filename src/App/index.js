@@ -16,6 +16,7 @@ import LoginWithQRCode from 'app/Login/LoginWithQRCode';
 import store from './app.store';
 import getTheme from 'nb-theme/components';
 import materialTheme from 'nb-theme/variables/material';
+import TalkDetail from 'app/TalkDetail';
 
 
 const theme = getTheme(materialTheme);
@@ -29,8 +30,11 @@ const Navigator = StackNavigator({
     LoginWithQRCode: {
         screen: LoginWithQRCode,
     },
+    Detail:{
+        screen: TalkDetail,
+    }
 }, {
-    initialRouteName: 'Login',
+    initialRouteName: 'Home',
     headerMode: 'none'
 });
 
@@ -38,6 +42,7 @@ const Navigator = StackNavigator({
 export default class App extends Component {
 
     render() {
+
         return (
             <Provider store={ store } >
                 <StyleProvider style={ theme }>

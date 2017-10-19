@@ -1,10 +1,14 @@
 import React from 'react';
 import {
-    Text
+    Text,Button,View,TouchableHighlight
 } from 'react-native';
 
 export default (props) => {
     return (
-        <Text>Hello from Home</Text>
-    );
+        <View>
+            <Text>Hello from Home</Text>
+        </View>
+
+
+);
 }
