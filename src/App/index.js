@@ -34,7 +34,7 @@ const Navigator = StackNavigator({
         screen: TalkDetail,
     }
 }, {
-    initialRouteName: 'Home',
+    initialRouteName: 'Login',
     headerMode: 'none'
 });
 
