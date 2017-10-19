@@ -3,4 +3,3 @@ export const colors = {
     white: '#FFFFF3',
     blue: '#30A9DE',
 };
-
