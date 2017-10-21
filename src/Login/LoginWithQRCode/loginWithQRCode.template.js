@@ -11,21 +11,23 @@ import {
     FooterTab,
     Button,
     Icon,
-	Left,
+    Left,
+    Right,
 } from 'native-base';
 import QRCodeScanner from 'react-native-qrcode-scanner';
 import style from './loginWithQRCode.style';
 
 export default (props) => {
-	const navigate = props.navigation.navigate;
+	const { navigate, goBack } = props.navigation;
     return (
         <Container>
             <Header style={ style.header }>
 				<Left>
-					<Button onPress={ navigate.bind(null, 'Login') } transparent>
-						<Icon name='arrow-back' />
+                    <Button onPress={ () => goBack() } transparent>
+						<Icon style={ style.goBackIcon } name='arrow-back' />
 					</Button>
 				</Left>
+                <Text style={ style.sceneTitle }>Scan QR Code to Login</Text>
             </Header>
             <Content>
                 <View style={ style.scanTipsContainer }>
@@ -42,7 +44,9 @@ export default (props) => {
             </Content>
             <Footer>
                 <FooterTab>
-                    <Button style={ style.savedSessionsBtn } full>
+                    <Button
+                    onPress={ () => navigate('LoginWithSavedSession') }
+                    style={ style.savedSessionsBtn } full>
                         <Text style={ style.savedSessions } >Login with Saved Session</Text>
                     </Button>
                 </FooterTab>
