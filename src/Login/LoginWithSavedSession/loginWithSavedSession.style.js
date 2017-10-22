@@ -18,4 +18,7 @@ export default {
         fontSize: 15,
         fontWeight: 'bold',
     },
+    eventListItemBtn: {
+        flex: 1,
+    },
 }

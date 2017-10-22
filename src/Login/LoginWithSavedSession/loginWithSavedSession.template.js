@@ -2,6 +2,7 @@ import React from 'react';
 import {
     Text,
     ListView,
+    TouchableOpacity,
 } from 'react-native';
 import {
     Container,
@@ -51,7 +52,11 @@ export default (props) => {
     function renderEventsListItem({ name, apiUrl }) {
         return (
             <ListItem>
-                <Text style={ style.eventListItemName} >{ name }</Text>
+                <TouchableOpacity
+                onPress={ props.onEventSelected }
+                style={ style.eventListItemBtn }>
+                    <Text style={ style.eventListItemName } >{ name }</Text>
+                </TouchableOpacity>
             </ListItem>
         );
     }
