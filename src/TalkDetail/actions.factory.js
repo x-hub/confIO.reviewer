@@ -4,7 +4,8 @@ export const actionCreators = {
     OnRate,
     getSpeakersDetail,
     getSpeaker,
-    toggleSpeakerDetail
+    toggleSpeakerDetail,
+    toggleContentLoader
 };
 function OnRate(talk) {
     return {
@@ -28,5 +29,11 @@ function toggleSpeakerDetail(boolean) {
     return {
         type: ACTIONS.TOGGLE_SPEAKER_DETAIL,
         payload: boolean
+    }
+}
+function toggleContentLoader(boolean) {
+    return{
+        type: ACTIONS.SET_CONTENT_PLACEHOLDER_STATE,
+        payload:boolean
     }
 }

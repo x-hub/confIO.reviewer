@@ -18,12 +18,9 @@ class TalkDetail extends Component {
 
     componentWillMount() {
         Orientation.addOrientationListener(this._orientationDidChange.bind(this));
-        setTimeout(() => {
-            this.props.contentIsReady = true
-            this.setState({contentIsReady: true})
-        }, 500)
         const {speakers} = this.slot.talk;
-        this.props.getSpeakersDetail(speakers || [])
+        setTimeout(()=>this.props.getSpeakersDetail(speakers || []),600)
+
     }
 
     componentDidMount() {

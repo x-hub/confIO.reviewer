@@ -42,7 +42,7 @@ const Navigator = StackNavigator({
         screen: TalkSwiper
     }
 }, {
-    initialRouteName: 'Login',
+    initialRouteName: 'Swiper',
     headerMode: 'none'
 });
 

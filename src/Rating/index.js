@@ -56,8 +56,6 @@ export default class Rating extends React.Component {
       <View style={styles.container}>
         <View style={styles.wrap}>
 
-
-
           <View style={styles.reactions}>
             {REACTIONS.map((reaction, idx) => {
               const u = idx * DISTANCE;

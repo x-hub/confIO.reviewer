@@ -16,7 +16,10 @@ export default (styles, props,slot) => {
     return ( <Container>
         <Header style={styles.Header}>
             <Left>
-                <Button onPress={()=>goBack()} transparent>
+                <Button onPress={()=>{
+                    goBack()
+                    setTimeout(()=>props.toggleContentLoader(false),200)
+                }} transparent>
                     <Icon name='arrow-back'/>
                 </Button>
             </Left>
@@ -27,8 +30,8 @@ export default (styles, props,slot) => {
             </Body>
             <Right>
                 <Button transparent onPress={() => {
-                    props.OnRate(slot)
                     goBack()
+                    setTimeout(()=>props.OnRate(slot),200)
                 }}>
                     <Icon style={{color: "white"}} name="md-checkmark-circle-outline"/>
                 </Button>
@@ -142,6 +145,8 @@ export default (styles, props,slot) => {
         </SlidingUpPanel>
     </Container>)
 }
+
+
 function generateSpeakers(styles,props){
     let speakersView = [];
     props.speakers.forEach((speaker, i) => {

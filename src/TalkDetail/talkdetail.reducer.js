@@ -28,6 +28,11 @@ export default (state = {
                 ...state,
                 showSpeakerDetail:action.payload
             }
+        case ACTIONS.SET_CONTENT_PLACEHOLDER_STATE:
+            return{
+                ...state,
+                IsReady:action.payload
+            }
         default:
             return state;
     }
