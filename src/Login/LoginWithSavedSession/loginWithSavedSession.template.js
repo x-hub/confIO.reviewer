@@ -51,7 +51,7 @@ export default (props) => {
     function renderEventsListItem({ name, apiUrl }) {
         return (
             <ListItem>
-                <Text>{ name }</Text>
+                <Text style={ style.eventListItemName} >{ name }</Text>
             </ListItem>
         );
     }
