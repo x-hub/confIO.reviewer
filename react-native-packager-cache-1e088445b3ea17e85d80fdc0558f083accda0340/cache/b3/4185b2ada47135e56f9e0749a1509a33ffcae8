@@ -1,9 +1,0 @@
-
-
-'use strict';
-
-var ReactNativeFeatureFlags = {
-  useFiber: false
-};
-
-module.exports = ReactNativeFeatureFlags;
