@@ -36,11 +36,11 @@ export default class Rating extends React.Component {
         let offset = Math.max(0, this._pan._value + 0);
         if (offset < 0) return this._pan.setValue(0);
         if (offset > END) return this._pan.setValue(END);
-
-
+        // 0 50 100 150 200
+        // 40 % 50 = 40
+        //
         const modulo = offset % DISTANCE;
-        offset = (modulo >= DISTANCE/2) ? (offset+(DISTANCE-modulo)) : (offset-modulo);
-
+        offset = (modulo >= DISTANCE/2) ? ((offset-modulo)+DISTANCE) : (offset-modulo);
         this.updatePan(offset);
       }
     });

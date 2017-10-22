@@ -1,31 +1,30 @@
 import React, { Component } from 'react';
-import template from './loginWithQRCode.template';
+import template from './template';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-
-export const actions = {
-    QR_CODE_READ: 'QR_CODE_READ',
-};
-
-const actionCreators = {
-   onQRCodeRead
-};
-
-
-function onQRCodeRead(e) {
-    return {
-        type: actions.QR_CODE_READ,
-        payload: e
-    }
-}
-
+import {actionCreators} from "./actions.factory"
 
 function mapStateToProps(state) {
-    return state;
+    return state.login;
 }
 
 function mapDispatchToProps(dispatch) {
     return bindActionCreators(actionCreators, dispatch);
 }
+ class QRLogin extends Component{
 
-export default connect(mapStateToProps, mapDispatchToProps)(template);
+    constructor(props) {
+        super(props)
+        this.navigate = props.navigation.navigate;
+
+    }
+    componentWillReceiveProps(newProps) {
+        if(newProps != null){
+            this.navigate('Swiper')
+        }
+    }
+    render(){
+        return template(this.props);
+    }
+}
+export default connect(mapStateToProps, mapDispatchToProps)(QRLogin);

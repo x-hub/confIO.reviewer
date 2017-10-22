@@ -4,6 +4,7 @@ const logoSize = 120;
 export default {
     loginContainer: {
         flex: 1,
+        position:'relative',
         flexDirection: 'column',
         justifyContent: 'space-between',
         backgroundColor: 'rgba(0,0,0,0.3)',

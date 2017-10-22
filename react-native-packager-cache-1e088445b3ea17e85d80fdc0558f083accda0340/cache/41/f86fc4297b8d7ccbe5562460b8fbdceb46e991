@@ -1,0 +1,356 @@
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _react2 = require('react');
+
+var _react3 = _interopRequireDefault(_react2);
+
+var _index = require('./../react-transform-hmr/lib/index.js');
+
+var _index2 = _interopRequireDefault(_index);
+
+var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _class,
+    _temp,
+    _jsxFileName = '/home/bassihassan/Desktop/confIOReviewer/node_modules/rn-sliding-up-panel/SlidingUpPanel.js';
+
+var _propTypes = require('prop-types');
+
+var _propTypes2 = _interopRequireDefault(_propTypes);
+
+var _reactNative = require('react-native');
+
+var _FlickAnimation = require('./libs/FlickAnimation');
+
+var _FlickAnimation2 = _interopRequireDefault(_FlickAnimation);
+
+var _layout = require('./libs/layout');
+
+var _styles = require('./libs/styles');
+
+var _styles2 = _interopRequireDefault(_styles);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var _components = {
+  SlidingUpPanel: {
+    displayName: 'SlidingUpPanel'
+  }
+};
+
+var _reactTransformHmrLibIndexJs2 = (0, _index2.default)({
+  filename: '/home/bassihassan/Desktop/confIOReviewer/node_modules/rn-sliding-up-panel/SlidingUpPanel.js',
+  components: _components,
+  locals: [module],
+  imports: [_react3.default]
+});
+
+function _wrapComponent(id) {
+  return function (Component) {
+    return _reactTransformHmrLibIndexJs2(Component, id);
+  };
+}
+
+var deprecated = function deprecated(condition, message) {
+  return condition && console.warn(message);
+};
+
+var SlidingUpPanel = _wrapComponent('SlidingUpPanel')((_temp = _class = function (_React$Component) {
+  _inherits(SlidingUpPanel, _React$Component);
+
+  function SlidingUpPanel(props) {
+    _classCallCheck(this, SlidingUpPanel);
+
+    var _this = _possibleConstructorReturn(this, (SlidingUpPanel.__proto__ || Object.getPrototypeOf(SlidingUpPanel)).call(this, props));
+
+    _this._onDrag = _this._onDrag.bind(_this);
+    _this._requestClose = _this._requestClose.bind(_this);
+    _this._renderBackdrop = _this._renderBackdrop.bind(_this);
+    _this._isInsideDraggableRange = _this._isInsideDraggableRange.bind(_this);
+
+    _this.transitionTo = _this.transitionTo.bind(_this);
+    return _this;
+  }
+
+  _createClass(SlidingUpPanel, [{
+    key: 'componentWillMount',
+    value: function componentWillMount() {
+      if (__DEV__) {
+        deprecated(this.props.contentStyle, 'SlidingUpPanel#contentStyle is deprecated. ' + 'You should wrap your content inside a View.');
+      }
+
+      var _props$draggableRange = this.props.draggableRange,
+          top = _props$draggableRange.top,
+          bottom = _props$draggableRange.bottom;
+
+
+      this._animatedValueY = -bottom;
+      this._translateYAnimation = new _reactNative.Animated.Value(this._animatedValueY);
+      this._flick = new _FlickAnimation2.default(this._translateYAnimation, -top, -bottom);
+
+      this._panResponder = _reactNative.PanResponder.create({
+        onStartShouldSetPanResponder: this._onStartShouldSetPanResponder.bind(this),
+        onMoveShouldSetPanResponder: this._onMoveShouldSetPanResponder.bind(this),
+        onPanResponderGrant: this._onPanResponderGrant.bind(this),
+        onPanResponderMove: this._onPanResponderMove.bind(this),
+        onPanResponderRelease: this._onPanResponderRelease.bind(this),
+        onPanResponderTerminate: this._onPanResponderTerminate.bind(this),
+        onPanResponderTerminationRequest: function onPanResponderTerminationRequest() {
+          return false;
+        },
+        onShouldBlockNativeResponder: function onShouldBlockNativeResponder() {
+          return false;
+        }
+      });
+
+      this._translateYAnimation.addListener(this._onDrag);
+    }
+  }, {
+    key: 'componentWillReceiveProps',
+    value: function componentWillReceiveProps(nextProps) {
+      if (nextProps.visible && !this.props.visible) {
+        this.transitionTo(-this.props.draggableRange.top);
+      }
+
+      if (nextProps.draggableRange.top !== this.props.draggableRange.top || nextProps.draggableRange.bottom !== this.props.draggableRange.bottom) {
+        var _nextProps$draggableR = nextProps.draggableRange,
+            top = _nextProps$draggableR.top,
+            bottom = _nextProps$draggableR.bottom;
+
+        this._flick = new _FlickAnimation2.default(this._translateYAnimation, -top, -bottom);
+      }
+    }
+  }, {
+    key: 'componentDidUpdate',
+    value: function componentDidUpdate() {
+      var bottom = this.props.draggableRange.bottom;
+
+      if (this._animatedValueY !== -bottom && !this.props.visible) {
+        this._translateYAnimation.setValue(-bottom);
+      }
+    }
+  }, {
+    key: '_onStartShouldSetPanResponder',
+    value: function _onStartShouldSetPanResponder(evt, gestureState) {
+      return this.props.allowDragging && this._isInsideDraggableRange(this._animatedValueY);
+    }
+  }, {
+    key: '_onMoveShouldSetPanResponder',
+    value: function _onMoveShouldSetPanResponder(evt, gestureState) {
+      return this.props.allowDragging && this._isInsideDraggableRange(this._animatedValueY) && Math.abs(gestureState.dy) > 1;
+    }
+  }, {
+    key: '_onPanResponderGrant',
+    value: function _onPanResponderGrant(evt, gestureState) {
+      this._flick.stop();
+      this._translateYAnimation.setOffset(this._animatedValueY);
+      this._translateYAnimation.setValue(0);
+      this.props.onDragStart(-this._animatedValueY);
+    }
+  }, {
+    key: '_onPanResponderMove',
+    value: function _onPanResponderMove(evt, gestureState) {
+      if (!this._isInsideDraggableRange(this._animatedValueY)) {
+        return;
+      }
+
+      this._translateYAnimation.setValue(gestureState.dy);
+    }
+  }, {
+    key: '_onPanResponderRelease',
+    value: function _onPanResponderRelease(evt, gestureState) {
+      if (!this._isInsideDraggableRange(this._animatedValueY)) {
+        return;
+      }
+
+      this._translateYAnimation.flattenOffset();
+      var cancelFlick = this.props.onDragEnd(-this._animatedValueY);
+
+      if (!this.props.allowMomentum || cancelFlick) {
+        return;
+      }
+
+      if (Math.abs(gestureState.vy) > 0.1) {
+        this._flick.start({
+          velocity: gestureState.vy,
+          fromValue: this._animatedValueY
+        });
+      }
+
+      return;
+    }
+  }, {
+    key: '_onPanResponderTerminate',
+    value: function _onPanResponderTerminate(evt, gestureState) {}
+  }, {
+    key: '_isInsideDraggableRange',
+    value: function _isInsideDraggableRange(value) {
+      return value >= -this.props.draggableRange.top && value <= -this.props.draggableRange.bottom;
+    }
+  }, {
+    key: '_onDrag',
+    value: function _onDrag(_ref) {
+      var value = _ref.value;
+
+      if (this._isInsideDraggableRange(value)) {
+        this._animatedValueY = value;
+        this.props.onDrag(value);
+      }
+
+      if (value >= -this.props.draggableRange.bottom) {
+        this.props.onRequestClose();
+        return;
+      }
+    }
+  }, {
+    key: 'transitionTo',
+    value: function transitionTo(value) {
+      var onAnimationEnd = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : function () {};
+
+      var animationConfig = {
+        toValue: -Math.abs(value),
+        duration: 260,
+
+        delay: _reactNative.Platform.OS === 'android' ? 166.67 : undefined };
+
+      _reactNative.Animated.timing(this._translateYAnimation, animationConfig).start(onAnimationEnd);
+    }
+  }, {
+    key: '_requestClose',
+    value: function _requestClose() {
+      var _this2 = this;
+
+      var bottom = this.props.draggableRange.bottom;
+
+      if (this._animatedValueY === -bottom) {
+        return this.props.onRequestClose();
+      }
+
+      return this.transitionTo(-this.props.draggableRange.bottom, function () {
+        return _this2.props.onRequestClose();
+      });
+    }
+  }, {
+    key: '_renderBackdrop',
+    value: function _renderBackdrop() {
+      var _this3 = this;
+
+      if (!this.props.showBackdrop) {
+        return null;
+      }
+
+      var _props$draggableRange2 = this.props.draggableRange,
+          top = _props$draggableRange2.top,
+          bottom = _props$draggableRange2.bottom;
+
+
+      var backdropOpacity = this._translateYAnimation.interpolate({
+        inputRange: [-top, -bottom],
+        outputRange: [0.75, 0],
+        extrapolate: 'clamp'
+      });
+
+      return _react3.default.createElement(
+        _reactNative.TouchableWithoutFeedback,
+        {
+          onPressIn: function onPressIn() {
+            return _this3._flick.stop();
+          },
+          onPress: function onPress() {
+            return _this3._requestClose();
+          }, __source: {
+            fileName: _jsxFileName,
+            lineNumber: 222
+          }
+        },
+        _react3.default.createElement(_reactNative.Animated.View, { style: [_styles2.default.backdrop, { opacity: backdropOpacity }], __source: {
+            fileName: _jsxFileName,
+            lineNumber: 225
+          }
+        })
+      );
+    }
+  }, {
+    key: 'render',
+    value: function render() {
+      if (!this.props.visible) {
+        return null;
+      }
+
+      var _props$draggableRange3 = this.props.draggableRange,
+          top = _props$draggableRange3.top,
+          bottom = _props$draggableRange3.bottom;
+
+      var height = this.props.height;
+
+      var translateY = this._translateYAnimation.interpolate({
+        inputRange: [-top, -bottom],
+        outputRange: [-top, -bottom],
+        extrapolate: 'clamp'
+      });
+
+      var transform = { transform: [{ translateY: translateY }] };
+
+      var animatedContainerStyles = [_styles2.default.animatedContainer, this.props.contentStyle, transform, { height: height, top: _layout.visibleHeight, bottom: 0 }];
+
+      return _react3.default.createElement(
+        _reactNative.View,
+        { style: _styles2.default.container, pointerEvents: 'box-none', __source: {
+            fileName: _jsxFileName,
+            lineNumber: 254
+          }
+        },
+        this._renderBackdrop(),
+        _react3.default.createElement(
+          _reactNative.Animated.View,
+          _extends({}, this._panResponder.panHandlers, {
+            style: animatedContainerStyles, __source: {
+              fileName: _jsxFileName,
+              lineNumber: 256
+            }
+          }),
+          this.props.children
+        )
+      );
+    }
+  }]);
+
+  return SlidingUpPanel;
+}(_react3.default.Component), _class.propTypes = {
+  visible: _propTypes2.default.bool.isRequired,
+  draggableRange: _propTypes2.default.shape({
+    top: _propTypes2.default.number.isRequired,
+    bottom: _propTypes2.default.number.isRequired
+  }),
+  height: _propTypes2.default.number,
+  onDrag: _propTypes2.default.func,
+  onDragStart: _propTypes2.default.func,
+  onDragEnd: _propTypes2.default.func,
+  onRequestClose: _propTypes2.default.func,
+  allowMomentum: _propTypes2.default.bool,
+  allowDragging: _propTypes2.default.bool,
+  showBackdrop: _propTypes2.default.bool
+}, _class.defaultProps = {
+  visible: false,
+  height: _layout.visibleHeight,
+  draggableRange: { top: _layout.visibleHeight, bottom: 0 },
+  onDrag: function onDrag() {},
+  onDragStart: function onDragStart() {},
+  onDragEnd: function onDragEnd() {},
+  onRequestClose: function onRequestClose() {},
+  allowMomentum: true,
+  allowDragging: true,
+  showBackdrop: true
+}, _temp));
+
+exports.default = SlidingUpPanel;

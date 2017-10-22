@@ -15,12 +15,12 @@ import logo from 'assets/logo.png';
 export default (props) => {
     const navigate = props.navigation.navigate;
     const ConfSelector = props.conf ?
-        renderConfSelectorWithUpdate.bind(this, conf) :
+        renderConfSelectorWithUpdate.bind(this, props.conf) :
         renderConfSelector.bind(this);
 
     return (
         <View style={ style.loginContainer }>
-            <Image style={{ position: 'absolute',}} source={ require('assets/loginBackgroundImage.jpg') } />
+            <Image style={{ position: 'absolute',width:"100%",height:"100%",top:0,right:0,left:0,bottom:0}} source={ require('assets/loginBackgroundImage.jpg') } />
             <View style={ style.loginContainer }>
                 <View style={ style.logoContainer }>
                     <View style={ style.logoWrapper }>
@@ -28,7 +28,7 @@ export default (props) => {
                     </View>
                 </View>
                 <View style={ style.confDetailsContainer }>
-                    <ConfSelector />                                        
+                    <ConfSelector />
                 </View>
             </View>
         </View>
