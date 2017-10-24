@@ -14,6 +14,7 @@ import {
     List,
     ListItem,
 } from 'native-base';
+import EventDetailsDialog from 'app/EventDetailsDialog';
 import style from './loginWithSavedSession.style';
 
 export default (props) => {
@@ -21,10 +22,11 @@ export default (props) => {
     const listDataSource = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 });
     //const events = props.events;
     const events = [
-        { name: 'Devoxx 2017' },
+        { name: 'Devoxx 2017', image: 'https://devoxx.ma/assets/images/logos/logo.png', description: 'dq sidjqld kqdj qjdklq jqsdkl qldk jqsdklj qklsjd qkjd qkjdq kjdqkjd qskjj qskd qkdjqkdqsdkqsdqdq qsd qsdqsd' },
         { name: 'DockerCon 2017' },
         { name: 'ScalaCon 2017' },
     ];
+    const { dialogVisible, selectedEvent } = props;
     return (
         <Container>
             <Header style={ style.header }>
@@ -46,6 +48,11 @@ export default (props) => {
                 >
                 </List>
             </Content>
+            <EventDetailsDialog
+            visible={ dialogVisible }
+            event={ selectedEvent }
+            onRequestClose={ props.hideEventDetails.bind(this) }
+            />
         </Container>
     );
 
@@ -53,7 +60,7 @@ export default (props) => {
         return (
             <ListItem>
                 <TouchableOpacity
-                onPress={ props.onEventSelected }
+                onPress={ props.selectEvent }
                 style={ style.eventListItemBtn }>
                     <Text style={ style.eventListItemName } >{ name }</Text>
                 </TouchableOpacity>
@@ -61,25 +68,19 @@ export default (props) => {
         );
     }
 
-    function renderInfoEventsListItemButton({ name }) {
+    function renderInfoEventsListItemButton(event) {
 		return (
-			<Button full onPress={ showEventsListItemInfo }>
+			<Button full onPress={ props.showEventDetails.bind(this, event) }>
 				<Icon active name="information-circle" />
 			</Button>
 		);
 	}
 
-	function renderDeleteEventsListItemButton({ name }) {
+	function renderDeleteEventsListItemButton(event) {
 		return (
-			<Button full danger onPress={ deleteEventsListItem }>
+			<Button full danger onPress={ props.deleteEvent.bind(this, event) }>
 				<Icon active name="trash" />
 			</Button>
 		);
-	}
-
-	function deleteEventsListItem(event) {
-	}
-
-	function showEventsListItemInfo(event) {
 	}
 }
