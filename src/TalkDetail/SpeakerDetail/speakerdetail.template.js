@@ -1,21 +1,22 @@
 import React from "react"
-import {View,Text,Image} from "react-native"
-import style from "./style"
-export default (speaker)=>{
-    return(
+import {Image, Text, View} from "react-native"
+import style from "./speakerdetail.style"
+
+export default (props) => {
+    return (
         <View style={style.slideUp}>
             <View style={style.slideUpHeader}>
             </View>
             <View style={style.slideUpUser}>
                 <Image style={style.slideUpUserImg}
-                       source={{uri: speaker.avatarURL}}/>
+                       source={{uri: props.speaker.avatarURL}}/>
                 <View style={{marginLeft: 10}}>
                     <Text style={style.Label}>
-                        {speaker.firstName}
-                        {speaker.lastName}
+                        {props.speaker.firstName}
+                        {props.speaker.lastName}
                     </Text>
                     <Text style={{fontFamily: "Roboto-Light"}}>
-                        @{speaker.company}
+                        @{props.speaker.company}
                     </Text>
                 </View>
             </View>

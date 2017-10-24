@@ -1,15 +1,23 @@
 import {colors} from "shared/theme"
-export  default  {
+
+export default {
     Header: {backgroundColor: colors.primary, justifyContent: "center", alignItems: "center"},
     container: {
         flex: 1,
-        position:"relative",
+        position: "relative",
         backgroundColor: '#EAF0F2',
         alignItems: "center"
 
     },
     Label: {fontFamily: "Roboto-Medium", color: "white", fontSize: 20},
-    speakers: {marginTop: 10, marginLeft: 10,alignItems:"center",justifyContent:"center", width: "100%", position: "relative"},
+    speakers: {
+        marginTop: 10,
+        marginLeft: 10,
+        alignItems: "center",
+        justifyContent: "center",
+        width: "100%",
+        position: "relative"
+    },
 
     speakerBar: {
         flexDirection: "row",

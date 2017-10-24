@@ -1,0 +1,186 @@
+import React, {Component} from 'react';
+import {Dimensions, Text, View} from 'react-native';
+import {Body, Button, Card, CardItem, Container, Content, Header, Icon, Left, Right, Thumbnail} from 'native-base';
+import Rating from "app/Rating"
+import NestedSpeakersImgs from "./NestedImgs"
+import SepakerDetail from "./SpeakerDetail/speakerdetail.template"
+import SlidingUpPanel from 'rn-sliding-up-panel'
+import Placeholder from 'rn-placeholder';
+import {colors} from "shared/theme"
+import styles from "./talkdetail.style"
+import Orientation from "react-native-orientation"
+
+const {height} = Dimensions.get('window')
+const draggableRange = {
+    top: height / 2,
+    bottom: 0
+}
+export default class Template extends Component {
+
+    constructor(props) {
+        super(props)
+        const {slot} = this.props.navigation.state.params
+        const {navigate, goBack} = this.props.navigation;
+        this.navigate = navigate;
+        this.goBack = goBack;
+        this.slot = slot;
+    }
+
+    componentWillMount() {
+        Orientation.addOrientationListener(this._orientationDidChange.bind(this));
+        const {speakers} = this.slot.talk;
+        setTimeout(() => this.props.getSpeakersDetail(speakers || []), 600)
+    }
+
+    componentDidMount() {
+
+    }
+
+    _orientationDidChange(orientation) {
+        const {height} = Dimensions.get('window')
+        // later
+    }
+
+    componentWillUnmount() {
+        Orientation.removeOrientationListener(this._orientationDidChange);
+    }
+
+    render() {
+        return ( <Container>
+            <Header style={styles.Header}>
+                <Left>
+                    <Button onPress={() => {
+                        this.goBack()
+                        setTimeout(() => this.props.toggleContentLoader(false), 200)
+                    }} transparent>
+                        <Icon name='arrow-back'/>
+                    </Button>
+                </Left>
+                <Body style={{alignItems: "flex-start"}}>
+                <Text style={styles.Label}>
+                    Talk Detail
+                </Text>
+                </Body>
+                <Right>
+                    <Button transparent onPress={() => {
+                        this.goBack()
+                        setTimeout(() => {
+                            this.props.OnRate(this.slot);
+                            this.props.toggleContentLoader(false)
+                        }, 200)
+                    }}>
+                        <Icon style={{color: "white"}} name="md-checkmark-circle-outline"/>
+                    </Button>
+
+                </Right>
+            </Header>
+
+            <Content style={styles.content}>
+                <View style={styles.container}>
+                    <View style={styles.speakers}>
+                        <View style={[styles.speakerBar, {marginTop: 10}]}>
+                            <Placeholder.ImageContent
+                                size={60}
+                                animate="fade"
+                                color="#CCC"
+                                lineNumber={4}
+                                lineSpacing={5}
+                                lastLineWidth="30%"
+                                onReady={this.props.IsReady}
+                            >
+                                <View style={{flexDirection: "row", justifyContent: "center", alignItems: "center"}}>
+                                    {NestedSpeakersImgs(styles, this.props)}
+                                </View>
+                            </Placeholder.ImageContent>
+                        </View>
+                    </View>
+
+                    <View style={styles.contentTypes}>
+                        <View style={{...styles.contentTypesItem, backgroundColor: colors.primary}}>
+                            <Placeholder.Line
+                                color="#FFF"
+                                textSize={14}
+                                onReady={this.props.IsReady}
+                            >
+                                <Text style={styles.contentTypesItemLabel}>{this.slot.talk.track}</Text>
+                            </Placeholder.Line>
+                        </View>
+                        <View style={{...styles.contentTypesItem, backgroundColor: colors.white}}>
+                            <Placeholder.Line
+                                color="#EEE"
+                                textSize={14}
+                                onReady={this.props.IsReady}
+                            >
+                                <Text style={{
+                                    ...styles.contentTypesItemLabel,
+                                    color: "black"
+                                }}>{this.slot.talk.talkType}</Text>
+                            </Placeholder.Line>
+                        </View>
+
+                    </View>
+                    <View style={styles.contentBody}>
+                        <Card>
+                            <CardItem>
+                                <Left>
+                                    <Body>
+                                    <Placeholder.Line
+                                        color="#EEE"
+                                        width="77%"
+                                        textSize={14}
+                                        onReady={this.props.IsReady}
+                                    >
+                                        <Text style={{fontFamily: "Roboto-Medium"}}>
+                                            {this.slot.talk.title}
+                                        </Text>
+                                    </Placeholder.Line>
+                                    </Body>
+                                </Left>
+                            </CardItem>
+                            <View style={{margin: 20, marginTop: 5}}>
+                                <Placeholder.Paragraph
+                                    lineNumber={4}
+                                    textSize={14}
+                                    lineSpacing={5}
+                                    color="#EEE"
+
+                                    onReady={this.props.IsReady}
+                                >
+                                    <CardItem style={{marginLeft: 0, alignItems: "center"}}>
+                                        <Body>
+
+                                        <Text style={{fontFamily: "Roboto-Light"}}>
+                                            {this.slot.talk.summary}
+                                        </Text>
+
+                                        </Body>
+                                    </CardItem>
+                                </Placeholder.Paragraph>
+
+                            </View>
+
+                            <CardItem>
+                                <Body style={{alignItems: "center"}}>
+                                <Rating/>
+                                </Body>
+                            </CardItem>
+                        </Card>
+                        <Text>
+
+                        </Text>
+                    </View>
+                </View>
+            </Content>
+            <SlidingUpPanel
+                draggableRange={draggableRange}
+                ref={c => this.props._panel = c}
+                visible={this.props.showSpeakerDetail}
+                height={height / 1.75}
+                onRequestClose={this.props.toggleSpeakerDetail.bind(this, false)}>
+                <SepakerDetail speaker={this.props.selectedSpeaker}/>
+            </SlidingUpPanel>
+        </Container>)
+    }
+}
+
+

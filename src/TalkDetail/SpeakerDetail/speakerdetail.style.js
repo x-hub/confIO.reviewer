@@ -1,4 +1,5 @@
 import {colors} from "shared/theme"
+
 export default {
     Label: {fontFamily: "Roboto-Medium", color: "white", fontSize: 20},
     //slideUp

@@ -1,53 +1,51 @@
-import React, {Component} from 'react';
-import {Dimensions} from 'react-native';
-import Orientation from 'react-native-orientation';
-import styles from "./style"
-import {actionCreators} from "./actions.factory"
+import React from 'react';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
-import template from "./template"
+import template from "./talkdetail.template"
+import {ACTIONS} from "app/App/actionsType"
 
-const {height} = Dimensions.get('window')
-
-class TalkDetail extends Component {
-    constructor(props) {
-        super(props)
-        const {slot} = this.props.navigation.state.params
-        this.slot = slot;
-    }
-
-    componentWillMount() {
-        Orientation.addOrientationListener(this._orientationDidChange.bind(this));
-        const {speakers} = this.slot.talk;
-        setTimeout(()=>this.props.getSpeakersDetail(speakers || []),600)
-
-    }
-
-    componentDidMount() {
-
-    }
-
-    _orientationDidChange(orientation) {
-        const {height} = Dimensions.get('window')
-        // later
-    }
-
-    componentWillUnmount() {
-        Orientation.removeOrientationListener(this._orientationDidChange);
-    }
-
-
-    updateRating() {
-
-    }
-
-    render() {
-        return (
-            template(styles, this.props, this.slot)
-        )
+function OnRate(talk) {
+    return {
+        type: ACTIONS.TALK_RATE,
+        payload: talk
     }
 }
 
+function getSpeakersDetail(speakersId) {
+    return {
+        type: ACTIONS.GET_SPEAKERS_DETAILS,
+        payload: speakersId
+    }
+}
+
+function getSpeaker(position) {
+    return {
+        type: ACTIONS.SELECT_SPEAKER,
+        payload: position
+    }
+}
+
+function toggleSpeakerDetail(boolean) {
+    return {
+        type: ACTIONS.TOGGLE_SPEAKER_DETAIL,
+        payload: boolean
+    }
+}
+
+function toggleContentLoader(boolean) {
+    return {
+        type: ACTIONS.SET_CONTENT_PLACEHOLDER_STATE,
+        payload: boolean
+    }
+}
+
+const actionCreators = {
+    OnRate,
+    getSpeakersDetail,
+    getSpeaker,
+    toggleSpeakerDetail,
+    toggleContentLoader
+};
 
 function mapStateToProps(state) {
     return state.talkdetail;
@@ -57,4 +55,4 @@ function mapDispatchToProps(dispatch) {
     return bindActionCreators(actionCreators, dispatch);
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(TalkDetail);
+export default connect(mapStateToProps, mapDispatchToProps)(template);
