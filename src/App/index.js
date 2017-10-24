@@ -13,6 +13,7 @@ import {
 import Home from 'app/Home';
 import Login from 'app/Login';
 import LoginWithQRCode from 'app/Login/LoginWithQRCode';
+import LoginWithSavedSession from 'app/Login/LoginWithSavedSession';
 import store from './app.store';
 import getTheme from 'nb-theme/components';
 import materialTheme from 'nb-theme/variables/material';
@@ -29,6 +30,9 @@ const Navigator = StackNavigator({
     },
     LoginWithQRCode: {
         screen: LoginWithQRCode,
+    },
+    LoginWithSavedSession: {
+        screen: LoginWithSavedSession,
     },
     Detail:{
         screen: TalkDetail,

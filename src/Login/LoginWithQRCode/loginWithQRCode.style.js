@@ -4,6 +4,15 @@ export default {
 	header: {
 		justifyContent: 'flex-start',
 	},
+    goBackIcon: {
+        color: colors.black,
+    },
+    sceneTitle: {
+        textAlign: 'center',
+        textAlignVertical: 'center',
+        fontSize: 18,
+        color: colors.black,
+    },
     savedSessionsBtn: {
         backgroundColor: colors.primary,
     },
