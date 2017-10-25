@@ -13,4 +13,12 @@ export default {
     goBackIcon: {
         color: colors.black,
     },
+    eventListItemName: {
+        marginLeft: 7,
+        fontSize: 15,
+        fontWeight: 'bold',
+    },
+    eventListItemBtn: {
+        flex: 1,
+    },
 }
