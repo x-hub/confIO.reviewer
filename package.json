@@ -7,8 +7,8 @@
     "test": "jest"
   },
   "dependencies": {
-    "lodash": "^4.17.4",
-    "native-base": "^2.3.2",
+    "lodash": "4.17.4",
+    "native-base": "2.3.2",
     "react": "16.0.0-beta.5",
     "react-native": "0.49.3",
     "react-native-camera": "^0.10.0",
@@ -16,16 +16,17 @@
     "react-native-modal": "^4.1.0",
     "react-native-orientation": "^3.1.0",
     "react-native-qrcode-scanner": "0.0.22",
-    "react-native-vector-icons": "^4.4.2",
-    "react-navigation": "^1.0.0-beta.13",
-    "react-redux": "^5.0.6",
-    "redux": "^3.7.2",
+    "react-native-vector-icons": "4.4.2",
+    "react-navigation": "1.0.0-beta.13",
+    "react-redux": "5.0.6",
+    "redux": "3.7.2",
+    "rn-placeholder": "^1.1.0",
     "rn-sliding-up-panel": "^1.1.6"
   },
   "devDependencies": {
-    "babel": "^6.23.0",
+    "babel": "6.23.0",
     "babel-jest": "21.2.0",
-    "babel-plugin-module-alias": "^1.6.0",
+    "babel-plugin-module-alias": "1.6.0",
     "babel-preset-react-native": "4.0.0",
     "jest": "21.2.1",
     "react-test-renderer": "16.0.0-beta.5"
