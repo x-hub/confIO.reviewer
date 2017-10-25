@@ -1,6 +1,6 @@
 import {colors} from 'shared/theme';
 
-const logoSize = 120;
+const logoSize = 233;
 
 export default {
     loginContainer: {
@@ -8,7 +8,7 @@ export default {
         position: 'relative',
         flexDirection: 'column',
         justifyContent: 'space-between',
-        backgroundColor: 'rgba(0,0,0,0.3)',
+        backgroundColor: 'rgba(0,0,0,0.5)',
     },
     logoContainer: {
         flex: 2,
