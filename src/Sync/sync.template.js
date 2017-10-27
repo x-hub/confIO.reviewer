@@ -3,13 +3,14 @@ import {
     Text,
     View,
     ScrollView,
-    ScrollItem,
+    FlatList
 } from 'react-native';
 import {
     Container,
     Header,
     Content,
     Left,
+    Right,
     Button,
     Icon,
 } from 'native-base';
@@ -28,12 +29,7 @@ const actionTypes = {
 };
 
 export default (props) => {
-    //const { actions, isRefreshing, onRefresh } = props;
-    const state = {
-        actions: [{ type: actionTypes.VOTE, target: '2165464654cfg4dfgdfg', payload: 8, timestamp: Date.now() }],
-        isRefreshing: false,
-        onRefresh: () => { state.isRefreshing != state.isRefreshing }
-    };
+    const { actions, isRefreshing, syncActions, removeAction } = props;
     const { goBack, navigate } = props.navigation;
     return (
         <Container>
@@ -47,8 +43,8 @@ export default (props) => {
             </Header>
             <Content>
                 <PullToRefresh
-                isRefreshing={ state.isRefreshing }
-                onRefresh={ state.onRefresh }
+                isRefreshing={ isRefreshing }
+                onRefresh={ syncActions }
                 animationBackgroundColor={ style.animationBackgroundColor }
                 pullHeight={ 180 }
                 contentView={ renderContent() }
@@ -63,15 +59,45 @@ export default (props) => {
 
     function renderContent() {
         return (
-            <ScrollView>
-                { state.actions.map(renderAction) }
-            </ScrollView>
+            <View>
+                <FlatList
+                    data={ actions }
+                    renderItem={ renderAction }
+                    keyExtractor={ ({ id }) => id }
+                />
+            </View>
         );
     }
 
-    function renderAction({ type, target, payload, timestamp }) {
+    function renderAction({ item: { type, target, payload, timestamp }}) {
         return (
-            <Text key={ target }>{ type }</Text>
+            <View key={ target } style={ style.actionContainer }>
+                <Left style={ style.actionTextContainer }>
+                    { humanReadable() }
+                </Left>
+                <Right style={ style.actionRemoveContainer }>
+                    <Button danger
+                    onPress={ removeAction }
+                    >
+                        <Icon name='trash'/>
+                    </Button>
+                </Right>
+            </View>
         );
+        function humanReadable() {
+            switch(type) {
+                case actionTypes.VOTE:
+                    return (
+                        <Text style={ style.actionText }>
+                            Voted for <Text style={ style.actionVoteTarget  }>{ target }</Text>
+                            <Text> with </Text>
+                            <Text style={ style.actionVoteResult }>{ payload }</Text>
+                        </Text>
+                    );
+                default:
+                    return <Text style={ style.actionText }>Unkown Event</Text>
+            }
+        }
     }
+
 }
