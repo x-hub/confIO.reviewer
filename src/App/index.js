@@ -45,7 +45,7 @@ const Navigator = StackNavigator({
         screen: Sync,
     },
 }, {
-    initialRouteName: 'Sync',
+    initialRouteName: 'Login',
     headerMode: 'none'
 });
 
