@@ -23,9 +23,14 @@ const animations = {
     coffee_end: require('./animations/coffee_end.json'),
 };
 
+const actionTypes = {
+    VOTE: 'VOTE',
+};
+
 export default (props) => {
-    //const { isRefreshing, onRefresh } = props;
+    //const { actions, isRefreshing, onRefresh } = props;
     const state = {
+        actions: [{ type: actionTypes.VOTE, target: '2165464654cfg4dfgdfg', payload: 8, timestamp: Date.now() }],
         isRefreshing: false,
         onRefresh: () => { state.isRefreshing != state.isRefreshing }
     };
@@ -59,7 +64,14 @@ export default (props) => {
     function renderContent() {
         return (
             <ScrollView>
+                { state.actions.map(renderAction) }
             </ScrollView>
+        );
+    }
+
+    function renderAction({ type, target, payload, timestamp }) {
+        return (
+            <Text key={ target }>{ type }</Text>
         );
     }
 }
