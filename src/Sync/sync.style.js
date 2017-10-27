@@ -42,4 +42,16 @@ export default {
     actionRemoveContainer: {
         flex: 2,
     },
+    emptyActionsListText: {
+        marginTop: 34,
+        fontSize: 21,
+        fontWeight: 'bold',
+        color: colors.black,
+        textAlign: 'center',
+    },
+    emptyActionAnimation: {
+        alignSelf: 'center',
+        height: 200,
+        width: 200,
+    },
 }

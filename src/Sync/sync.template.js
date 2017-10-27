@@ -14,6 +14,8 @@ import {
     Button,
     Icon,
 } from 'native-base';
+import Animation from 'lottie-react-native';
+import { AutoPlayAnimation } from 'shared';
 import PullToRefresh from 'react-native-pull-refresh';
 import style from './sync.style';
 
@@ -22,6 +24,7 @@ const animations = {
     coffee_pull: require('./animations/coffee_pull.json'),
     coffee_repeat: require('./animations/coffee_repeat.json'),
     coffee_end: require('./animations/coffee_end.json'),
+    empty_box: require('./animations/empty_box.json'),
 };
 
 const actionTypes = {
@@ -31,6 +34,29 @@ const actionTypes = {
 export default (props) => {
     const { actions, isRefreshing, syncActions, removeAction } = props;
     const { goBack, navigate } = props.navigation;
+    const ActionsList = () => (
+        <PullToRefresh
+        isRefreshing={ isRefreshing }
+        onRefresh={ syncActions }
+        animationBackgroundColor={ style.animationBackgroundColor }
+        pullHeight={ 180 }
+        contentView={ renderContent() }
+        onPullAnimationSrc={ animations.coffee_pull }
+        onStartRefreshAnimationSrc={ animations.coffee_start }
+        onRefreshAnimationSrc={ animations.coffee_repeat }
+        onEndRefreshAnimationSrc={ animations.coffee_end }
+        />
+    );
+    const EmptyActionsList = () => (
+        <View>
+            <AutoPlayAnimation
+            style={ style.emptyActionAnimation }
+            source={ animations.empty_box }
+            />
+            <Text style={ style.emptyActionsListText }>You're Lazy, No actions to Sync</Text>
+        </View>
+    );
+    const SyncBody = actions.lenght? ActionsList : EmptyActionsList;
     return (
         <Container>
             <Header style={ style.header }>
@@ -42,17 +68,7 @@ export default (props) => {
                 <Text style={ style.sceneTitle }>Synchronize</Text>
             </Header>
             <Content>
-                <PullToRefresh
-                isRefreshing={ isRefreshing }
-                onRefresh={ syncActions }
-                animationBackgroundColor={ style.animationBackgroundColor }
-                pullHeight={ 180 }
-                contentView={ renderContent() }
-                onPullAnimationSrc={ animations.coffee_pull }
-                onStartRefreshAnimationSrc={ animations.coffee_start }
-                onRefreshAnimationSrc={ animations.coffee_repeat }
-                onEndRefreshAnimationSrc={ animations.coffee_end }
-                />
+                <SyncBody />
             </Content>
         </Container>
     );
