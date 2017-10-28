@@ -69,6 +69,7 @@ export default (props) => {
             </Header>
             <Content>
                 <SyncBody />
+
             </Content>
         </Container>
     );

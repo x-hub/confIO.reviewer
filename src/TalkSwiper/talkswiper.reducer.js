@@ -3,7 +3,7 @@ import talks from "app/Data/talks"
 
 export default (state = {
     talksReviewed: [],
-    talksNotReviewed: [],
+    talksNotReviewed: talks,
     talksToBeReviewedLater: [],
     current: talks
 }, action) => {
