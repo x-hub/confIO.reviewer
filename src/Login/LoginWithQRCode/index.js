@@ -1,14 +1,18 @@
 import React, { Component } from 'react';
-import template from './LoginWithQRCode.template';
+import template from './loginWithQRCode.template';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import {ACTIONS} from "app/App/actionsType"
+
+const actions = {
+    QR_CODE_READ: 'QR_CODE_READ',
+};
+
 const actionCreators = {
     onQRCodeRead
 };
 function onQRCodeRead(e) {
     return {
-        type: ACTIONS.QR_CODE_READ,
+        type: actions.QR_CODE_READ,
         payload: e
     }
 }

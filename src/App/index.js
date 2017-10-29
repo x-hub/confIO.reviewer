@@ -19,7 +19,7 @@ import getTheme from 'nb-theme/components';
 import materialTheme from 'nb-theme/variables/material';
 import TalkDetail from 'app/TalkDetail';
 import TalkSwiper from 'app/TalkSwiper'
-
+import Sync from 'app/Sync';
 
 const theme = getTheme(materialTheme);
 const Navigator = StackNavigator({
@@ -39,8 +39,11 @@ const Navigator = StackNavigator({
         screen: TalkDetail,
     },
     Swiper:{
-        screen: TalkSwiper
-    }
+        screen: TalkSwiper,
+    },
+    Sync: {
+        screen: Sync,
+    },
 }, {
     initialRouteName: 'Login',
     headerMode: 'none'

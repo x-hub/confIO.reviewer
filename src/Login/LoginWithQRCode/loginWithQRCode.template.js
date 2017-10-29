@@ -42,7 +42,7 @@ export default (props) => {
             </Content>
             <Footer>
                 <FooterTab>
-                    <Button style={ style.savedSessionsBtn } full>
+                    <Button onPress={ navigate.bind(null, 'LoginWithSavedSession') } style={ style.savedSessionsBtn } full>
                         <Text style={ style.savedSessions } >Login with Saved Session</Text>
                     </Button>
                 </FooterTab>
