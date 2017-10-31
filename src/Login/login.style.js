@@ -1,4 +1,4 @@
-import {colors} from 'shared/theme';
+import { colors } from 'shared/theme';
 
 const logoSize = 233;
 
@@ -25,7 +25,7 @@ export default {
         height: logoSize,
         justifyContent: 'center',
     },
-    confDetailsContainer: {
+    eventDetailsContainer: {
         justifyContent: 'center',
         flex: 3,
         flexDirection: 'column',
@@ -38,6 +38,7 @@ export default {
         flexDirection: 'column',
     },
     eventType: {
+        color: colors.white,
         alignSelf: 'center',
         fontSize: 15,
         fontWeight: 'bold',
@@ -48,7 +49,14 @@ export default {
         fontSize: 24,
         fontWeight: 'bold',
     },
-    eventLogo: {
+    eventImageContainer: {
+        marginTop: 8,
+        marginBottom: 8,
+        padding: 3,
+        borderRadius: 5,
+        backgroundColor: 'rgba(255, 255, 255,0.8)',
+    },
+    eventImage: {
         height: 150,
         resizeMode: 'contain',
     },

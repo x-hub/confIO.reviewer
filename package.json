@@ -24,6 +24,7 @@
     "react-navigation": "1.0.0-beta.13",
     "react-redux": "5.0.6",
     "redux": "3.7.2",
+    "redux-promise": "^0.5.3",
     "rn-placeholder": "^1.1.0",
     "rn-sliding-up-panel": "^1.1.6"
   },

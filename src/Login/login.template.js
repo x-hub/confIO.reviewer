@@ -6,9 +6,9 @@ import logo from 'assets/logo.png';
 
 export default (props) => {
     const navigate = props.navigation.navigate;
-    const ConfSelector = props.conf ?
-        renderConfSelectorWithUpdate.bind(this, props.conf) :
-        renderConfSelector.bind(this);
+    const EventSelector = props.event ?
+        renderEventSelectorWithUpdate.bind(this, props.event) :
+        renderEventSelector.bind(this);
 
     return (
         <View style={style.loginContainer}>
@@ -20,14 +20,14 @@ export default (props) => {
                         <Thumbnail style={style.logo} source={logo}/>
                     </View>
                 </View>
-                <View style={style.confDetailsContainer}>
-                    <ConfSelector/>
+                <View style={style.eventDetailsContainer}>
+                    <EventSelector/>
                 </View>
             </View>
         </View>
     );
 
-    function renderConfSelector() {
+    function renderEventSelector() {
         return (
             <View>
                 <Button style={style.selectEventBtn}
@@ -39,16 +39,18 @@ export default (props) => {
         );
     }
 
-    function renderConfSelectorWithUpdate({type, name, logo}) {
+    function renderEventSelectorWithUpdate({ type, name, image }) {
         return (
-            <View style={style.eventInfos}>
-                <Text style={style.eventType}>Selected {type}</Text>
-                <Text style={style.eventName}>{name}</Text>
-                <Image style={style.eventLogo} source={{uri: logo}}/>
-                <Button style={style.selectEventBtn}
-                        onPress={navigate.bind(this, 'LoginWithQRCode')} rounded>
-                    <Icon style={style.icon} name='swap'/>
-                    <Text style={style.selectEvent}>Change</Text>
+            <View style={ style.eventInfos }>
+                <Text style={ style.eventType }>Selected { type }</Text>
+                <Text style={ style.eventName }>{ name }</Text>
+                <View style={ style.eventImageContainer }>
+                    <Image style={ style.eventImage } source={ {uri: image} }/>
+                </View>
+                <Button style={ style.selectEventBtn }
+                        onPress={ navigate.bind(this, 'LoginWithQRCode') } rounded>
+                    <Icon style={ style.icon } name='swap'/>
+                    <Text style={ style.selectEvent }>Change</Text>
                 </Button>
             </View>
         );

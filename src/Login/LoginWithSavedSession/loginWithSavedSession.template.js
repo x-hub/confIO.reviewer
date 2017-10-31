@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Component } from 'react';
 import {
     Text,
     ListView,
@@ -17,16 +17,19 @@ import {
 import EventDetailsDialog from 'app/EventDetailsDialog';
 import style from './loginWithSavedSession.style';
 
-export default (props) => {
+export default class LoginWithSavedSession extends Component {
+    componentWillMount() {
+        this.props.fetchEvents();
+    }
+    render() {
+        return render(this.props);
+    }
+}
+
+function render(props) {
 	const { navigate, goBack } = props.navigation;
     const listDataSource = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 });
-    //const events = props.events;
-    const events = [
-        { name: 'Devoxx 2017', image: 'https://devoxx.ma/assets/images/logos/logo.png', description: 'dq sidjqld kqdj qjdklq jqsdkl qldk jqsdklj qklsjd qkjd qkjdq kjdqkjd qskjj qskd qkdjqkdqsdkqsdqdq qsd qsdqsd' },
-        { name: 'DockerCon 2017' },
-        { name: 'ScalaCon 2017' },
-    ];
-    const { dialogVisible, selectedEvent } = props;
+    const { dialogVisible, selectedEvent, events } = props;
     return (
         <Container>
             <Header style={ style.header }>
@@ -45,8 +48,7 @@ export default (props) => {
                 renderRightHiddenRow={ renderDeleteEventsListItemButton }
 				leftOpenValue={ 75 }
 				rightOpenValue={ -75 }
-                >
-                </List>
+                />
             </Content>
             <EventDetailsDialog
             visible={ dialogVisible }
@@ -56,7 +58,7 @@ export default (props) => {
         </Container>
     );
 
-    function renderEventsListItem({ name, apiUrl }) {
+    function renderEventsListItem({ name }) {
         return (
             <ListItem>
                 <TouchableOpacity
