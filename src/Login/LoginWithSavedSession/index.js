@@ -25,21 +25,23 @@ const actionCreators = {
 
 function readEventsFromStorage() {
     return events = AsyncStorage.getItem('events')
+    .then((events) => events? JSON.parse(events) : [])
     .then((events) => {
         return Promise.all(
-            JSON.parse(events)
-            .map(readEventDetails)
+            events.map(
+                readEventDetails
+            )
         )
     });
 
     function readEventDetails(eventCode) {
         return AsyncStorage.getItem(`events:${eventCode}`)
-        .then((event) => JSON.parse(event));
+        .then((event) => event? JSON.parse(event) : {});
     }
 }
 
 function deleteEventFromStorage(eventToDelete) {
-    readEventsFromStorage()
+    return readEventsFromStorage()
     .then((events) => {
         const updatedEventsList = events.filter(
             (event) => event.code != eventToDelete.code

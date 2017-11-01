@@ -34,7 +34,8 @@ function fetchDefaultEvent() {
             return Promise.reject();
         }
     })
-    .then((event) => JSON.parse(event));
+    .then((event) => JSON.parse(event))
+    .catch((err) => null);
     return {
         type: actions.FETCH_DEFAULT_EVENT,
         payload: defaultEvent,
