@@ -16,7 +16,7 @@ export default class Template extends Component {
     componentWillMount() {
         let {event} = this.props;
         const {navigate} = this.props.navigation;
-        let BaseUrl = event.baseUrl.concat("/", event.eventCode);
+        let BaseUrl = event.baseUrl.concat("api/conferences/", event.code);
         let ScheduleUrl = BaseUrl.concat("/schedules/")
         let SpeakersUrl = BaseUrl.concat("/speakers/")
         Http.get(ScheduleUrl).map((e) => e.links).switchMap((Links) => {

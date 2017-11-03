@@ -26,7 +26,7 @@ function initSpeakers(event, speakers) {
 
 function mapStateToProps(state) {
     return {
-        ...state.login
+        ...state.feed
     };
 }
 

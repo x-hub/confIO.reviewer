@@ -3,8 +3,9 @@ import template from './loginWithQRCode.template';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { AsyncStorage } from 'react-native';
+import navActions from 'app/Navigator/navigator.actions';
 
-const actions = {
+export const actions = {
     QR_CODE_READ: 'QR_CODE_READ',
 };
 
@@ -48,13 +49,13 @@ function handleQRCode(data) {
 
 function onQRCodeRead({ data }) {
     return {
-        type: actions.QR_CODE_READ,
+        type: navActions.GOTO_Feed,
         payload: handleQRCode(data)
     }
 }
 
 function mapStateToProps(state) {
-    return {}
+    return state.loginWithQRCode;
 }
 
 function mapDispatchToProps(dispatch) {

@@ -17,33 +17,32 @@ import QRCodeScanner from 'react-native-qrcode-scanner';
 import style from './loginWithQRCode.style';
 
 export default (props) => {
-	const navigate = props.navigation.navigate;
-	setTimeout(()=>{
-	    props.onQRCodeRead({token:"xxx",
-            baseUrl:"https://cfp.devoxx.ma/api/conferences",
-            eventCode:"DevoxxMA2017"})
-           setTimeout(()=>{ navigate('Feed');},400)
-    },500)
+	const { goBack, navigate } = props.navigation;
     return (
         <Container>
             <Header style={ style.header }>
 				<Left>
-					<Button onPress={ navigate.bind(null, 'Login') } transparent>
-						<Icon name='arrow-back' />
+                    <Button onPress={ () => goBack() } transparent>
+						<Icon style={ style.goBackIcon } name='arrow-back' />
 					</Button>
 				</Left>
+                <Text style={ style.sceneTitle }>Scan QR Code to Login</Text>
             </Header>
             <Content>
                 <View style={ style.scanTipsContainer }>
                     <View style={ style.scanTipsIconContainer } >
-                        <Icon style={ style.scanTipsIcon } name="information" />
+                        <Icon style={ style.scanTipsIcon } name='information' />
                     </View>
                     <Text style={ style.scanTips }>
                        Go to your confIO instance on your computer and scan the QR code.
                     </Text>
                 </View>
                 <View>
-                    <QRCodeScanner onRead={ props.onQRCodeRead.bind(this) }/>
+                    <QRCodeScanner
+                    fadeIn={ true }
+                    showMarker={ true }
+                    onRead={ props.onQRCodeRead.bind(this) }
+                    />
                 </View>
             </Content>
             <Footer>
