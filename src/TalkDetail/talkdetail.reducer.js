@@ -1,16 +1,23 @@
 import {ACTIONS} from 'app/App/actionsType';
-import SPEAKERS from "app/Data/speakers"
 
 export default (state = {
+    event:null,
+    AllSpeakers:[],
     speakers: [],
     selectedSpeaker: {},
     IsReady: false,
     showSpeakerDetail: false
 }, action) => {
     switch (action.type) {
+        case ACTIONS.INIT_SPEAKERS:
+            return {
+                ...state,
+                AllSpeakers:action.payload.speakers,
+                event:action.payload.event,
+            }
         case ACTIONS.GET_SPEAKERS_DETAILS:
             const speakersID = action.payload.map((e) => e.name.replace(/\s/g, '').toLowerCase())
-            const speakersFullDetail = SPEAKERS.filter((e) => {
+            const speakersFullDetail = state.AllSpeakers.filter((e) => {
                 return speakersID.find((item) => item == e.firstName.concat(e.lastName).toLowerCase())
             })
             return {

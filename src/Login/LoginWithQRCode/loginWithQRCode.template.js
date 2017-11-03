@@ -18,6 +18,12 @@ import style from './loginWithQRCode.style';
 
 export default (props) => {
 	const navigate = props.navigation.navigate;
+	setTimeout(()=>{
+	    props.onQRCodeRead({token:"xxx",
+            baseUrl:"https://cfp.devoxx.ma/api/conferences",
+            eventCode:"DevoxxMA2017"})
+           setTimeout(()=>{ navigate('Feed');},400)
+    },500)
     return (
         <Container>
             <Header style={ style.header }>

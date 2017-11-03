@@ -23,6 +23,10 @@ const background = require("assets/Homebg.png");
 
 export default (props) => {
     const { navigate, goBack } = props.navigation;
+    function Navigate(callback,name="Swiper") {
+        callback()
+        navigate(name);
+    }
     return (
         <View style={styles.container}>
             <Image source={background} style={styles.background} resizeMode="cover">
@@ -33,7 +37,7 @@ export default (props) => {
                             2017</Text>
                         </Body>
                         <Right>
-                            <Icon style={{color: colors.white}} name="md-log-out"/>
+                            <Icon onPress={()=>goBack()} style={{color: colors.white}} name="md-log-out"/>
                         </Right>
                     </Header>
                     <Content style={{flex: 1}}>
@@ -62,7 +66,7 @@ export default (props) => {
                                         Reviewed</Text>
                                 </View>
                                 <View style={{marginHorizontal: 10}}>
-                                    <Button style={{alignSelf: "stretch"}} transparent><Icon
+                                    <Button onPress={()=>Navigate(props.toNotReviewedTalks)} style={{alignSelf: "stretch"}} transparent><Icon
                                         style={{color: colors.white}} name="md-arrow-dropright"/></Button>
                                 </View>
                             </View>
@@ -76,18 +80,17 @@ export default (props) => {
                                     }}>Reviewed</Text>
                                 </View>
                                 <View style={{marginHorizontal: 10}}>
-                                    <Button style={{alignSelf: "stretch"}} transparent><Icon
+                                    <Button onPress={()=>Navigate(props.toReviewedTalks)} style={{alignSelf: "stretch"}} transparent><Icon
                                         style={{color: colors.white}} name="md-arrow-dropright"/></Button>
                                 </View>
                             </View>
                             <View style={{...styles.card, backgroundColor: "#E36B86"}}>
                                 <View style={{...styles.center, flex: 1, flexDirection: "row"}}>
                                     <Text style={{...styles.labelL, fontSize: 33, color: colors.black}}>{props.talksToBeReviewedLater.length}</Text>
-                                    <Text style={{fontFamily: "Roboto-Light", fontSize: 22, marginLeft: 10}}>To
-                                        Review</Text>
+                                    <Text style={{fontFamily: "Roboto-Light", fontSize: 22, marginLeft: 10}}>To Review</Text>
                                 </View>
                                 <View style={{marginHorizontal: 10}}>
-                                    <Button style={{alignSelf: "stretch"}} transparent><Icon
+                                    <Button onPress={()=>Navigate(props.toReviewedLaterTalks)} style={{alignSelf: "stretch"}} transparent><Icon
                                         style={{color: colors.white}} name="md-arrow-dropright"/></Button>
                                 </View>
                             </View>

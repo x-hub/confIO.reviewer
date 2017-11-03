@@ -3,7 +3,7 @@ import template from './loginWithQRCode.template';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 
-const actions = {
+export const actions = {
     QR_CODE_READ: 'QR_CODE_READ',
 };
 
@@ -18,7 +18,7 @@ function onQRCodeRead(e) {
 }
 
 function mapStateToProps(state) {
-    return state.login;
+    return {}
 }
 
 function mapDispatchToProps(dispatch) {

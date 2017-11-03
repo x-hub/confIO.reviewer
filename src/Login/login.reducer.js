@@ -1,10 +1,11 @@
-import { ACTIONS } from 'app/App/actionsType';
+import {actions} from "./LoginWithQRCode"
 
-export default (state = {}, action) => {
+export default (state = {event:null}, action) => {
     switch(action.type) {
-        case ACTIONS.QR_CODE_READ:
+        case actions.QR_CODE_READ:
             return {
-                ...action.payload
+                ...state,
+                event:action.payload
             };
         default:
             return state;

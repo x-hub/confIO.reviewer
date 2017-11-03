@@ -6,9 +6,26 @@ import template from './home.template';
 
 
 const actionCreators = {
+    toNotReviewedTalks,
+    toReviewedLaterTalks,
+    toReviewedTalks
 
 };
-
+function toReviewedTalks() {
+    return {
+        type:ACTIONS.SET_REVIEWED_CURRENT
+    }
+}
+function toReviewedLaterTalks() {
+    return {
+        type:ACTIONS.SET_REVIEWED_LATER_CURRENT
+    }
+}
+function toNotReviewedTalks() {
+    return {
+        type:ACTIONS.SET_NOT_REVIEWED_CURRENT
+    }
+}
 function mapStateToProps(state) {
     return {
         ...state.talkswiper

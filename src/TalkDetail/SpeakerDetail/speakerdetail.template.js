@@ -24,7 +24,7 @@ export default (props) => {
 
                 <Text
                     style={{fontWeight: "400", color: "black", marginTop: 10, fontFamily: "Roboto-Light"}}>
-                    BIOGRAPHIE TBD
+                    {props.speaker.bio}
                 </Text>
             </View>
         </View>
