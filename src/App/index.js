@@ -19,6 +19,7 @@ import getTheme from 'nb-theme/components';
 import materialTheme from 'nb-theme/variables/material';
 import TalkDetail from 'app/TalkDetail';
 import TalkSwiper from 'app/TalkSwiper'
+import Feed from "app/Feed"
 import Sync from 'app/Sync';
 
 const theme = getTheme(materialTheme);
@@ -40,6 +41,9 @@ const Navigator = StackNavigator({
     },
     Swiper:{
         screen: TalkSwiper,
+    },
+    Feed: {
+        screen: Feed,
     },
     Sync: {
         screen: Sync,

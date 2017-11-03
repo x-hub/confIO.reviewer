@@ -1,11 +1,12 @@
 import { ACTIONS } from 'app/App/actionsType';
 import { actions as loginActions } from 'app/Login';
 
-export default (state = {}, action) => {
+export default (state = {event:null}, action) => {
     switch(action.type) {
-        case ACTIONS.QR_CODE_READ:
+        case actions.QR_CODE_READ:
             return {
-                ...action.payload
+                ...state,
+                event:action.payload
             };
         case loginActions.FETCH_DEFAULT_EVENT:
             return {

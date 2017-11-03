@@ -27,6 +27,7 @@
     "redux-promise": "0.5.3",
     "rn-placeholder": "1.1.0",
     "rn-sliding-up-panel": "1.1.6"
+    "rxjs": "^5.5.2"
   },
   "devDependencies": {
     "babel": "6.23.0",

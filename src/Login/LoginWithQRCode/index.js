@@ -54,7 +54,7 @@ function onQRCodeRead({ data }) {
 }
 
 function mapStateToProps(state) {
-    return state.login;
+    return {}
 }
 
 function mapDispatchToProps(dispatch) {

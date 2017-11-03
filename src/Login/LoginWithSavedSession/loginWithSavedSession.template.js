@@ -62,7 +62,7 @@ function render(props) {
         return (
             <ListItem>
                 <TouchableOpacity
-                onPress={ props.selectEvent }
+                onPress={ ()=>{props.selectEvent(); navigate('Home')} }
                 style={ style.eventListItemBtn }>
                     <Text style={ style.eventListItemName } >{ name }</Text>
                 </TouchableOpacity>
