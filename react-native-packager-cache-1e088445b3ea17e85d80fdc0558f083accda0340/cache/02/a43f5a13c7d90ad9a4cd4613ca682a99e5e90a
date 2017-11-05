@@ -1,7 +1,0 @@
-var fs = require('fs');
-
-module.exports = function applyPatch(file, patch) {
-  fs.writeFileSync(file, fs.readFileSync(file, 'utf8').replace(patch.pattern, function (match) {
-    return '' + match + patch.patch;
-  }));
-};

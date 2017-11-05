@@ -1,6 +1,0 @@
-var fs = require('fs');
-
-module.exports = function revokePatch(file, patch) {
-  var unpatch = patch.unpatch || patch.patch;
-  fs.writeFileSync(file, fs.readFileSync(file, 'utf8').replace(unpatch, ''));
-};

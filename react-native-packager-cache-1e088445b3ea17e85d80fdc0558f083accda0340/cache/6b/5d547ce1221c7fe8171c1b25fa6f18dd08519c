@@ -1,7 +1,0 @@
-"use strict";
-
-var root_1 = require('../util/root');
-var Symbol = root_1.root.Symbol;
-exports.rxSubscriber = typeof Symbol === 'function' && typeof (typeof Symbol === 'function' ? Symbol.for : '@@for') === 'function' ? (typeof Symbol === 'function' ? Symbol.for : '@@for')('rxSubscriber') : '@@rxSubscriber';
-
-exports.$$rxSubscriber = exports.rxSubscriber;

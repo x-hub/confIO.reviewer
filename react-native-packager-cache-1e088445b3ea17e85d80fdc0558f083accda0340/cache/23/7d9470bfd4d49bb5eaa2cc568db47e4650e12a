@@ -1,7 +1,0 @@
-var mapHeaderSearchPaths = require('./mapHeaderSearchPaths');
-
-module.exports = function addToHeaderSearchPaths(project, path) {
-  mapHeaderSearchPaths(project, function (searchPaths) {
-    return searchPaths.concat(path);
-  });
-};

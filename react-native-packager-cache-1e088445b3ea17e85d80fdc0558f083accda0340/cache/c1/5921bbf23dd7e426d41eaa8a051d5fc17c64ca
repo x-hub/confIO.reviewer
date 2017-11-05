@@ -1,8 +1,0 @@
-
-
-exports.version = {
-  major: 0,
-  minor: 49,
-  patch: 3,
-  prerelease: null
-};

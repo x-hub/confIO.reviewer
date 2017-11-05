@@ -1,9 +1,0 @@
-
-'use strict';
-
-var MessageQueueTestModule = {
-  testHook1: function testHook1() {},
-  testHook2: function testHook2() {}
-};
-
-module.exports = MessageQueueTestModule;

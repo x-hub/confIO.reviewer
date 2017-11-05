@@ -1,8 +1,0 @@
-
-module.exports = function getBuildProperty(project, prop) {
-  var target = project.getFirstTarget().firstTarget;
-  var config = project.pbxXCConfigurationList()[target.buildConfigurationList];
-  var buildSection = project.pbxXCBuildConfigurationSection()[config.buildConfigurations[0].value];
-
-  return buildSection.buildSettings[prop];
-};
