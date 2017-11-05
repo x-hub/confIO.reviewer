@@ -1,0 +1,19 @@
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+exports.default = function (_ref) {
+  var _ref$textSize = _ref.textSize,
+      textSize = _ref$textSize === undefined ? 12 : _ref$textSize,
+      _ref$color = _ref.color,
+      color = _ref$color === undefined ? '#efefef' : _ref$color,
+      _ref$width = _ref.width,
+      width = _ref$width === undefined ? '100%' : _ref$width;
+  return {
+    height: textSize,
+    width: width,
+    alignSelf: 'stretch',
+    backgroundColor: color,
+    borderRadius: textSize / 4
+  };
+};

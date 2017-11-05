@@ -1,0 +1,18 @@
+
+'use strict';
+
+var launchEditor = require('../util/launchEditor');
+
+module.exports = function (_ref) {
+  var projectRoots = _ref.projectRoots;
+
+  return function (req, res, next) {
+    if (req.url === '/open-stack-frame') {
+      var frame = JSON.parse(req.rawBody);
+      launchEditor(frame.file, frame.lineNumber, projectRoots);
+      res.end('OK');
+    } else {
+      next();
+    }
+  };
+};

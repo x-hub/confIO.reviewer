@@ -58,13 +58,16 @@ function render(props) {
         </Container>
     );
 
-    function renderEventsListItem({ name }) {
+    function renderEventsListItem(event) {
         return (
             <ListItem>
                 <TouchableOpacity
-                onPress={ ()=>{props.selectEvent(); navigate('Home')} }
+                onPress={ ()=>{
+                    //props.selectEvent(event);
+                    props.GOTOHome(event)
+                     } }
                 style={ style.eventListItemBtn }>
-                    <Text style={ style.eventListItemName } >{ name }</Text>
+                    <Text style={ style.eventListItemName } >{ event.name }</Text>
                 </TouchableOpacity>
             </ListItem>
         );

@@ -1,0 +1,20 @@
+
+
+'use strict';
+
+var Assert = require('NativeModules').Assert;
+
+var Asserts = {
+  assertEquals: function assertEquals(expected, actual, msg) {
+    if (expected !== actual) {
+      Assert.fail(msg || 'Expected: ' + expected + ', received: ' + actual + '\n' + 'at ' + new Error().stack);
+    } else {
+      Assert.success();
+    }
+  },
+  assertTrue: function assertTrue(expr, msg) {
+    Asserts.assertEquals(true, expr, msg);
+  }
+};
+
+module.exports = Asserts;

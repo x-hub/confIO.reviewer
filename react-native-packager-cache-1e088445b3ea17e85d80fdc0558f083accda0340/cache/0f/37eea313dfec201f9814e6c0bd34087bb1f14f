@@ -1,0 +1,9 @@
+module.exports = function makeBuildPatch(name) {
+  var installPattern = new RegExp("\\s{4}(compile)(\\(|\\s)(project)\\(\\':" + name + "\\'\\)(\\)|\\s)");
+
+  return {
+    installPattern: installPattern,
+    pattern: /[^ \t]dependencies {\n/,
+    patch: "    compile project(':" + name + "')\n"
+  };
+};

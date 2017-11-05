@@ -1,16 +1,22 @@
 import {Observable} from "rxjs"
 
 
-class Http{
-    get(url){
-        return Observable.fromPromise(fetch(url).then((resp)=>resp.json()));
+class Http {
+    get (url) {
+        return Observable.fromPromise(fetch(url));
     }
-    post(url,body,headers){
-        return Observable.fromPromise(fetch(url,{
-            methode:"POST",
-            body,
-            headers
-        }))
+
+    getBody(url) {
+        return Observable.fromPromise(fetch(url).then((e) => e.json()))
+    }
+
+    post(url, props) {
+        return Observable.fromPromise(fetch(url, {
+                method: "POST",
+                ...props
+            }
+        ))
     }
 }
+
 module.exports = new Http();

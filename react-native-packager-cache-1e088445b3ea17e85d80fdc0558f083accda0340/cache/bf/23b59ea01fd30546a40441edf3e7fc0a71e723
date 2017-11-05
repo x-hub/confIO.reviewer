@@ -1,0 +1,192 @@
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+
+var _this = this,
+    _jsxFileName = '/home/bassihassan/Desktop/confIOReviewer/src/Login/login.template.js';
+
+var _react = require('react');
+
+var _react2 = _interopRequireDefault(_react);
+
+var _reactNative = require('react-native');
+
+var _nativeBase = require('native-base');
+
+var _login = require('./login.style');
+
+var _login2 = _interopRequireDefault(_login);
+
+var _logo = require('../../assets/logo.png');
+
+var _logo2 = _interopRequireDefault(_logo);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+exports.default = function (props) {
+    var navigate = props.navigation.navigate;
+    var EventSelector = props.event ? renderEventSelectorWithUpdate.bind(_this, props.event) : renderEventSelector.bind(_this);
+
+    return _react2.default.createElement(
+        _reactNative.View,
+        { style: _login2.default.loginContainer, __source: {
+                fileName: _jsxFileName,
+                lineNumber: 14
+            }
+        },
+        _react2.default.createElement(_reactNative.Image, { style: { position: 'absolute', width: "100%", height: "100%", top: 0, right: 0, left: 0, bottom: 0 },
+            source: require('../../assets/loginBackgroundImage.jpg'), __source: {
+                fileName: _jsxFileName,
+                lineNumber: 15
+            }
+        }),
+        _react2.default.createElement(
+            _reactNative.View,
+            { style: _login2.default.loginContainer, __source: {
+                    fileName: _jsxFileName,
+                    lineNumber: 17
+                }
+            },
+            _react2.default.createElement(
+                _reactNative.View,
+                { style: _login2.default.logoContainer, __source: {
+                        fileName: _jsxFileName,
+                        lineNumber: 18
+                    }
+                },
+                _react2.default.createElement(
+                    _reactNative.View,
+                    { style: _login2.default.logoWrapper, __source: {
+                            fileName: _jsxFileName,
+                            lineNumber: 19
+                        }
+                    },
+                    _react2.default.createElement(_nativeBase.Thumbnail, { style: _login2.default.logo, source: _logo2.default, __source: {
+                            fileName: _jsxFileName,
+                            lineNumber: 20
+                        }
+                    })
+                )
+            ),
+            _react2.default.createElement(
+                _reactNative.View,
+                { style: _login2.default.eventDetailsContainer, __source: {
+                        fileName: _jsxFileName,
+                        lineNumber: 23
+                    }
+                },
+                _react2.default.createElement(EventSelector, {
+                    __source: {
+                        fileName: _jsxFileName,
+                        lineNumber: 24
+                    }
+                })
+            )
+        )
+    );
+
+    function renderEventSelector() {
+        return _react2.default.createElement(
+            _reactNative.View,
+            {
+                __source: {
+                    fileName: _jsxFileName,
+                    lineNumber: 32
+                }
+            },
+            _react2.default.createElement(
+                _nativeBase.Button,
+                { style: _login2.default.selectEventBtn,
+                    onPress: navigate.bind(this, 'LoginWithQRCode'), rounded: true, __source: {
+                        fileName: _jsxFileName,
+                        lineNumber: 33
+                    }
+                },
+                _react2.default.createElement(_nativeBase.Icon, { style: _login2.default.icon, name: 'swap', __source: {
+                        fileName: _jsxFileName,
+                        lineNumber: 35
+                    }
+                }),
+                _react2.default.createElement(
+                    _reactNative.Text,
+                    { style: _login2.default.selectEvent, __source: {
+                            fileName: _jsxFileName,
+                            lineNumber: 36
+                        }
+                    },
+                    'Select Event'
+                )
+            )
+        );
+    }
+
+    function renderEventSelectorWithUpdate(_ref) {
+        var type = _ref.type,
+            name = _ref.name,
+            image = _ref.image;
+
+        return _react2.default.createElement(
+            _reactNative.View,
+            { style: _login2.default.eventInfos, __source: {
+                    fileName: _jsxFileName,
+                    lineNumber: 44
+                }
+            },
+            _react2.default.createElement(
+                _reactNative.Text,
+                { style: _login2.default.eventType, __source: {
+                        fileName: _jsxFileName,
+                        lineNumber: 45
+                    }
+                },
+                'Selected ',
+                type
+            ),
+            _react2.default.createElement(
+                _reactNative.Text,
+                { style: _login2.default.eventName, __source: {
+                        fileName: _jsxFileName,
+                        lineNumber: 46
+                    }
+                },
+                name
+            ),
+            _react2.default.createElement(
+                _reactNative.View,
+                { style: _login2.default.eventImageContainer, __source: {
+                        fileName: _jsxFileName,
+                        lineNumber: 47
+                    }
+                },
+                _react2.default.createElement(_reactNative.Image, { style: _login2.default.eventImage, source: { uri: image }, __source: {
+                        fileName: _jsxFileName,
+                        lineNumber: 48
+                    }
+                })
+            ),
+            _react2.default.createElement(
+                _nativeBase.Button,
+                { style: _login2.default.selectEventBtn,
+                    onPress: navigate.bind(this, 'LoginWithQRCode'), rounded: true, __source: {
+                        fileName: _jsxFileName,
+                        lineNumber: 50
+                    }
+                },
+                _react2.default.createElement(_nativeBase.Icon, { style: _login2.default.icon, name: 'swap', __source: {
+                        fileName: _jsxFileName,
+                        lineNumber: 52
+                    }
+                }),
+                _react2.default.createElement(
+                    _reactNative.Text,
+                    { style: _login2.default.selectEvent, __source: {
+                            fileName: _jsxFileName,
+                            lineNumber: 53
+                        }
+                    },
+                    'Change'
+                )
+            )
+        );
+    }
+};

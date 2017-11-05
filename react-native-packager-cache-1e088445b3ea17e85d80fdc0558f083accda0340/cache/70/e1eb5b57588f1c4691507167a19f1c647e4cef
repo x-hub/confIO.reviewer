@@ -1,0 +1,205 @@
+
+
+'use strict';
+
+var _react2 = require('react');
+
+var _react3 = _interopRequireDefault(_react2);
+
+var _index = require('./../../../../../react-transform-hmr/lib/index.js');
+
+var _index2 = _interopRequireDefault(_index);
+
+var _jsxFileName = '/home/bassihassan/Desktop/confIOReviewer/node_modules/react-native/ReactAndroid/src/androidTest/js/PickerAndroidTestModule.js';
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var _components = {
+  PickerAndroidTestApp: {
+    displayName: 'PickerAndroidTestApp'
+  }
+};
+
+var _reactTransformHmrLibIndexJs2 = (0, _index2.default)({
+  filename: '/home/bassihassan/Desktop/confIOReviewer/node_modules/react-native/ReactAndroid/src/androidTest/js/PickerAndroidTestModule.js',
+  components: _components,
+  locals: [module],
+  imports: [_react3.default]
+});
+
+function _wrapComponent(id) {
+  return function (Component) {
+    return _reactTransformHmrLibIndexJs2(Component, id);
+  };
+}
+
+var BatchedBridge = require('BatchedBridge');
+var React = require('React');
+var RecordingModule = require('NativeModules').PickerAndroidRecordingModule;
+var Picker = require('Picker');
+var View = require('View');
+
+var Item = Picker.Item;
+
+var appInstance;
+
+var PickerAndroidTestApp = _wrapComponent('PickerAndroidTestApp')(function (_React$Component) {
+  _inherits(PickerAndroidTestApp, _React$Component);
+
+  function PickerAndroidTestApp() {
+    var _ref;
+
+    var _temp, _this, _ret;
+
+    _classCallCheck(this, PickerAndroidTestApp);
+
+    for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
+      args[_key] = arguments[_key];
+    }
+
+    return _ret = (_temp = (_this = _possibleConstructorReturn(this, (_ref = PickerAndroidTestApp.__proto__ || Object.getPrototypeOf(PickerAndroidTestApp)).call.apply(_ref, [this].concat(args))), _this), _this.state = {
+      selected: 1,
+      mode: 'dropdown',
+      style: {}
+    }, _this.onValueChange = function (value) {
+      _this.setState({ selected: value });
+      RecordingModule.recordSelection(value);
+    }, _temp), _possibleConstructorReturn(_this, _ret);
+  }
+
+  _createClass(PickerAndroidTestApp, [{
+    key: 'componentWillMount',
+    value: function componentWillMount() {
+      appInstance = this;
+    }
+  }, {
+    key: 'render',
+    value: function render() {
+      return React.createElement(
+        View,
+        { collapsable: false, __source: {
+            fileName: _jsxFileName,
+            lineNumber: 37
+          }
+        },
+        React.createElement(
+          Picker,
+          {
+            mode: 'dialog',
+            prompt: 'prompt',
+            style: this.state.style,
+            selectedValue: this.state.selected,
+            onValueChange: this.onValueChange, __source: {
+              fileName: _jsxFileName,
+              lineNumber: 38
+            }
+          },
+          React.createElement(Item, { label: 'item1', color: '#ff0000', value: 0, __source: {
+              fileName: _jsxFileName,
+              lineNumber: 44
+            }
+          }),
+          React.createElement(Item, { label: 'item2', color: '#00ff00', value: 1, __source: {
+              fileName: _jsxFileName,
+              lineNumber: 45
+            }
+          }),
+          React.createElement(Item, { label: 'item3', color: '#0000ff', value: 2, __source: {
+              fileName: _jsxFileName,
+              lineNumber: 46
+            }
+          })
+        ),
+        React.createElement(
+          Picker,
+          { mode: this.state.mode, __source: {
+              fileName: _jsxFileName,
+              lineNumber: 48
+            }
+          },
+          React.createElement(Item, { label: 'item1', __source: {
+              fileName: _jsxFileName,
+              lineNumber: 49
+            }
+          }),
+          React.createElement(Item, { label: 'item2', __source: {
+              fileName: _jsxFileName,
+              lineNumber: 50
+            }
+          })
+        ),
+        React.createElement(
+          Picker,
+          { enabled: false, __source: {
+              fileName: _jsxFileName,
+              lineNumber: 52
+            }
+          },
+          React.createElement(Item, { label: 'item1', __source: {
+              fileName: _jsxFileName,
+              lineNumber: 53
+            }
+          }),
+          React.createElement(Item, { label: 'item2', __source: {
+              fileName: _jsxFileName,
+              lineNumber: 54
+            }
+          })
+        ),
+        React.createElement(
+          Picker,
+          {
+            mode: 'dropdown',
+            selectedValue: this.state.selected,
+            onValueChange: this.onValueChange, __source: {
+              fileName: _jsxFileName,
+              lineNumber: 56
+            }
+          },
+          React.createElement(Item, { label: 'item in sync 1', value: 0, __source: {
+              fileName: _jsxFileName,
+              lineNumber: 60
+            }
+          }),
+          React.createElement(Item, { label: 'item in sync 2', value: 1, __source: {
+              fileName: _jsxFileName,
+              lineNumber: 61
+            }
+          }),
+          React.createElement(Item, { label: 'item in sync 3', value: 2, __source: {
+              fileName: _jsxFileName,
+              lineNumber: 62
+            }
+          })
+        )
+      );
+    }
+  }]);
+
+  return PickerAndroidTestApp;
+}(React.Component));
+
+var PickerAndroidTestModule = {
+  PickerAndroidTestApp: PickerAndroidTestApp,
+  selectItem: function selectItem(value) {
+    appInstance.setState({ selected: value });
+  },
+  setMode: function setMode(mode) {
+    appInstance.setState({ mode: mode });
+  },
+  setPrimaryColor: function setPrimaryColor(color) {
+    appInstance.setState({ style: { color: color } });
+  }
+};
+
+BatchedBridge.registerCallableModule('PickerAndroidTestModule', PickerAndroidTestModule);
+
+module.exports = PickerAndroidTestModule;

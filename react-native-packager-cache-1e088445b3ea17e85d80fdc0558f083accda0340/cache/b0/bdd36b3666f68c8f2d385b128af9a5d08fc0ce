@@ -1,0 +1,8 @@
+
+'use strict';
+
+function sign(source) {
+  return source;
+}
+
+module.exports = sign;

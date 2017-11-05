@@ -1,0 +1,9 @@
+
+'use strict';
+
+module.exports.out = function () {
+  return jest.genMockFn();
+};
+module.exports.err = function () {
+  return jest.genMockFn();
+};

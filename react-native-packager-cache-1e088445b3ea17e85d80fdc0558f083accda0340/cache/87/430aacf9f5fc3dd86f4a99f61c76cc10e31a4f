@@ -1,0 +1,90 @@
+
+'use strict';
+
+var findWindowsSolution = require('./findWindowsSolution');
+var findNamespace = require('./findNamespace');
+var findProject = require('./findProject');
+var findPackageClassName = require('./findPackageClassName');
+var path = require('path');
+var generateGUID = require('./generateGUID');
+
+var relativeProjectPath = function relativeProjectPath(fullProjPath) {
+  var windowsPath = fullProjPath.substring(fullProjPath.lastIndexOf("node_modules") - 1, fullProjPath.length).replace(/\//g, '\\');
+
+  return '..' + windowsPath;
+};
+
+var getProjectName = function getProjectName(fullProjPath) {
+  return fullProjPath.split('/').slice(-1)[0].replace(/\.csproj/i, '');
+};
+
+exports.projectConfig = function projectConfigWindows(folder, userConfig) {
+
+  var csSolution = userConfig.csSolution || findWindowsSolution(folder);
+
+  if (!csSolution) {
+    return null;
+  }
+
+  var solutionPath = path.join(folder, csSolution);
+  var windowsAppFolder = csSolution.substring(0, csSolution.lastIndexOf(".sln"));
+  var src = userConfig.sourceDir || windowsAppFolder;
+  var sourceDir = path.join(folder, src);
+  var mainPage = path.join(sourceDir, 'MainPage.cs');
+  var projectPath = userConfig.projectPath || findProject(folder);
+
+  return {
+    sourceDir: sourceDir,
+    solutionPath: solutionPath,
+    projectPath: projectPath,
+    mainPage: mainPage,
+    folder: folder,
+    userConfig: userConfig
+  };
+};
+
+exports.dependencyConfig = function dependencyConfigWindows(folder, userConfig) {
+
+  var csSolution = userConfig.csSolution || findWindowsSolution(folder);
+
+  if (!csSolution) {
+    return null;
+  }
+
+  var windowsAppFolder = csSolution.substring(0, csSolution.lastIndexOf(".sln"));
+  var src = userConfig.sourceDir || windowsAppFolder;
+
+  if (!src) {
+    return null;
+  }
+
+  var sourceDir = path.join(folder, src);
+  var packageClassName = findPackageClassName(sourceDir);
+  var namespace = userConfig.namespace || findNamespace(sourceDir);
+  var csProj = userConfig.csProj || findProject(folder);
+
+  if (!packageClassName || !namespace) {
+    return null;
+  }
+
+  var packageUsingPath = userConfig.packageUsingPath || 'using ' + namespace + ';';
+
+  var packageInstance = userConfig.packageInstance || 'new ' + packageClassName + '()';
+
+  var projectGUID = generateGUID();
+  var pathGUID = generateGUID();
+  var projectName = getProjectName(csProj);
+  var relativeProjPath = relativeProjectPath(csProj);
+
+  return {
+    sourceDir: sourceDir,
+    packageUsingPath: packageUsingPath,
+    packageInstance: packageInstance,
+    projectName: projectName,
+    csProj: csProj,
+    folder: folder,
+    projectGUID: projectGUID,
+    pathGUID: pathGUID,
+    relativeProjPath: relativeProjPath
+  };
+};

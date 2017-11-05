@@ -1,0 +1,67 @@
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+var _jsxFileName = '/home/bassihassan/Desktop/confIOReviewer/src/Home/Home.template.js';
+
+var _react = require('react');
+
+var _react2 = _interopRequireDefault(_react);
+
+var _reactNative = require('react-native');
+
+var _nativeBase = require('native-base');
+
+var _theme = require('../../shared/theme');
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+exports.default = function (props) {
+    return _react2.default.createElement(
+        _nativeBase.Container,
+        {
+            __source: {
+                fileName: _jsxFileName,
+                lineNumber: 7
+            }
+        },
+        _react2.default.createElement(_nativeBase.Header, { backgroundColor: _theme.colors.primary, __source: {
+                fileName: _jsxFileName,
+                lineNumber: 9
+            }
+        }),
+        _react2.default.createElement(
+            _nativeBase.Content,
+            {
+                __source: {
+                    fileName: _jsxFileName,
+                    lineNumber: 10
+                }
+            },
+            _react2.default.createElement(_nativeBase.Spinner, { color: _theme.colors.primary, __source: {
+                    fileName: _jsxFileName,
+                    lineNumber: 12
+                }
+            }),
+            _react2.default.createElement(
+                _nativeBase.Button,
+                { onPress: function onPress() {
+                        return props.navigation.navigate('Detail');
+                    }, __source: {
+                        fileName: _jsxFileName,
+                        lineNumber: 13
+                    }
+                },
+                _react2.default.createElement(
+                    _reactNative.Text,
+                    {
+                        __source: {
+                            fileName: _jsxFileName,
+                            lineNumber: 13
+                        }
+                    },
+                    'To Detail'
+                )
+            )
+        )
+    );
+};

@@ -1,45 +1,45 @@
 import {ACTIONS} from 'app/App/actionsType';
-
+import nativeStorage from "app/App/Services/nativeStorage"
+import {actions} from "app/Login/LoginWithSavedSession/index"
+import navActions from 'app/Navigator/navigator.actions';
 export default (state = {
     event:null,
-    AllSpeakers:[],
+    talk:{},
     speakers: [],
     selectedSpeaker: {},
     IsReady: false,
-    showSpeakerDetail: false
-}, action) => {
-    switch (action.type) {
-        case ACTIONS.INIT_SPEAKERS:
-            return {
+    showSpeakerDetail: false,
+    type:""
+}, {type,payload}) => {
+    switch (type) {
+        case actions.SELECT_EVENT :
+        case navActions.GOTO_Home :
+            return{
                 ...state,
-                AllSpeakers:action.payload.speakers,
-                event:action.payload.event,
+                event:payload.event
             }
-        case ACTIONS.GET_SPEAKERS_DETAILS:
-            const speakersID = action.payload.map((e) => e.name.replace(/\s/g, '').toLowerCase())
-            const speakersFullDetail = state.AllSpeakers.filter((e) => {
-                return speakersID.find((item) => item == e.firstName.concat(e.lastName).toLowerCase())
-            })
+        case navActions.GOTO_Detail :
             return {
                 ...state,
-                speakers: speakersFullDetail,
-                IsReady: true
+                ...payload,
+                IsReady:true
             }
-        case ACTIONS.SELECT_SPEAKER:
+
+        case ACTIONS.SELECT_SPEAKER :
             return {
                 ...state,
-                selectedSpeaker: state.speakers[action.payload],
+                selectedSpeaker: state.speakers[payload],
                 showSpeakerDetail: true
             }
         case ACTIONS.TOGGLE_SPEAKER_DETAIL:
             return {
                 ...state,
-                showSpeakerDetail: action.payload
+                showSpeakerDetail: payload
             }
         case ACTIONS.SET_CONTENT_PLACEHOLDER_STATE:
             return {
                 ...state,
-                IsReady: action.payload
+                IsReady: payload
             }
         default:
             return state;

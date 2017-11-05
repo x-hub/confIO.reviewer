@@ -1,0 +1,88 @@
+
+'use strict';
+
+var chalk = require('chalk');
+var child_process = require('child_process');
+var os = require('os');
+var path = require('path');
+
+function logIOS() {
+  return new Promise(function (resolve, reject) {
+    _logIOS(resolve, reject);
+  });
+}
+
+function _logIOS() {
+  var rawDevices = void 0;
+
+  try {
+    rawDevices = child_process.execFileSync('xcrun', ['simctl', 'list', 'devices', '--json'], { encoding: 'utf8' });
+  } catch (e) {
+    console.log(chalk.red('xcrun invocation failed. Please check that Xcode is installed.'));
+    return Promise.reject(e);
+  }
+
+  var _JSON$parse = JSON.parse(rawDevices),
+      devices = _JSON$parse.devices;
+
+  var device = _findAvailableDevice(devices);
+  if (device === undefined) {
+    console.log(chalk.red('No active iOS device found'));
+    return Promise.reject();
+  }
+
+  return tailDeviceLogs(device.udid);
+}
+
+function _findAvailableDevice(devices) {
+  for (var _iterator = Object.keys(devices), _isArray = Array.isArray(_iterator), _i = 0, _iterator = _isArray ? _iterator : _iterator[typeof Symbol === 'function' ? Symbol.iterator : '@@iterator']();;) {
+    var _ref;
+
+    if (_isArray) {
+      if (_i >= _iterator.length) break;
+      _ref = _iterator[_i++];
+    } else {
+      _i = _iterator.next();
+      if (_i.done) break;
+      _ref = _i.value;
+    }
+
+    var key = _ref;
+
+    for (var _iterator2 = devices[key], _isArray2 = Array.isArray(_iterator2), _i2 = 0, _iterator2 = _isArray2 ? _iterator2 : _iterator2[typeof Symbol === 'function' ? Symbol.iterator : '@@iterator']();;) {
+      var _ref2;
+
+      if (_isArray2) {
+        if (_i2 >= _iterator2.length) break;
+        _ref2 = _iterator2[_i2++];
+      } else {
+        _i2 = _iterator2.next();
+        if (_i2.done) break;
+        _ref2 = _i2.value;
+      }
+
+      var device = _ref2;
+
+      if (device.availability === '(available)' && device.state === 'Booted') {
+        return device;
+      }
+    }
+  }
+}
+
+function tailDeviceLogs(udid) {
+  var logDir = path.join(os.homedir(), 'Library', 'Logs', 'CoreSimulator', udid, 'asl');
+
+  var log = child_process.spawnSync('syslog', ['-w', '-F', 'std', '-d', logDir], { stdio: 'inherit' });
+
+  if (log.error !== null) {
+    console.log(chalk.red('syslog invocation failed.'));
+    return Promise.reject(log.error);
+  }
+}
+
+module.exports = {
+  name: 'log-ios',
+  description: 'starts iOS device syslog tail',
+  func: logIOS
+};

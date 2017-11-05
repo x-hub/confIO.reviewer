@@ -1,0 +1,200 @@
+
+
+'use strict';
+
+var _react2 = require('react');
+
+var _react3 = _interopRequireDefault(_react2);
+
+var _index = require('./../../../../../react-transform-hmr/lib/index.js');
+
+var _index2 = _interopRequireDefault(_index);
+
+var _jsxFileName = '/home/bassihassan/Desktop/confIOReviewer/node_modules/react-native/ReactAndroid/src/androidTest/js/TestIdTestModule.js';
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var _components = {
+  TestIdTestApp: {
+    displayName: 'TestIdTestApp'
+  }
+};
+
+var _reactTransformHmrLibIndexJs2 = (0, _index2.default)({
+  filename: '/home/bassihassan/Desktop/confIOReviewer/node_modules/react-native/ReactAndroid/src/androidTest/js/TestIdTestModule.js',
+  components: _components,
+  locals: [module],
+  imports: [_react3.default]
+});
+
+function _wrapComponent(id) {
+  return function (Component) {
+    return _reactTransformHmrLibIndexJs2(Component, id);
+  };
+}
+
+var Image = require('Image');
+var React = require('React');
+var StyleSheet = require('StyleSheet');
+var Switch = require('Switch');
+var Text = require('Text');
+var TextInput = require('TextInput');
+var TouchableBounce = require('TouchableBounce');
+var TouchableHighlight = require('TouchableHighlight');
+var TouchableOpacity = require('TouchableOpacity');
+var TouchableWithoutFeedback = require('TouchableWithoutFeedback');
+var View = require('View');
+
+var TestIdTestApp = _wrapComponent('TestIdTestApp')(function (_React$Component) {
+  _inherits(TestIdTestApp, _React$Component);
+
+  function TestIdTestApp() {
+    _classCallCheck(this, TestIdTestApp);
+
+    return _possibleConstructorReturn(this, (TestIdTestApp.__proto__ || Object.getPrototypeOf(TestIdTestApp)).apply(this, arguments));
+  }
+
+  _createClass(TestIdTestApp, [{
+    key: 'render',
+    value: function render() {
+      return React.createElement(
+        View,
+        {
+          __source: {
+            fileName: _jsxFileName,
+            lineNumber: 35
+          }
+        },
+        React.createElement(Image, {
+          testID: 'Image',
+          source: { uri: 'data:image/gif;base64,' + 'R0lGODdhMAAwAPAAAAAAAP///ywAAAAAMAAwAAAC8IyPqcvt3wCcDkiLc7C0qwyGHhSWpjQu5yqmCYsapy' + 'uvUUlvONmOZtfzgFzByTB10QgxOR0TqBQejhRNzOfkVJ+5YiUqrXF5Y5lKh/DeuNcP5yLWGsEbtLiOSpa/' + 'TPg7JpJHxyendzWTBfX0cxOnKPjgBzi4diinWGdkF8kjdfnycQZXZeYGejmJlZeGl9i2icVqaNVailT6F5' + 'iJ90m6mvuTS4OK05M0vDk0Q4XUtwvKOzrcd3iq9uisF81M1OIcR7lEewwcLp7tuNNkM3uNna3F2JQFo97V' + 'riy/Xl4/f1cf5VWzXyym7PHhhx4dbgYKAAA7' },
+          style: styles.base, __source: {
+            fileName: _jsxFileName,
+            lineNumber: 37
+          }
+        }),
+        React.createElement(
+          Text,
+          { testID: 'Text', __source: {
+              fileName: _jsxFileName,
+              lineNumber: 47
+            }
+          },
+          'text'
+        ),
+        React.createElement(TextInput, { testID: 'TextInput', value: 'Text input', __source: {
+            fileName: _jsxFileName,
+            lineNumber: 49
+          }
+        }),
+        React.createElement(
+          TouchableBounce,
+          { testID: 'TouchableBounce', __source: {
+              fileName: _jsxFileName,
+              lineNumber: 51
+            }
+          },
+          React.createElement(
+            Text,
+            {
+              __source: {
+                fileName: _jsxFileName,
+                lineNumber: 52
+              }
+            },
+            'TouchableBounce'
+          )
+        ),
+        React.createElement(
+          TouchableHighlight,
+          { testID: 'TouchableHighlight', __source: {
+              fileName: _jsxFileName,
+              lineNumber: 55
+            }
+          },
+          React.createElement(
+            Text,
+            {
+              __source: {
+                fileName: _jsxFileName,
+                lineNumber: 56
+              }
+            },
+            'TouchableHighlight'
+          )
+        ),
+        React.createElement(
+          TouchableOpacity,
+          { testID: 'TouchableOpacity', __source: {
+              fileName: _jsxFileName,
+              lineNumber: 59
+            }
+          },
+          React.createElement(
+            Text,
+            {
+              __source: {
+                fileName: _jsxFileName,
+                lineNumber: 60
+              }
+            },
+            'TouchableOpacity'
+          )
+        ),
+        React.createElement(
+          TouchableWithoutFeedback,
+          { testID: 'TouchableWithoutFeedback', __source: {
+              fileName: _jsxFileName,
+              lineNumber: 63
+            }
+          },
+          React.createElement(
+            View,
+            {
+              __source: {
+                fileName: _jsxFileName,
+                lineNumber: 64
+              }
+            },
+            React.createElement(
+              Text,
+              {
+                __source: {
+                  fileName: _jsxFileName,
+                  lineNumber: 65
+                }
+              },
+              'TouchableWithoutFeedback'
+            )
+          )
+        ),
+        React.createElement(View, { testID: 'View', __source: {
+            fileName: _jsxFileName,
+            lineNumber: 69
+          }
+        })
+      );
+    }
+  }]);
+
+  return TestIdTestApp;
+}(React.Component));
+
+var styles = StyleSheet.create({
+  base: {
+    width: 150,
+    height: 50
+  }
+});
+
+module.exports = {
+  TestIdTestApp: TestIdTestApp
+};

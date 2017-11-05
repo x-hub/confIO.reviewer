@@ -1,0 +1,10 @@
+
+'use strict';
+
+var remoteModulesConfig = [['RemoteModule1', null, ['remoteMethod', 'promiseMethod'], []], ['RemoteModule2', null, ['remoteMethod', 'promiseMethod'], []]];
+
+var MessageQueueTestConfig = {
+  remoteModuleConfig: remoteModulesConfig
+};
+
+module.exports = MessageQueueTestConfig;

@@ -1,0 +1,12 @@
+var path = require('path');
+var getBuildProperty = require('./getBuildProperty');
+
+module.exports = function getPlistPath(project, sourceDir) {
+  var plistFile = getBuildProperty(project, 'INFOPLIST_FILE');
+
+  if (!plistFile) {
+    return null;
+  }
+
+  return path.join(sourceDir, plistFile.replace(/"/g, '').replace('$(SRCROOT)', ''));
+};

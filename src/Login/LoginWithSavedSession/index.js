@@ -1,11 +1,16 @@
-import React, { Component } from 'react';
+import React, {Component} from 'react';
 import {
     AsyncStorage,
 } from 'react-native';
 import template from './loginWithSavedSession.template';
-import { connect } from 'react-redux';
-import { bindActionCreators } from 'redux';
-import { actionCreators as eventDetailsDialog } from 'app/EventDetailsDialog';
+import {connect} from 'react-redux';
+import {bindActionCreators} from 'redux';
+import {actionCreators as eventDetailsDialog} from 'app/EventDetailsDialog';
+import nativeStorage from "app/App/Services/nativeStorage"
+import {fetchTalks} from "app/Login"
+import {GOTOHome} from "app/Feed/index"
+import {Observable} from "rxjs"
+
 
 export const actions = {
     FETCH_ALL_EVENTS: 'FETCH_ALL_EVENTS',
@@ -21,45 +26,52 @@ const actionCreators = {
     showEventDetails,
     hideEventDetails,
     deleteEvent,
+    GOTOHome,
 };
 
 function readEventsFromStorage() {
-    return events = AsyncStorage.getItem('events')
-    .then((events) => events? JSON.parse(events) : [])
-    .then((events) => {
-        return Promise.all(
-            events.map(
-                readEventDetails
-            )
-        )
+    return nativeStorage.get('events').switchMap((events) => {
+        return Observable.forkJoin(events.map(
+            readEventDetails
+        ))
     });
+    // return events = AsyncStorage.getItem('events')
+    // .then((events) => events? JSON.parse(events) : [])
+    // .then((events) => {
+    //     return Promise.all(
+    //         events.map(
+    //             readEventDetails
+    //         )
+    //     )
+    // });
 
     function readEventDetails(eventCode) {
-        return AsyncStorage.getItem(`events:${eventCode}`)
-        .then((event) => event? JSON.parse(event) : {});
+        return nativeStorage.get(`event-${eventCode}`).switchMap((event) => {
+            return Observable.of(event || {})
+        })
     }
 }
 
 function deleteEventFromStorage(eventToDelete) {
     return readEventsFromStorage()
-    .then((events) => {
-        const updatedEventsList = events.filter(
-            (event) => event.code != eventToDelete.code
-        )
-        const updatedEventsCodeList = updatedEventsList.map(
-            (event) => event.code
-        )
-        return Promise.all([
-            AsyncStorage.removeItem(`events:${eventToDelete.code}`),
-            AsyncStorage.setItem('events', JSON.stringify(updatedEventsCodeList))
-        ])
-        .then(() => updatedEventsList);
-    });
+        .switchMap((events) => {
+            const updatedEventsList = events.filter(
+                (event) => event.code != eventToDelete.code
+            )
+            const updatedEventsCodeList = updatedEventsList.map(
+                (event) => event.code
+            )
+            return Observable.forkJoin([,
+                nativeStorage.remove(`event-${eventToDelete.code}`),
+                nativeStorage.save('events', updatedEventsCodeList)
+            ])
+                .switchMap(() => Observable.of(updatedEventsList));
+        });
 }
 
 
 function fetchEvents() {
-    const events = readEventsFromStorage();
+    const events = readEventsFromStorage().toPromise();
     return {
         type: actions.FETCH_ALL_EVENTS,
         payload: events,
@@ -67,14 +79,15 @@ function fetchEvents() {
 }
 
 function selectEvent(e) {
+
     return {
         type: actions.SELECT_EVENT,
-        payload: e,
+        payload: fetchTalks(e),
     }
 }
 
 function deleteEvent(e) {
-    const updatedEvents = deleteEventFromStorage(e);
+    const updatedEvents = deleteEventFromStorage(e).toPromise();
     return {
         type: actions.DELETE_EVENT,
         payload: updatedEvents,

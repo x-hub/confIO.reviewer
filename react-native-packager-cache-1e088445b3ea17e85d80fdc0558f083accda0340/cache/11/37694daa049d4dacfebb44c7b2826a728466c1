@@ -1,0 +1,19 @@
+
+var defaultHeaderPaths = ['"$(inherited)"'];
+
+module.exports = function headerSearchPathIter(project, func) {
+  var config = project.pbxXCBuildConfigurationSection();
+
+  Object.keys(config).filter(function (ref) {
+    return ref.indexOf('_comment') === -1;
+  }).forEach(function (ref) {
+    var buildSettings = config[ref].buildSettings;
+    var shouldVisitBuildSettings = (Array.isArray(buildSettings.OTHER_LDFLAGS) ? buildSettings.OTHER_LDFLAGS : []).indexOf('"-lc++"') >= 0;
+
+    if (shouldVisitBuildSettings) {
+      var searchPaths = buildSettings.HEADER_SEARCH_PATHS ? [].concat(buildSettings.HEADER_SEARCH_PATHS) : defaultHeaderPaths;
+
+      buildSettings.HEADER_SEARCH_PATHS = func(searchPaths);
+    }
+  });
+};

@@ -1,0 +1,116 @@
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+
+var backendStateForLoggedInPerson = {
+  chats: [{
+    name: 'Claire',
+    messages: [{
+      name: 'Claire',
+      text: 'I ❤️ React Native!'
+    }]
+  }, {
+    name: 'John',
+    messages: [{
+      name: 'John',
+      text: 'I ❤️ React Native!'
+    }]
+  }]
+};
+
+function isNetworkFailure() {
+  var chanceOfFailure = 0;
+  return Math.random() < chanceOfFailure;
+}
+
+function _makeSimulatedNetworkRequest(getValue) {
+  var durationMs = 400;
+  return new Promise(function (resolve, reject) {
+    setTimeout(function () {
+      if (isNetworkFailure()) {
+        reject(new Error('Network failure'));
+      } else {
+        getValue(resolve, reject);
+      }
+    }, durationMs);
+  });
+}
+
+function fetchChatList() {
+  return regeneratorRuntime.async(function fetchChatList$(_context) {
+    while (1) {
+      switch (_context.prev = _context.next) {
+        case 0:
+          return _context.abrupt('return', _makeSimulatedNetworkRequest(function (resolve, reject) {
+            resolve(backendStateForLoggedInPerson.chats.map(function (chat) {
+              return chat.name;
+            }));
+          }));
+
+        case 1:
+        case 'end':
+          return _context.stop();
+      }
+    }
+  }, null, this);
+}
+
+function fetchChat(name) {
+  return regeneratorRuntime.async(function fetchChat$(_context2) {
+    while (1) {
+      switch (_context2.prev = _context2.next) {
+        case 0:
+          return _context2.abrupt('return', _makeSimulatedNetworkRequest(function (resolve, reject) {
+            resolve(backendStateForLoggedInPerson.chats.find(function (chat) {
+              return chat.name === name;
+            }));
+          }));
+
+        case 1:
+        case 'end':
+          return _context2.stop();
+      }
+    }
+  }, null, this);
+}
+
+function sendMessage(_ref) {
+  var name = _ref.name,
+      message = _ref.message;
+  return regeneratorRuntime.async(function sendMessage$(_context3) {
+    while (1) {
+      switch (_context3.prev = _context3.next) {
+        case 0:
+          return _context3.abrupt('return', _makeSimulatedNetworkRequest(function (resolve, reject) {
+            var chatForName = backendStateForLoggedInPerson.chats.find(function (chat) {
+              return chat.name === name;
+            });
+            if (chatForName) {
+              chatForName.messages.push({
+                name: 'Me',
+                text: message
+              });
+              resolve();
+            } else {
+              reject(new Error('Uknown person: ' + name));
+            }
+          }));
+
+        case 1:
+        case 'end':
+          return _context3.stop();
+      }
+    }
+  }, null, this);
+}
+
+var Backend = {
+  fetchChatList: fetchChatList,
+  fetchChat: fetchChat,
+  sendMessage: sendMessage
+};
+
+exports.default = Backend;

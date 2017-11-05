@@ -1,0 +1,34 @@
+function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
+
+var fs = require('fs-extra');
+var path = require('path');
+var xcode = require('xcode');
+var log = require('npmlog');
+var groupFilesByType = require('../groupFilesByType');
+var createGroupWithMessage = require('./createGroupWithMessage');
+var getPlist = require('./getPlist');
+var writePlist = require('./writePlist');
+
+module.exports = function linkAssetsIOS(files, projectConfig) {
+  var project = xcode.project(projectConfig.pbxprojPath).parseSync();
+  var assets = groupFilesByType(files);
+  var plist = getPlist(project, projectConfig.sourceDir);
+
+  createGroupWithMessage(project, 'Resources');
+
+  var fonts = (assets.font || []).map(function (asset) {
+    return project.addResourceFile(path.relative(projectConfig.sourceDir, asset), { target: project.getFirstTarget().uuid });
+  }).filter(function (file) {
+    return file;
+  }).map(function (file) {
+    return file.basename;
+  });
+
+  var existingFonts = plist.UIAppFonts || [];
+  var allFonts = [].concat(_toConsumableArray(existingFonts), _toConsumableArray(fonts));
+  plist.UIAppFonts = Array.from(new Set(allFonts));
+
+  fs.writeFileSync(projectConfig.pbxprojPath, project.writeSync());
+
+  writePlist(project, projectConfig.sourceDir, plist);
+};

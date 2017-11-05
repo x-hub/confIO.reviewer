@@ -1,0 +1,10 @@
+module.exports = function makeSolutionPatch(windowsConfig) {
+
+  var solutionInsert = 'Project("{' + windowsConfig.projectGUID.toUpperCase() + '}") = "' + windowsConfig.projectName + '", "' + windowsConfig.relativeProjPath + '", "{' + windowsConfig.pathGUID.toUpperCase() + '}"\nEndProject\n';
+
+  return {
+    pattern: 'Global',
+    patch: solutionInsert,
+    unpatch: new RegExp('Project.+' + windowsConfig.projectName + '.+\\s+EndProject\\s+')
+  };
+};

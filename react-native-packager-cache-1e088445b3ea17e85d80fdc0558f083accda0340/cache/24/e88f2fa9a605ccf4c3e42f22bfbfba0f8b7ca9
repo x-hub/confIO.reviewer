@@ -1,0 +1,19 @@
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+
+var _theme = require("../../shared/theme");
+
+exports.default = {
+    headerTitle: { fontFamily: "Roboto-Medium", color: "white", fontSize: 20 },
+    title: { flex: 1, fontFamily: "Roboto-Light" },
+    rateLater: { flex: 0, marginLeft: 6 },
+    body: {
+        justifyContent: "center",
+        alignItems: "center", flexDirection: "column",
+        backgroundColor: _theme.colors.primary, height: 250
+    },
+    trackImg: { height: 80, width: 80 },
+    trackLabel: { fontSize: 20, color: _theme.colors.white, fontFamily: "Roboto-Light" },
+    talkLabel: { fontFamily: "Roboto-Light" }
+};

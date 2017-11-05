@@ -10,7 +10,7 @@ export default (state = INITIAL_STATE, { type, payload }) => {
         case navActions.GOTO_Feed:
             return {
                 ...state,
-                event: payload,
+                data: payload,
             };
         default:
             return state;

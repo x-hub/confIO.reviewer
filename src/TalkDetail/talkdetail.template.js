@@ -19,17 +19,17 @@ export default class Template extends Component {
 
     constructor(props) {
         super(props)
-        const {slot} = this.props.navigation.state.params
         const {navigate, goBack} = this.props.navigation;
         this.navigate = navigate;
         this.goBack = goBack;
-        this.slot = slot;
+        this.score=0;
+    }
+    updateScore(value){
+        this.score = value;
     }
 
     componentWillMount() {
         Orientation.addOrientationListener(this._orientationDidChange.bind(this));
-        const {speakers} = this.slot.talk;
-        setTimeout(() => this.props.getSpeakersDetail(speakers || []), 600)
     }
 
     componentDidMount() {
@@ -46,28 +46,28 @@ export default class Template extends Component {
     }
 
     render() {
+
         return ( <Container>
             <Header style={styles.Header}>
                 <Left>
                     <Button onPress={() => {
                         this.goBack()
-                        setTimeout(() => this.props.toggleContentLoader(false), 200)
+                     //   setTimeout(() => this.props.toggleContentLoader(false), 200)
                     }} transparent>
                         <Icon name='arrow-back'/>
                     </Button>
                 </Left>
                 <Body style={{alignItems: "flex-start"}}>
                 <Text style={styles.Label}>
-                    Talk Detail
+                    Talk Detail {this.props.type}
                 </Text>
                 </Body>
                 <Right>
                     <Button transparent onPress={() => {
                         this.goBack()
-                        setTimeout(() => {
-                            this.props.OnRate(this.slot);
-                            this.props.toggleContentLoader(false)
-                        }, 200)
+                        let {event,talk,type} = this.props;
+                        this.props.OnRate(event,talk,type,this.score);
+                        this.props.toggleContentLoader(false)
                     }}>
                         <Icon style={{color: "white"}} name="md-checkmark-circle-outline"/>
                     </Button>
@@ -102,7 +102,7 @@ export default class Template extends Component {
                                 textSize={14}
                                 onReady={this.props.IsReady}
                             >
-                                <Text style={styles.contentTypesItemLabel}>{this.slot.talk.track}</Text>
+                                <Text style={styles.contentTypesItemLabel}>{this.props.talk.track}</Text>
                             </Placeholder.Line>
                         </View>
                         <View style={{...styles.contentTypesItem, backgroundColor: colors.white}}>
@@ -114,7 +114,7 @@ export default class Template extends Component {
                                 <Text style={{
                                     ...styles.contentTypesItemLabel,
                                     color: "black"
-                                }}>{this.slot.talk.talkType}</Text>
+                                }}>{this.props.talk.talkType}</Text>
                             </Placeholder.Line>
                         </View>
 
@@ -131,7 +131,7 @@ export default class Template extends Component {
                                         onReady={this.props.IsReady}
                                     >
                                         <Text style={{fontFamily: "Roboto-Medium"}}>
-                                            {this.slot.talk.title}
+                                            {this.props.talk.title}
                                         </Text>
                                     </Placeholder.Line>
                                     </Body>
@@ -150,7 +150,7 @@ export default class Template extends Component {
                                         <Body>
 
                                         <Text style={{fontFamily: "Roboto-Light"}}>
-                                            {this.slot.talk.summary}
+                                            {this.props.talk.summary}
                                         </Text>
 
                                         </Body>
@@ -161,7 +161,7 @@ export default class Template extends Component {
 
                             <CardItem>
                                 <Body style={{alignItems: "center"}}>
-                                <Rating/>
+                                <Rating rate ={this.updateScore.bind(this)}/>
                                 </Body>
                             </CardItem>
                         </Card>

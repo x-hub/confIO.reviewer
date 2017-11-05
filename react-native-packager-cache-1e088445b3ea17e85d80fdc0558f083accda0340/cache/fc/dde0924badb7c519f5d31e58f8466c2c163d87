@@ -1,0 +1,209 @@
+
+
+"use strict";
+
+var _react2 = require('react');
+
+var _react3 = _interopRequireDefault(_react2);
+
+var _index = require('./../../../../../react-transform-hmr/lib/index.js');
+
+var _index2 = _interopRequireDefault(_index);
+
+var _jsxFileName = '/home/bassihassan/Desktop/confIOReviewer/node_modules/react-native/ReactAndroid/src/androidTest/js/ViewRenderingTestModule.js';
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var _components = {
+  ViewSampleApp: {
+    displayName: 'ViewSampleApp'
+  },
+  MarginSampleApp: {
+    displayName: 'MarginSampleApp'
+  },
+  BorderSampleApp: {
+    displayName: 'BorderSampleApp'
+  },
+  TransformSampleApp: {
+    displayName: 'TransformSampleApp'
+  }
+};
+
+var _reactTransformHmrLibIndexJs2 = (0, _index2.default)({
+  filename: '/home/bassihassan/Desktop/confIOReviewer/node_modules/react-native/ReactAndroid/src/androidTest/js/ViewRenderingTestModule.js',
+  components: _components,
+  locals: [module],
+  imports: [_react3.default]
+});
+
+function _wrapComponent(id) {
+  return function (Component) {
+    return _reactTransformHmrLibIndexJs2(Component, id);
+  };
+}
+
+var BatchedBridge = require('BatchedBridge');
+var React = require('React');
+var View = require('View');
+var StyleSheet = require('StyleSheet');
+
+var renderApplication = require('renderApplication');
+
+var styles = StyleSheet.create({
+  view: {
+    opacity: 0.75,
+    backgroundColor: "rgb(255, 0, 0)"
+  }
+});
+
+var ViewSampleApp = _wrapComponent('ViewSampleApp')(function (_React$Component) {
+  _inherits(ViewSampleApp, _React$Component);
+
+  function ViewSampleApp() {
+    var _ref;
+
+    var _temp, _this, _ret;
+
+    _classCallCheck(this, ViewSampleApp);
+
+    for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
+      args[_key] = arguments[_key];
+    }
+
+    return _ret = (_temp = (_this = _possibleConstructorReturn(this, (_ref = ViewSampleApp.__proto__ || Object.getPrototypeOf(ViewSampleApp)).call.apply(_ref, [this].concat(args))), _this), _this.state = {}, _temp), _possibleConstructorReturn(_this, _ret);
+  }
+
+  _createClass(ViewSampleApp, [{
+    key: 'render',
+    value: function render() {
+      return React.createElement(View, { style: styles.view, collapsable: false, __source: {
+          fileName: _jsxFileName,
+          lineNumber: 33
+        }
+      });
+    }
+  }]);
+
+  return ViewSampleApp;
+}(React.Component));
+
+var _updateMargins;
+
+var MarginSampleApp = _wrapComponent('MarginSampleApp')(function (_React$Component2) {
+  _inherits(MarginSampleApp, _React$Component2);
+
+  function MarginSampleApp() {
+    var _ref2;
+
+    var _temp2, _this2, _ret2;
+
+    _classCallCheck(this, MarginSampleApp);
+
+    for (var _len2 = arguments.length, args = Array(_len2), _key2 = 0; _key2 < _len2; _key2++) {
+      args[_key2] = arguments[_key2];
+    }
+
+    return _ret2 = (_temp2 = (_this2 = _possibleConstructorReturn(this, (_ref2 = MarginSampleApp.__proto__ || Object.getPrototypeOf(MarginSampleApp)).call.apply(_ref2, [this].concat(args))), _this2), _this2.state = { margin: 10 }, _temp2), _possibleConstructorReturn(_this2, _ret2);
+  }
+
+  _createClass(MarginSampleApp, [{
+    key: 'render',
+    value: function render() {
+      _updateMargins = this.setState.bind(this, { margin: 15 });
+      return React.createElement(View, { style: { margin: this.state.margin, marginLeft: 20 }, collapsable: false, __source: {
+          fileName: _jsxFileName,
+          lineNumber: 46
+        }
+      });
+    }
+  }]);
+
+  return MarginSampleApp;
+}(React.Component));
+
+var BorderSampleApp = _wrapComponent('BorderSampleApp')(function (_React$Component3) {
+  _inherits(BorderSampleApp, _React$Component3);
+
+  function BorderSampleApp() {
+    _classCallCheck(this, BorderSampleApp);
+
+    return _possibleConstructorReturn(this, (BorderSampleApp.__proto__ || Object.getPrototypeOf(BorderSampleApp)).apply(this, arguments));
+  }
+
+  _createClass(BorderSampleApp, [{
+    key: 'render',
+    value: function render() {
+      return React.createElement(
+        View,
+        { style: { borderLeftWidth: 20, borderWidth: 5, backgroundColor: 'blue' }, collapsable: false, __source: {
+            fileName: _jsxFileName,
+            lineNumber: 54
+          }
+        },
+        React.createElement(View, { style: { backgroundColor: 'red', width: 20, height: 20 }, collapsable: false, __source: {
+            fileName: _jsxFileName,
+            lineNumber: 55
+          }
+        })
+      );
+    }
+  }]);
+
+  return BorderSampleApp;
+}(React.Component));
+
+var TransformSampleApp = _wrapComponent('TransformSampleApp')(function (_React$Component4) {
+  _inherits(TransformSampleApp, _React$Component4);
+
+  function TransformSampleApp() {
+    _classCallCheck(this, TransformSampleApp);
+
+    return _possibleConstructorReturn(this, (TransformSampleApp.__proto__ || Object.getPrototypeOf(TransformSampleApp)).apply(this, arguments));
+  }
+
+  _createClass(TransformSampleApp, [{
+    key: 'render',
+    value: function render() {
+      var style = {
+        transform: [{ translateX: 20 }, { translateY: 25 }, { rotate: '15deg' }, { scaleX: 5 }, { scaleY: 10 }]
+      };
+      return React.createElement(View, { style: style, collapsable: false, __source: {
+          fileName: _jsxFileName,
+          lineNumber: 73
+        }
+      });
+    }
+  }]);
+
+  return TransformSampleApp;
+}(React.Component));
+
+var ViewRenderingTestModule = {
+  renderViewApplication: function renderViewApplication(rootTag) {
+    renderApplication(ViewSampleApp, {}, rootTag);
+  },
+  renderMarginApplication: function renderMarginApplication(rootTag) {
+    renderApplication(MarginSampleApp, {}, rootTag);
+  },
+  renderBorderApplication: function renderBorderApplication(rootTag) {
+    renderApplication(BorderSampleApp, {}, rootTag);
+  },
+  renderTransformApplication: function renderTransformApplication(rootTag) {
+    renderApplication(TransformSampleApp, {}, rootTag);
+  },
+  updateMargins: function updateMargins() {
+    _updateMargins();
+  }
+};
+
+BatchedBridge.registerCallableModule('ViewRenderingTestModule', ViewRenderingTestModule);
+
+module.exports = ViewRenderingTestModule;

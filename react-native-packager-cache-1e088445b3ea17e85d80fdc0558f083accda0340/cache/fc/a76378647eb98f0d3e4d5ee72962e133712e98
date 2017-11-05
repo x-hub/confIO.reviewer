@@ -1,0 +1,483 @@
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+
+var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
+var _jsxFileName = '/home/bassihassan/Desktop/confIOReviewer/src/TalkDetail/template.js',
+    _this = this;
+
+var _react = require('react');
+
+var _react2 = _interopRequireDefault(_react);
+
+var _reactNative = require('react-native');
+
+var _nativeBase = require('native-base');
+
+var _Rating = require('../Rating');
+
+var _Rating2 = _interopRequireDefault(_Rating);
+
+var _SpeakerDetail = require('./SpeakerDetail');
+
+var _SpeakerDetail2 = _interopRequireDefault(_SpeakerDetail);
+
+var _rnSlidingUpPanel = require('rn-sliding-up-panel');
+
+var _rnSlidingUpPanel2 = _interopRequireDefault(_rnSlidingUpPanel);
+
+var _rnPlaceholder = require('rn-placeholder');
+
+var _rnPlaceholder2 = _interopRequireDefault(_rnPlaceholder);
+
+var _theme = require('../../shared/theme');
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var _Dimensions$get = _reactNative.Dimensions.get('window'),
+    height = _Dimensions$get.height;
+
+exports.default = function (styles, props, slot) {
+    var _props$navigation = props.navigation,
+        navigate = _props$navigation.navigate,
+        goBack = _props$navigation.goBack;
+
+    var draggableRange = {
+        top: height / 2,
+        bottom: 0
+    };
+    return _react2.default.createElement(
+        _nativeBase.Container,
+        {
+            __source: {
+                fileName: _jsxFileName,
+                lineNumber: 16
+            }
+        },
+        _react2.default.createElement(
+            _nativeBase.Header,
+            { style: styles.Header, __source: {
+                    fileName: _jsxFileName,
+                    lineNumber: 17
+                }
+            },
+            _react2.default.createElement(
+                _nativeBase.Left,
+                {
+                    __source: {
+                        fileName: _jsxFileName,
+                        lineNumber: 18
+                    }
+                },
+                _react2.default.createElement(
+                    _nativeBase.Button,
+                    { onPress: function onPress() {
+                            goBack();
+                            setTimeout(function () {
+                                return props.toggleContentLoader(false);
+                            }, 200);
+                        }, transparent: true, __source: {
+                            fileName: _jsxFileName,
+                            lineNumber: 19
+                        }
+                    },
+                    _react2.default.createElement(_nativeBase.Icon, { name: 'arrow-back', __source: {
+                            fileName: _jsxFileName,
+                            lineNumber: 23
+                        }
+                    })
+                )
+            ),
+            _react2.default.createElement(
+                _nativeBase.Body,
+                { style: { alignItems: "flex-start" }, __source: {
+                        fileName: _jsxFileName,
+                        lineNumber: 26
+                    }
+                },
+                _react2.default.createElement(
+                    _reactNative.Text,
+                    { style: styles.Label, __source: {
+                            fileName: _jsxFileName,
+                            lineNumber: 27
+                        }
+                    },
+                    'Talk Detail'
+                )
+            ),
+            _react2.default.createElement(
+                _nativeBase.Right,
+                {
+                    __source: {
+                        fileName: _jsxFileName,
+                        lineNumber: 31
+                    }
+                },
+                _react2.default.createElement(
+                    _nativeBase.Button,
+                    { transparent: true, onPress: function onPress() {
+                            goBack();
+                            setTimeout(function () {
+                                props.OnRate(slot);props.toggleContentLoader(false);
+                            }, 200);
+                        }, __source: {
+                            fileName: _jsxFileName,
+                            lineNumber: 32
+                        }
+                    },
+                    _react2.default.createElement(_nativeBase.Icon, { style: { color: "white" }, name: 'md-checkmark-circle-outline', __source: {
+                            fileName: _jsxFileName,
+                            lineNumber: 36
+                        }
+                    })
+                )
+            )
+        ),
+        _react2.default.createElement(
+            _nativeBase.Content,
+            { style: styles.content, __source: {
+                    fileName: _jsxFileName,
+                    lineNumber: 42
+                }
+            },
+            _react2.default.createElement(
+                _reactNative.View,
+                { style: styles.container, __source: {
+                        fileName: _jsxFileName,
+                        lineNumber: 43
+                    }
+                },
+                _react2.default.createElement(
+                    _reactNative.View,
+                    { style: styles.speakers, __source: {
+                            fileName: _jsxFileName,
+                            lineNumber: 44
+                        }
+                    },
+                    _react2.default.createElement(
+                        _reactNative.View,
+                        { style: [styles.speakerBar, { marginTop: 10 }], __source: {
+                                fileName: _jsxFileName,
+                                lineNumber: 45
+                            }
+                        },
+                        _react2.default.createElement(
+                            _rnPlaceholder2.default.ImageContent,
+                            {
+                                size: 60,
+                                animate: 'fade',
+                                color: '#CCC',
+                                lineNumber: 4,
+                                lineSpacing: 5,
+                                lastLineWidth: '30%',
+                                onReady: props.IsReady,
+                                __source: {
+                                    fileName: _jsxFileName,
+                                    lineNumber: 46
+                                }
+                            },
+                            _react2.default.createElement(
+                                _reactNative.View,
+                                { style: { flexDirection: "row", justifyContent: "center", alignItems: "center" }, __source: {
+                                        fileName: _jsxFileName,
+                                        lineNumber: 55
+                                    }
+                                },
+                                generateSpeakers(styles, props)
+                            )
+                        )
+                    )
+                ),
+                _react2.default.createElement(
+                    _reactNative.View,
+                    { style: styles.contentTypes, __source: {
+                            fileName: _jsxFileName,
+                            lineNumber: 62
+                        }
+                    },
+                    _react2.default.createElement(
+                        _reactNative.View,
+                        { style: _extends({}, styles.contentTypesItem, { backgroundColor: _theme.colors.primary }), __source: {
+                                fileName: _jsxFileName,
+                                lineNumber: 63
+                            }
+                        },
+                        _react2.default.createElement(
+                            _rnPlaceholder2.default.Line,
+                            {
+                                color: '#FFF',
+                                textSize: 14,
+                                onReady: props.IsReady,
+                                __source: {
+                                    fileName: _jsxFileName,
+                                    lineNumber: 64
+                                }
+                            },
+                            _react2.default.createElement(
+                                _reactNative.Text,
+                                { style: styles.contentTypesItemLabel, __source: {
+                                        fileName: _jsxFileName,
+                                        lineNumber: 69
+                                    }
+                                },
+                                slot.talk.track
+                            )
+                        )
+                    ),
+                    _react2.default.createElement(
+                        _reactNative.View,
+                        { style: _extends({}, styles.contentTypesItem, { backgroundColor: _theme.colors.white }), __source: {
+                                fileName: _jsxFileName,
+                                lineNumber: 72
+                            }
+                        },
+                        _react2.default.createElement(
+                            _rnPlaceholder2.default.Line,
+                            {
+                                color: '#EEE',
+                                textSize: 14,
+                                onReady: props.IsReady,
+                                __source: {
+                                    fileName: _jsxFileName,
+                                    lineNumber: 73
+                                }
+                            },
+                            _react2.default.createElement(
+                                _reactNative.Text,
+                                { style: _extends({}, styles.contentTypesItemLabel, {
+                                        color: "black"
+                                    }), __source: {
+                                        fileName: _jsxFileName,
+                                        lineNumber: 78
+                                    }
+                                },
+                                slot.talk.talkType
+                            )
+                        )
+                    )
+                ),
+                _react2.default.createElement(
+                    _reactNative.View,
+                    { style: styles.contentBody, __source: {
+                            fileName: _jsxFileName,
+                            lineNumber: 86
+                        }
+                    },
+                    _react2.default.createElement(
+                        _nativeBase.Card,
+                        {
+                            __source: {
+                                fileName: _jsxFileName,
+                                lineNumber: 87
+                            }
+                        },
+                        _react2.default.createElement(
+                            _nativeBase.CardItem,
+                            {
+                                __source: {
+                                    fileName: _jsxFileName,
+                                    lineNumber: 88
+                                }
+                            },
+                            _react2.default.createElement(
+                                _nativeBase.Left,
+                                {
+                                    __source: {
+                                        fileName: _jsxFileName,
+                                        lineNumber: 89
+                                    }
+                                },
+                                _react2.default.createElement(
+                                    _nativeBase.Body,
+                                    {
+                                        __source: {
+                                            fileName: _jsxFileName,
+                                            lineNumber: 90
+                                        }
+                                    },
+                                    _react2.default.createElement(
+                                        _rnPlaceholder2.default.Line,
+                                        {
+                                            color: '#EEE',
+                                            width: '77%',
+                                            textSize: 14,
+                                            onReady: props.IsReady,
+                                            __source: {
+                                                fileName: _jsxFileName,
+                                                lineNumber: 91
+                                            }
+                                        },
+                                        _react2.default.createElement(
+                                            _reactNative.Text,
+                                            { style: { fontFamily: "Roboto-Medium" }, __source: {
+                                                    fileName: _jsxFileName,
+                                                    lineNumber: 97
+                                                }
+                                            },
+                                            slot.talk.title
+                                        )
+                                    )
+                                )
+                            )
+                        ),
+                        _react2.default.createElement(
+                            _reactNative.View,
+                            { style: { margin: 20, marginTop: 5 }, __source: {
+                                    fileName: _jsxFileName,
+                                    lineNumber: 104
+                                }
+                            },
+                            _react2.default.createElement(
+                                _rnPlaceholder2.default.Paragraph,
+                                {
+                                    lineNumber: 4,
+                                    textSize: 14,
+                                    lineSpacing: 5,
+                                    color: '#EEE',
+
+                                    onReady: props.IsReady,
+                                    __source: {
+                                        fileName: _jsxFileName,
+                                        lineNumber: 105
+                                    }
+                                },
+                                _react2.default.createElement(
+                                    _nativeBase.CardItem,
+                                    { style: { marginLeft: 0, alignItems: "center" }, __source: {
+                                            fileName: _jsxFileName,
+                                            lineNumber: 113
+                                        }
+                                    },
+                                    _react2.default.createElement(
+                                        _nativeBase.Body,
+                                        {
+                                            __source: {
+                                                fileName: _jsxFileName,
+                                                lineNumber: 114
+                                            }
+                                        },
+                                        _react2.default.createElement(
+                                            _reactNative.Text,
+                                            { style: { fontFamily: "Roboto-Light" }, __source: {
+                                                    fileName: _jsxFileName,
+                                                    lineNumber: 116
+                                                }
+                                            },
+                                            slot.talk.summary
+                                        )
+                                    )
+                                )
+                            )
+                        ),
+                        _react2.default.createElement(
+                            _nativeBase.CardItem,
+                            {
+                                __source: {
+                                    fileName: _jsxFileName,
+                                    lineNumber: 126
+                                }
+                            },
+                            _react2.default.createElement(
+                                _nativeBase.Body,
+                                { style: { alignItems: "center" }, __source: {
+                                        fileName: _jsxFileName,
+                                        lineNumber: 127
+                                    }
+                                },
+                                _react2.default.createElement(_Rating2.default, {
+                                    __source: {
+                                        fileName: _jsxFileName,
+                                        lineNumber: 128
+                                    }
+                                })
+                            )
+                        )
+                    ),
+                    _react2.default.createElement(_reactNative.Text, {
+                        __source: {
+                            fileName: _jsxFileName,
+                            lineNumber: 132
+                        }
+                    })
+                )
+            )
+        ),
+        _react2.default.createElement(
+            _rnSlidingUpPanel2.default,
+            {
+                draggableRange: draggableRange,
+                ref: function ref(c) {
+                    return props._panel = c;
+                },
+                visible: props.showSpeakerDetail,
+                height: height / 1.75,
+                onRequestClose: props.toggleSpeakerDetail.bind(_this, false), __source: {
+                    fileName: _jsxFileName,
+                    lineNumber: 138
+                }
+            },
+            (0, _SpeakerDetail2.default)(props.selectedSpeaker)
+        )
+    );
+};
+
+function generateSpeakers(styles, props) {
+    var _this2 = this;
+
+    var speakersView = [];
+    props.speakers.forEach(function (speaker, i) {
+        speakersView.push(_react2.default.createElement(
+            _reactNative.View,
+            { key: i, __source: {
+                    fileName: _jsxFileName,
+                    lineNumber: 153
+                }
+            },
+            _react2.default.createElement(
+                _reactNative.TouchableHighlight,
+                { style: _extends({}, styles.speakerImg, { zIndex: i * -1, marginLeft: i != 0 ? -10 : 0 }),
+                    onPress: props.getSpeaker.bind(_this2, i), __source: {
+                        fileName: _jsxFileName,
+                        lineNumber: 154
+                    }
+                },
+                _react2.default.createElement(_reactNative.Image, {
+                    style: { height: 66, width: 66, borderRadius: 33 },
+                    source: { uri: speaker.avatarURL },
+                    __source: {
+                        fileName: _jsxFileName,
+                        lineNumber: 156
+                    }
+                })
+            )
+        ));
+    });
+    if (props.speakers.length == 1) {
+        speakersView.push(_react2.default.createElement(
+            _reactNative.View,
+            { key: props.speakers.length + 1, __source: {
+                    fileName: _jsxFileName,
+                    lineNumber: 165
+                }
+            },
+            _react2.default.createElement(
+                _reactNative.Text,
+                { style: {
+                        marginLeft: 10,
+                        fontSize: 30,
+                        fontWeight: "100",
+                        fontFamily: "Roboto-Light"
+                    }, __source: {
+                        fileName: _jsxFileName,
+                        lineNumber: 166
+                    }
+                },
+                props.speakers[0].firstName,
+                ' ',
+                props.speakers[0].lastName
+            )
+        ));
+    }
+    return speakersView;
+}

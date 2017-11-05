@@ -14,7 +14,7 @@ export default (state = INITIAL_STATE, action) => {
         case actions.SELECT_EVENT:
             return {
                 ...state,
-                selectedEvent: action.payload,
+                selectedEvent: action.payload.event,
             }
         case actions.SHOW_EVENT_DETAILS:
             return {

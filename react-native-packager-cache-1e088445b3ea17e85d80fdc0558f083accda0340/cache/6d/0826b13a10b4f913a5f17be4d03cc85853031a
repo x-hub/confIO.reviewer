@@ -1,0 +1,7 @@
+var _AnimatedPullToRefresh = require('./src/AnimatedPullToRefresh');
+
+var _AnimatedPullToRefresh2 = _interopRequireDefault(_AnimatedPullToRefresh);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+module.exports = _AnimatedPullToRefresh2.default;

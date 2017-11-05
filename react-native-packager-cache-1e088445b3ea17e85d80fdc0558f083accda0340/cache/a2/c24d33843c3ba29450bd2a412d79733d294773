@@ -1,0 +1,46 @@
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+
+var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
+var _actionsType = require('../App/actionsType');
+
+var _navigator = require('../Navigator/navigator.actions');
+
+var _navigator2 = _interopRequireDefault(_navigator);
+
+var _LoginWithSavedSession = require('../Login/LoginWithSavedSession');
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var INITIAL_STATE = {
+    event: {},
+    isReady: false,
+    talks: [],
+    reviewed: [],
+    later: [],
+    user: {}
+};
+
+exports.default = function () {
+    var state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : INITIAL_STATE;
+    var _ref = arguments[1];
+    var type = _ref.type,
+        payload = _ref.payload;
+
+    switch (type) {
+        case _LoginWithSavedSession.actions.SELECT_EVENT:
+        case _navigator2.default.GOTO_Home:
+            return _extends({}, state, payload);
+        case _navigator2.default.GOTO_Swiper:
+            return _extends({}, state, payload);
+        case _actionsType.ACTIONS.TALK_RATE_LATER:
+            return _extends({}, state, {
+                talks: payload.talks,
+                later: payload.later
+            });
+        default:
+            return state;
+    }
+};

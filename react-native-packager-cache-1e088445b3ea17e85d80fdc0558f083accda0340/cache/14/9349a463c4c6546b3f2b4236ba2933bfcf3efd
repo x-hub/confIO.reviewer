@@ -1,0 +1,28 @@
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+
+var _theme = require('../../../shared/theme');
+
+exports.default = {
+    header: {
+        justifyContent: 'flex-start'
+    },
+    sceneTitle: {
+        textAlign: 'center',
+        textAlignVertical: 'center',
+        fontSize: 18,
+        color: _theme.colors.black
+    },
+    goBackIcon: {
+        color: _theme.colors.black
+    },
+    eventListItemName: {
+        marginLeft: 7,
+        fontSize: 15,
+        fontWeight: 'bold'
+    },
+    eventListItemBtn: {
+        flex: 1
+    }
+};

@@ -1,0 +1,37 @@
+
+'use strict';
+
+var findProject = require('./findProject');
+var path = require('path');
+
+var mapSharedLibaries = function mapSharedLibaries(libraries) {
+  return libraries.map(function (name) {
+    if (path.extname(name)) {
+      return name;
+    }
+    return name + (name.indexOf('lib') === 0 ? '.tbd' : '.framework');
+  });
+};
+
+exports.projectConfig = function projectConfigIOS(folder, userConfig) {
+  var project = userConfig.project || findProject(folder);
+
+  if (!project) {
+    return null;
+  }
+
+  var projectPath = path.join(folder, project);
+
+  return {
+    sourceDir: path.dirname(projectPath),
+    folder: folder,
+    pbxprojPath: path.join(projectPath, 'project.pbxproj'),
+    projectPath: projectPath,
+    projectName: path.basename(projectPath),
+    libraryFolder: userConfig.libraryFolder || 'Libraries',
+    sharedLibraries: mapSharedLibaries(userConfig.sharedLibraries || []),
+    plist: userConfig.plist || []
+  };
+};
+
+exports.dependencyConfig = exports.projectConfig;

@@ -1,0 +1,119 @@
+
+'use strict';
+
+console.disableYellowBox = true;
+
+require('ProgressBarTestModule');
+require('ViewRenderingTestModule');
+require('TestJavaToJSArgumentsModule');
+require('TestJSLocaleModule');
+require('TestJSToJavaParametersModule');
+require('TestJavaToJSReturnValuesModule');
+require('UIManagerTestModule');
+
+require('CatalystRootViewTestModule');
+require('DatePickerDialogTestModule');
+require('MeasureLayoutTestModule');
+require('PickerAndroidTestModule');
+require('ScrollViewTestModule');
+require('ShareTestModule');
+require('SwipeRefreshLayoutTestModule');
+require('TextInputTestModule');
+require('TimePickerDialogTestModule');
+
+var AppRegistry = require('AppRegistry');
+
+var apps = [{
+  appKey: 'CatalystRootViewTestApp',
+  component: function component() {
+    return require('CatalystRootViewTestModule').CatalystRootViewTestApp;
+  }
+}, {
+  appKey: 'DatePickerDialogTestApp',
+  component: function component() {
+    return require('DatePickerDialogTestModule').DatePickerDialogTestApp;
+  }
+}, {
+  appKey: 'JSResponderTestApp',
+  component: function component() {
+    return require('JSResponderTestApp');
+  }
+}, {
+  appKey: 'HorizontalScrollViewTestApp',
+  component: function component() {
+    return require('ScrollViewTestModule').HorizontalScrollViewTestApp;
+  }
+}, {
+  appKey: 'InitialPropsTestApp',
+  component: function component() {
+    return require('InitialPropsTestApp');
+  }
+}, {
+  appKey: 'LayoutEventsTestApp',
+  component: function component() {
+    return require('LayoutEventsTestApp');
+  }
+}, {
+  appKey: 'MeasureLayoutTestApp',
+  component: function component() {
+    return require('MeasureLayoutTestModule').MeasureLayoutTestApp;
+  }
+}, {
+  appKey: 'MultitouchHandlingTestAppModule',
+  component: function component() {
+    return require('MultitouchHandlingTestAppModule');
+  }
+}, {
+  appKey: 'NativeIdTestApp',
+  component: function component() {
+    return require('NativeIdTestModule').NativeIdTestApp;
+  }
+}, {
+  appKey: 'PickerAndroidTestApp',
+  component: function component() {
+    return require('PickerAndroidTestModule').PickerAndroidTestApp;
+  }
+}, {
+  appKey: 'ScrollViewTestApp',
+  component: function component() {
+    return require('ScrollViewTestModule').ScrollViewTestApp;
+  }
+}, {
+  appKey: 'ShareTestApp',
+  component: function component() {
+    return require('ShareTestModule').ShareTestApp;
+  }
+}, {
+  appKey: 'SubviewsClippingTestApp',
+  component: function component() {
+    return require('SubviewsClippingTestModule').App;
+  }
+}, {
+  appKey: 'SwipeRefreshLayoutTestApp',
+  component: function component() {
+    return require('SwipeRefreshLayoutTestModule').SwipeRefreshLayoutTestApp;
+  }
+}, {
+  appKey: 'TextInputTestApp',
+  component: function component() {
+    return require('TextInputTestModule').TextInputTestApp;
+  }
+}, {
+  appKey: 'TestIdTestApp',
+  component: function component() {
+    return require('TestIdTestModule').TestIdTestApp;
+  }
+}, {
+  appKey: 'TimePickerDialogTestApp',
+  component: function component() {
+    return require('TimePickerDialogTestModule').TimePickerDialogTestApp;
+  }
+}, {
+  appKey: 'TouchBubblingTestAppModule',
+  component: function component() {
+    return require('TouchBubblingTestAppModule');
+  }
+}];
+
+module.exports = apps;
+AppRegistry.registerConfig(apps);

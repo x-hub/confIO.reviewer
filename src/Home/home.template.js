@@ -33,8 +33,7 @@ export default (props) => {
                 <Container>
                     <Header style={{Opacity: 0}} noShadow={true} backgroundColor="rgba(0,0,0,0.01)">
                         <Body>
-                        <Text style={styles.labelM}>DevoxxMA
-                            2017</Text>
+                        <Text style={styles.labelM}>{props.event.name}</Text>
                         </Body>
                         <Right>
                             <Icon onPress={()=>goBack()} style={{color: colors.white}} name="md-log-out"/>
@@ -50,7 +49,8 @@ export default (props) => {
                                            source={{uri: 'https://lh6.googleusercontent.com/-0SpETtlSIGY/AAAAAAAAAAI/AAAAAAAAAA4/_6bdXciDHB0/photo.jpg'}}/>
                                 <View style={{marginLeft: 16, alignItems: "center"}}>
                                     <Text style={{...styles.labelL, fontSize: 18}}>
-                                        JHIPSTER Toto
+                                        {props.user.firstName}
+                                        {props.user.lastName}
                                     </Text>
                                     <Text style={{marginTop: 5, color: colors.gris}}>
                                         @Java
@@ -61,18 +61,19 @@ export default (props) => {
 
                             <View style={{...styles.card, backgroundColor: "#78C4E8"}}>
                                 <View style={{...styles.center, flex: 1, flexDirection: "row"}}>
-                                    <Text style={{...styles.labelL, fontSize: 33, color: colors.black}}>{props.talksNotReviewed.length}</Text>
+                                    <Text style={{...styles.labelL, fontSize: 33, color: colors.black}}>{props.talks.length}</Text>
                                     <Text style={{fontFamily: "Roboto-Light", fontSize: 22, marginLeft: 10}}>Not
                                         Reviewed</Text>
                                 </View>
                                 <View style={{marginHorizontal: 10}}>
-                                    <Button onPress={()=>Navigate(props.toNotReviewedTalks)} style={{alignSelf: "stretch"}} transparent><Icon
-                                        style={{color: colors.white}} name="md-arrow-dropright"/></Button>
+                                    {props.talks.length ? <Button onPress={()=>props.toNotReviewedTalks(props.event,props.talks)} style={{alignSelf: "stretch"}} transparent>
+                                        <Icon style={{color: colors.white}} name="md-arrow-dropright"/>
+                                    </Button> : <View/>}
                                 </View>
                             </View>
                             <View style={{...styles.card, backgroundColor: "#e8a652"}}>
                                 <View style={{...styles.center, flex: 1, flexDirection: "row"}}>
-                                    <Text style={{...styles.labelL, fontSize: 33, color: colors.black}}>{props.talksReviewed.length}</Text>
+                                    <Text style={{...styles.labelL, fontSize: 33, color: colors.black}}>{props.reviewed.length}</Text>
                                     <Text style={{
                                         fontFamily: "Roboto-Light",
                                         fontSize: 22,
@@ -80,18 +81,20 @@ export default (props) => {
                                     }}>Reviewed</Text>
                                 </View>
                                 <View style={{marginHorizontal: 10}}>
-                                    <Button onPress={()=>Navigate(props.toReviewedTalks)} style={{alignSelf: "stretch"}} transparent><Icon
-                                        style={{color: colors.white}} name="md-arrow-dropright"/></Button>
+                                    {props.reviewed.length ? <Button onPress={()=>{props.toReviewedTalks(props.event,props.reviewed)}} style={{alignSelf: "stretch"}} transparent>
+                                        <Icon style={{color: colors.white}} name="md-arrow-dropright"/>
+                                    </Button> : <View/>}
                                 </View>
                             </View>
                             <View style={{...styles.card, backgroundColor: "#E36B86"}}>
                                 <View style={{...styles.center, flex: 1, flexDirection: "row"}}>
-                                    <Text style={{...styles.labelL, fontSize: 33, color: colors.black}}>{props.talksToBeReviewedLater.length}</Text>
+                                    <Text style={{...styles.labelL, fontSize: 33, color: colors.black}}>{props.later.length}</Text>
                                     <Text style={{fontFamily: "Roboto-Light", fontSize: 22, marginLeft: 10}}>To Review</Text>
                                 </View>
                                 <View style={{marginHorizontal: 10}}>
-                                    <Button onPress={()=>Navigate(props.toReviewedLaterTalks)} style={{alignSelf: "stretch"}} transparent><Icon
-                                        style={{color: colors.white}} name="md-arrow-dropright"/></Button>
+                                    {props.later.length ?  <Button onPress={()=>{props.toReviewedLaterTalks(props.event,props.later)}} style={{alignSelf: "stretch"}} transparent>
+                                        <Icon style={{color: colors.white}} name="md-arrow-dropright"/>
+                                    </Button> :<View/>}
                                 </View>
                             </View>
 

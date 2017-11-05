@@ -1,0 +1,23 @@
+
+'use strict';
+
+function execute(fun, context, args) {
+  return fun.apply(context, args);
+}
+
+function reportError(error) {
+  throw error;
+}
+
+var ErrorUtils = {
+  apply: jest.fn(execute),
+  applyWithGuard: jest.fn(execute),
+  guard: jest.fn(function (callback) {
+    return callback;
+  }),
+  inGuard: jest.fn().mockReturnValue(true),
+  reportError: jest.fn(reportError),
+  setGlobalHandler: jest.fn()
+};
+
+module.exports = ErrorUtils;

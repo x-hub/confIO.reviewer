@@ -1,0 +1,40 @@
+var xcode = require('xcode');
+var fs = require('fs');
+var path = require('path');
+var log = require('npmlog');
+
+var addToHeaderSearchPaths = require('./addToHeaderSearchPaths');
+var getHeadersInFolder = require('./getHeadersInFolder');
+var getHeaderSearchPath = require('./getHeaderSearchPath');
+var getProducts = require('./getProducts');
+var createGroupWithMessage = require('./createGroupWithMessage');
+var addFileToProject = require('./addFileToProject');
+var addProjectToLibraries = require('./addProjectToLibraries');
+var addSharedLibraries = require('./addSharedLibraries');
+var isEmpty = require('lodash').isEmpty;
+var getGroup = require('./getGroup');
+
+module.exports = function registerNativeModuleIOS(dependencyConfig, projectConfig) {
+  var project = xcode.project(projectConfig.pbxprojPath).parseSync();
+  var dependencyProject = xcode.project(dependencyConfig.pbxprojPath).parseSync();
+
+  var libraries = createGroupWithMessage(project, projectConfig.libraryFolder);
+  var file = addFileToProject(project, path.relative(projectConfig.sourceDir, dependencyConfig.projectPath));
+
+  addProjectToLibraries(libraries, file);
+
+  getProducts(dependencyProject).forEach(function (product) {
+    project.addStaticLibrary(product, {
+      target: project.getFirstTarget().uuid
+    });
+  });
+
+  addSharedLibraries(project, dependencyConfig.sharedLibraries);
+
+  var headers = getHeadersInFolder(dependencyConfig.folder);
+  if (!isEmpty(headers)) {
+    addToHeaderSearchPaths(project, getHeaderSearchPath(projectConfig.sourceDir, headers));
+  }
+
+  fs.writeFileSync(projectConfig.pbxprojPath, project.writeSync());
+};

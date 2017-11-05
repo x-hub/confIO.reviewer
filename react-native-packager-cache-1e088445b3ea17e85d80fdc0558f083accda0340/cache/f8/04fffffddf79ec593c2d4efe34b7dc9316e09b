@@ -1,0 +1,14 @@
+var glob = require('glob');
+var path = require('path');
+
+var GLOB_EXCLUDE_PATTERN = ['node_modules/**', 'Pods/**', 'Examples/**', 'examples/**'];
+
+module.exports = function getHeadersInFolder(folder) {
+  return glob.sync('**/*.h', {
+    cwd: folder,
+    nodir: true,
+    ignore: GLOB_EXCLUDE_PATTERN
+  }).map(function (file) {
+    return path.join(folder, file);
+  });
+};

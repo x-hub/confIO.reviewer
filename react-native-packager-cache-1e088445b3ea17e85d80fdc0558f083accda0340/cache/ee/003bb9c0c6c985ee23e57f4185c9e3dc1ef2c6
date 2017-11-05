@@ -1,0 +1,34 @@
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+
+var _ = require('./');
+
+var _navigator = require('./navigator.actions');
+
+var _navigator2 = _interopRequireDefault(_navigator);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function getStateForRoute(route) {
+    return _.Navigator.router.getStateForAction(_.Navigator.router.getActionForPathAndParams(route));
+}
+
+var INITIAL_STATE = getStateForRoute('Login');
+
+exports.default = function () {
+    var state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : INITIAL_STATE;
+    var action = arguments[1];
+
+    var nextState = null;
+    switch (action.type) {
+        default:
+            if (action.type.startsWith('GOTO_')) {
+                var route = action.type.match(/GOTO_(.*)/)[1];
+                nextState = getStateForRoute(route);
+            } else {
+                nextState = _.Navigator.router.getStateForAction(action, state);
+            }
+            return nextState || state;
+    }
+};

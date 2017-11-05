@@ -25,7 +25,13 @@ class nativeStorage {
             })
         )
     }
-
+    getArray(keys){
+        if(keys.length == 0) return Observable.of([])
+        return this.toObservable(AsyncStorage.multiGet(keys).then((e) => {
+            let unzipArray = _.unzip(e);
+            return unzipArray[1].map(JSON.parse)
+        }))
+    }
     getAllKeys() {
         return this.toObservable(AsyncStorage.getAllKeys())
     }

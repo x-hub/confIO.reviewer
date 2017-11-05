@@ -1,0 +1,319 @@
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+
+var _react2 = require('react');
+
+var _react3 = _interopRequireDefault(_react2);
+
+var _index = require('./../../node_modules/react-transform-hmr/lib/index.js');
+
+var _index2 = _interopRequireDefault(_index);
+
+var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
+var _jsxFileName = '/home/bassihassan/Desktop/confIOReviewer/src/Rating/index.js';
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _reactNative = require('react-native');
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var _components = {
+    Rating: {
+        displayName: 'Rating'
+    }
+};
+
+var _node_modulesReactTransformHmrLibIndexJs2 = (0, _index2.default)({
+    filename: '/home/bassihassan/Desktop/confIOReviewer/src/Rating/index.js',
+    components: _components,
+    locals: [module],
+    imports: [_react3.default]
+});
+
+function _wrapComponent(id) {
+    return function (Component) {
+        return _node_modulesReactTransformHmrLibIndexJs2(Component, id);
+    };
+}
+
+var REACTIONS = [{ label: "Worried", src: require('../../assets/emojie/worried.png'), bigSrc: require('../../assets/emojie/worried_big.png') }, { label: "Sad", src: require('../../assets/emojie/sad.png'), bigSrc: require('../../assets/emojie/sad_big.png') }, { label: "Strong", src: require('../../assets/emojie/ambitious.png'), bigSrc: require('../../assets/emojie/ambitious_big.png') }, { label: "Happy", src: require('../../assets/emojie/smile.png'), bigSrc: require('../../assets/emojie/smile_big.png') }, {
+    label: "Surprised",
+    src: require('../../assets/emojie/surprised.png'),
+    bigSrc: require('../../assets/emojie/surprised_big.png')
+}];
+var WIDTH = 250;
+var DISTANCE = WIDTH / REACTIONS.length;
+var END = WIDTH - DISTANCE;
+
+var Rating = _wrapComponent('Rating')(function (_React$Component) {
+    _inherits(Rating, _React$Component);
+
+    function Rating(props) {
+        _classCallCheck(this, Rating);
+
+        var _this = _possibleConstructorReturn(this, (Rating.__proto__ || Object.getPrototypeOf(Rating)).call(this, props));
+
+        _this._pan = new _reactNative.Animated.Value(2 * DISTANCE);
+        _this.props.rate && _this.props.rate(2);
+        return _this;
+    }
+
+    _createClass(Rating, [{
+        key: 'componentWillMount',
+        value: function componentWillMount() {
+            var _this2 = this;
+
+            this._panResponder = _reactNative.PanResponder.create({
+                onMoveShouldSetResponderCapture: function onMoveShouldSetResponderCapture() {
+                    return true;
+                },
+                onMoveShouldSetPanResponderCapture: function onMoveShouldSetPanResponderCapture() {
+                    return true;
+                },
+                onPanResponderGrant: function onPanResponderGrant(e, gestureState) {
+                    _this2._pan.setOffset(_this2._pan._value);
+                    _this2._pan.setValue(0);
+                },
+                onPanResponderMove: _reactNative.Animated.event([null, { dx: this._pan }]),
+                onPanResponderRelease: function onPanResponderRelease() {
+                    _this2._pan.flattenOffset();
+
+                    var offset = Math.max(0, _this2._pan._value + 0);
+                    if (offset < 0) return _this2._pan.setValue(0);
+                    if (offset > END) return _this2._pan.setValue(END);
+                    var modulo = offset % DISTANCE;
+                    offset = modulo >= DISTANCE / 2 ? offset - modulo + DISTANCE : offset - modulo;
+                    _this2.updatePan(offset);
+                }
+            });
+        }
+    }, {
+        key: 'updatePan',
+        value: function updatePan(toValue) {
+            this.props.rate && this.props.rate(toValue / DISTANCE);
+            _reactNative.Animated.spring(this._pan, { toValue: toValue, friction: 7 }).start();
+        }
+    }, {
+        key: 'render',
+        value: function render() {
+            var _this3 = this;
+
+            return _react3.default.createElement(
+                _reactNative.View,
+                { style: styles.container, __source: {
+                        fileName: _jsxFileName,
+                        lineNumber: 55
+                    }
+                },
+                _react3.default.createElement(
+                    _reactNative.View,
+                    { style: styles.wrap, __source: {
+                            fileName: _jsxFileName,
+                            lineNumber: 56
+                        }
+                    },
+                    _react3.default.createElement(
+                        _reactNative.View,
+                        { style: styles.reactions, __source: {
+                                fileName: _jsxFileName,
+                                lineNumber: 58
+                            }
+                        },
+                        REACTIONS.map(function (reaction, idx) {
+                            var u = idx * DISTANCE;
+                            var inputRange = [u - 20, u, u + 20];
+                            var scaleOutputRange = [1, 0.25, 1];
+                            var topOutputRange = [0, 10, 0];
+                            var colorOutputRange = ['#999', 'transparent', '#999'];
+
+                            if (u - 20 < 0) {
+                                inputRange = [u, u + 20];
+                                scaleOutputRange = [0.25, 1];
+                                topOutputRange = [10, 0];
+                                colorOutputRange = ['transparent', '#999'];
+                            }
+
+                            if (u + 20 > END) {
+                                inputRange = [u - 20, u];
+                                scaleOutputRange = [1, 0.25];
+                                topOutputRange = [0, 10];
+                                colorOutputRange = ['#999', 'transparent'];
+                            }
+
+                            return _react3.default.createElement(
+                                _reactNative.TouchableOpacity,
+                                { onPress: function onPress() {
+                                        return _this3.updatePan(u);
+                                    }, activeOpacity: 0.9, key: idx, __source: {
+                                        fileName: _jsxFileName,
+                                        lineNumber: 82
+                                    }
+                                },
+                                _react3.default.createElement(
+                                    _reactNative.View,
+                                    { style: styles.smileyWrap, __source: {
+                                            fileName: _jsxFileName,
+                                            lineNumber: 83
+                                        }
+                                    },
+                                    _react3.default.createElement(_reactNative.Animated.Image, {
+                                        source: reaction.src,
+                                        style: [styles.smiley, {
+                                            transform: [{
+                                                scale: _this3._pan.interpolate({
+                                                    inputRange: inputRange,
+                                                    outputRange: scaleOutputRange,
+                                                    extrapolate: 'clamp'
+                                                })
+                                            }]
+                                        }],
+                                        __source: {
+                                            fileName: _jsxFileName,
+                                            lineNumber: 84
+                                        }
+                                    })
+                                ),
+                                _react3.default.createElement(
+                                    _reactNative.Animated.Text,
+                                    { style: [styles.reactionText, {
+                                            top: _this3._pan.interpolate({
+                                                inputRange: inputRange,
+                                                outputRange: topOutputRange,
+                                                extrapolate: 'clamp'
+                                            }),
+                                            color: _this3._pan.interpolate({
+                                                inputRange: inputRange,
+                                                outputRange: colorOutputRange,
+                                                extrapolate: 'clamp'
+                                            })
+                                        }], __source: {
+                                            fileName: _jsxFileName,
+                                            lineNumber: 97
+                                        }
+                                    },
+                                    reaction.label
+                                )
+                            );
+                        }),
+                        _react3.default.createElement(
+                            _reactNative.Animated.View,
+                            _extends({}, this._panResponder.panHandlers, { style: [styles.bigSmiley, {
+                                    transform: [{
+                                        translateX: this._pan.interpolate({
+                                            inputRange: [0, END],
+                                            outputRange: [0, END],
+                                            extrapolate: 'clamp'
+                                        })
+                                    }]
+                                }], __source: {
+                                    fileName: _jsxFileName,
+                                    lineNumber: 114
+                                }
+                            }),
+                            REACTIONS.map(function (reaction, idx) {
+                                var inputRange = [(idx - 1) * DISTANCE, idx * DISTANCE, (idx + 1) * DISTANCE];
+                                var outputRange = [0, 1, 0];
+
+                                if (idx == 0) {
+                                    inputRange = [idx * DISTANCE, (idx + 1) * DISTANCE];
+                                    outputRange = [1, 0];
+                                }
+
+                                if (idx == REACTIONS.length - 1) {
+                                    inputRange = [(idx - 1) * DISTANCE, idx * DISTANCE];
+                                    outputRange = [0, 1];
+                                }
+                                return _react3.default.createElement(_reactNative.Animated.Image, {
+                                    key: idx,
+                                    source: reaction.bigSrc,
+                                    style: [styles.bigSmileyImage, {
+                                        opacity: _this3._pan.interpolate({
+                                            inputRange: inputRange,
+                                            outputRange: outputRange,
+                                            extrapolate: 'clamp'
+                                        })
+                                    }],
+                                    __source: {
+                                        fileName: _jsxFileName,
+                                        lineNumber: 137
+                                    }
+                                });
+                            })
+                        )
+                    )
+                )
+            );
+        }
+    }]);
+
+    return Rating;
+}(_react3.default.Component));
+
+exports.default = Rating;
+
+
+var size = 42;
+
+var styles = _reactNative.StyleSheet.create({
+    container: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: 'transparent'
+    },
+    wrap: {
+        width: WIDTH,
+        marginBottom: 20
+    },
+
+    reactions: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        backgroundColor: 'transparent'
+    },
+    smileyWrap: {
+        width: DISTANCE,
+        height: DISTANCE,
+        justifyContent: 'center',
+        alignItems: 'center'
+    },
+    smiley: {
+        width: size,
+        height: size,
+        borderRadius: size / 2,
+        backgroundColor: 'transparent'
+    },
+    bigSmiley: {
+        width: DISTANCE,
+        height: DISTANCE,
+        borderRadius: DISTANCE / 2,
+        backgroundColor: '#ffb18d',
+        position: 'absolute',
+        top: 0,
+        left: 0
+    },
+    bigSmileyImage: {
+        width: DISTANCE,
+        height: DISTANCE,
+        position: 'absolute',
+        top: 0,
+        left: 0
+    },
+    reactionText: {
+        fontSize: 12,
+        textAlign: 'center',
+        color: '#999',
+        fontWeight: '400',
+        fontFamily: 'Avenir',
+        marginTop: 5
+    }
+});

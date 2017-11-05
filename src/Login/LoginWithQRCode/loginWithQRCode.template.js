@@ -18,6 +18,10 @@ import style from './loginWithQRCode.style';
 
 export default (props) => {
 	const { goBack, navigate } = props.navigation;
+	setTimeout(()=> {
+	  //props.onQRCodeRead({data:`{"authToken":"47568cf854a71d41f5e19455d3cf27d1b1f058cc0b331de1bbac6a7a86b0202a1f64469886a5d6d1e2170d0a716fa1f8","authEndpoint":"http://xhub.ddns.net:9000/mobileAuth","eventDetailsEndpoint":"http://xhub.ddns.net:9000/eventDetails"}`})
+	   // props.onQRCodeRead({data:`{}`})
+    },500)
     return (
         <Container>
             <Header style={ style.header }>
@@ -36,10 +40,13 @@ export default (props) => {
                     <Text style={ style.scanTips }>
                        Go to your confIO instance on your computer and scan the QR code.
                     </Text>
+
                 </View>
+                <View style={{alignItems:"center"}}><Text>{props.error ? "Invalide QR Code" : ""}</Text></View>
                 <View>
+
                     <QRCodeScanner
-                    fadeIn={ true }
+
                     showMarker={ true }
                     onRead={ props.onQRCodeRead.bind(this) }
                     />

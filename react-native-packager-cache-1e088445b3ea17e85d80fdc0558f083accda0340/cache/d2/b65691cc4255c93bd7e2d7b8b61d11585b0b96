@@ -1,0 +1,115 @@
+
+
+'use strict';
+
+var _react2 = require('react');
+
+var _react3 = _interopRequireDefault(_react2);
+
+var _index = require('./../../../../../react-transform-hmr/lib/index.js');
+
+var _index2 = _interopRequireDefault(_index);
+
+var _jsxFileName = '/home/bassihassan/Desktop/confIOReviewer/node_modules/react-native/ReactAndroid/src/androidTest/js/LayoutEventsTestApp.js';
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var _components = {
+  LayoutEventsTestApp: {
+    displayName: 'LayoutEventsTestApp'
+  }
+};
+
+var _reactTransformHmrLibIndexJs2 = (0, _index2.default)({
+  filename: '/home/bassihassan/Desktop/confIOReviewer/node_modules/react-native/ReactAndroid/src/androidTest/js/LayoutEventsTestApp.js',
+  components: _components,
+  locals: [module],
+  imports: [_react3.default]
+});
+
+function _wrapComponent(id) {
+  return function (Component) {
+    return _reactTransformHmrLibIndexJs2(Component, id);
+  };
+}
+
+var React = require('React');
+var View = require('View');
+
+var RecordingModule = require('NativeModules').Recording;
+
+var LAYOUT_SPECS = [[10, 10, 100, 100], [10, 10, 50, 50], [0, 0, 50, 50], [0, 0, 50, 50]];
+
+var LayoutEventsTestApp = _wrapComponent('LayoutEventsTestApp')(function (_React$Component) {
+  _inherits(LayoutEventsTestApp, _React$Component);
+
+  function LayoutEventsTestApp() {
+    _classCallCheck(this, LayoutEventsTestApp);
+
+    var _this = _possibleConstructorReturn(this, (LayoutEventsTestApp.__proto__ || Object.getPrototypeOf(LayoutEventsTestApp)).call(this));
+
+    _this.handleOnLayout = function (e) {
+      var layout = e.nativeEvent.layout;
+      RecordingModule.record(layout.x + ',' + layout.y + '-' + layout.width + 'x' + layout.height);
+
+      if (_this.state.specNumber >= LAYOUT_SPECS.length) {
+        RecordingModule.record('Got an extraneous layout call');
+      } else {
+        _this.setState({
+          specNumber: _this.state.specNumber + 1
+        });
+      }
+    };
+
+    _this.handleParentOnLayout = function (e) {
+      if (_this.numParentLayouts > 0) {
+        RecordingModule.record('Got an extraneous layout call on the parent');
+      }
+      _this.numParentLayouts++;
+    };
+
+    _this.state = {
+      specNumber: 0
+    };
+    _this.numParentLayouts = 0;
+    return _this;
+  }
+
+  _createClass(LayoutEventsTestApp, [{
+    key: 'render',
+    value: function render() {
+      var layout = LAYOUT_SPECS[this.state.specNumber];
+      return React.createElement(
+        View,
+        {
+          onLayout: this.handleParentOnLayout,
+          testID: 'parent',
+          style: { left: 0, top: 0, width: 500, height: 500 }, __source: {
+            fileName: _jsxFileName,
+            lineNumber: 62
+          }
+        },
+        React.createElement(View, {
+          onLayout: this.handleOnLayout,
+          testID: 'container',
+          style: { left: layout[0], top: layout[1], width: layout[2], height: layout[3] }, __source: {
+            fileName: _jsxFileName,
+            lineNumber: 66
+          }
+        })
+      );
+    }
+  }]);
+
+  return LayoutEventsTestApp;
+}(React.Component));
+
+module.exports = LayoutEventsTestApp;

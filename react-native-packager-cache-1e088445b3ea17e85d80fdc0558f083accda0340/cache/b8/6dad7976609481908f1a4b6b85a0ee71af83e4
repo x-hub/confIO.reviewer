@@ -1,0 +1,45 @@
+var getFirstProject = function getFirstProject(project) {
+  return project.getFirstProject().firstProject;
+};
+
+var findGroup = function findGroup(group, name) {
+  return group.children.find(function (group) {
+    return group.comment === name;
+  });
+};
+
+module.exports = function getGroup(project, path) {
+  var firstProject = getFirstProject(project);
+
+  var group = project.getPBXGroupByKey(firstProject.mainGroup);
+
+  if (!path) {
+    return group;
+  }
+
+  for (var _iterator = path.split('/'), _isArray = Array.isArray(_iterator), _i = 0, _iterator = _isArray ? _iterator : _iterator[typeof Symbol === 'function' ? Symbol.iterator : '@@iterator']();;) {
+    var _ref;
+
+    if (_isArray) {
+      if (_i >= _iterator.length) break;
+      _ref = _iterator[_i++];
+    } else {
+      _i = _iterator.next();
+      if (_i.done) break;
+      _ref = _i.value;
+    }
+
+    var name = _ref;
+
+    var foundGroup = findGroup(group, name);
+
+    if (foundGroup) {
+      group = project.getPBXGroupByKey(foundGroup.value);
+    } else {
+      group = null;
+      break;
+    }
+  }
+
+  return group;
+};
