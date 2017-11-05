@@ -1,0 +1,173 @@
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+
+var _jsxFileName = '/home/bassihassan/Desktop/confIOReviewer/src/Login/LoginWithQRCode/LoginWithQRCode.template.js',
+    _this = this;
+
+var _react = require('react');
+
+var _react2 = _interopRequireDefault(_react);
+
+var _reactNative = require('react-native');
+
+var _nativeBase = require('native-base');
+
+var _reactNativeQrcodeScanner = require('react-native-qrcode-scanner');
+
+var _reactNativeQrcodeScanner2 = _interopRequireDefault(_reactNativeQrcodeScanner);
+
+var _LoginWithQRCode = require('./LoginWithQRCode.style');
+
+var _LoginWithQRCode2 = _interopRequireDefault(_LoginWithQRCode);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+exports.default = function (props) {
+    var _props$navigation = props.navigation,
+        navigate = _props$navigation.navigate,
+        goBack = _props$navigation.goBack;
+
+    return _react2.default.createElement(
+        _nativeBase.Container,
+        {
+            __source: {
+                fileName: _jsxFileName,
+                lineNumber: 10
+            }
+        },
+        _react2.default.createElement(
+            _nativeBase.Header,
+            { style: _LoginWithQRCode2.default.header, __source: {
+                    fileName: _jsxFileName,
+                    lineNumber: 11
+                }
+            },
+            _react2.default.createElement(
+                _nativeBase.Left,
+                {
+                    __source: {
+                        fileName: _jsxFileName,
+                        lineNumber: 12
+                    }
+                },
+                _react2.default.createElement(
+                    _nativeBase.Button,
+                    { onPress: function onPress() {
+                            return goBack();
+                        }, transparent: true, __source: {
+                            fileName: _jsxFileName,
+                            lineNumber: 13
+                        }
+                    },
+                    _react2.default.createElement(_nativeBase.Icon, { style: _LoginWithQRCode2.default.goBackIcon, name: 'arrow-back', __source: {
+                            fileName: _jsxFileName,
+                            lineNumber: 14
+                        }
+                    })
+                )
+            ),
+            _react2.default.createElement(
+                _reactNative.Text,
+                { style: _LoginWithQRCode2.default.sceneTitle, __source: {
+                        fileName: _jsxFileName,
+                        lineNumber: 17
+                    }
+                },
+                'Scan QR Code to Login'
+            )
+        ),
+        _react2.default.createElement(
+            _nativeBase.Content,
+            {
+                __source: {
+                    fileName: _jsxFileName,
+                    lineNumber: 19
+                }
+            },
+            _react2.default.createElement(
+                _reactNative.View,
+                { style: _LoginWithQRCode2.default.scanTipsContainer, __source: {
+                        fileName: _jsxFileName,
+                        lineNumber: 20
+                    }
+                },
+                _react2.default.createElement(
+                    _reactNative.View,
+                    { style: _LoginWithQRCode2.default.scanTipsIconContainer, __source: {
+                            fileName: _jsxFileName,
+                            lineNumber: 21
+                        }
+                    },
+                    _react2.default.createElement(_nativeBase.Icon, { style: _LoginWithQRCode2.default.scanTipsIcon, name: 'information', __source: {
+                            fileName: _jsxFileName,
+                            lineNumber: 22
+                        }
+                    })
+                ),
+                _react2.default.createElement(
+                    _reactNative.Text,
+                    { style: _LoginWithQRCode2.default.scanTips, __source: {
+                            fileName: _jsxFileName,
+                            lineNumber: 24
+                        }
+                    },
+                    'Go to your confIO instance on your computer and scan the QR code.'
+                )
+            ),
+            _react2.default.createElement(
+                _reactNative.View,
+                {
+                    __source: {
+                        fileName: _jsxFileName,
+                        lineNumber: 28
+                    }
+                },
+                _react2.default.createElement(_reactNativeQrcodeScanner2.default, { onRead: props.onQRCodeRead.bind(_this), __source: {
+                        fileName: _jsxFileName,
+                        lineNumber: 29
+                    }
+                })
+            )
+        ),
+        _react2.default.createElement(
+            _nativeBase.Footer,
+            {
+                __source: {
+                    fileName: _jsxFileName,
+                    lineNumber: 32
+                }
+            },
+            _react2.default.createElement(
+                _nativeBase.FooterTab,
+                {
+                    __source: {
+                        fileName: _jsxFileName,
+                        lineNumber: 33
+                    }
+                },
+                _react2.default.createElement(
+                    _nativeBase.Button,
+                    {
+                        onPress: function onPress() {
+                            return navigate('LoginWithSavedSession');
+                        },
+                        style: _LoginWithQRCode2.default.savedSessionsBtn, full: true, __source: {
+                            fileName: _jsxFileName,
+                            lineNumber: 34
+                        }
+                    },
+                    _react2.default.createElement(
+                        _reactNative.Text,
+                        { style: _LoginWithQRCode2.default.savedSessions, __source: {
+                                fileName: _jsxFileName,
+                                lineNumber: 37
+                            }
+                        },
+                        'Login with Saved Session'
+                    )
+                )
+            )
+        )
+    );
+};

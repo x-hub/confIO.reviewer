@@ -1,0 +1,17 @@
+
+'use strict';
+
+var copyToClipBoard = require('../util/copyToClipBoard');
+var chalk = require('chalk');
+
+module.exports = function (req, res, next) {
+  if (req.url === '/copy-to-clipboard') {
+    var ret = copyToClipBoard(req.rawBody);
+    if (!ret) {
+      console.warn(chalk.red('Copy button is not supported on this platform!'));
+    }
+    res.end('OK');
+  } else {
+    next();
+  }
+};

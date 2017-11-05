@@ -1,74 +1,43 @@
-import {ACTIONS} from 'app/App/actionsType';
-
-
+import {ACTIONS} from "app/App/actionsType"
+import {actions} from "app/Login/LoginWithSavedSession/index"
+import navActions from 'app/Navigator/navigator.actions';
+import _ from "lodash"
+import {talkStatus} from "app/Home/index"
 export default (state = {
-    event:null,
-    talksReviewed: [],
-    talksNotReviewed: [],
-    talksToBeReviewedLater: [],
-    current: []
-}, action) => {
-    switch (action.type) {
-        case ACTIONS.INIT_TALKS:
+    event:{},
+    talks:[],
+
+    type:talkStatus.NotReviewed
+}, {type,payload}) => {
+    switch (type) {
+        case actions.SELECT_EVENT :
+        case  navActions.GOTO_Home :
             return{
                 ...state,
-                event:action.payload.event,
-                current:action.payload.talks,
-                talksNotReviewed:action.payload.talks
+                event:payload.event
             }
-        case ACTIONS.TALK_RATE:
-            let talks = filterList(state.current,action.payload)
-            const talksReviewed = state.talksReviewed.slice();
-            talksReviewed.push(action.payload);
-            if(state.current == state.talksNotReviewed) {
-                console.log("talk not reviwed")
-                return {
-                    ...state,
-                    talksNotReviewed: talks,
-                    current: talks,
-                    talksReviewed
-                };
+        case navActions.GOTO_Swiper :
+            if(payload.hasOwnProperty('talk')) {
+                let talks = state.talks.filter((item) => item.id != payload.talk.id)
+                talks = _.shuffle(talks);
+                delete payload['talk']
+                payload.talks = talks;
             }
-            if(state.current == state.talksToBeReviewedLater)
-                return {
-                    ...state,
-                    talksToBeReviewedLater:talks,
-                    current: talks,
-                    talksReviewed
-                };
-            if(state.current == state.talksReviewed)
-                return {
-                    ...state
-                }
-        case ACTIONS.TALK_RATE_LATER:
-            talks = state.current.filter((e) => e.talk.id != action.payload.talk.id)
-            const talksToBeReviewedLater = state.talksToBeReviewedLater.slice();
-            talksToBeReviewedLater.push(action.payload);
             return {
                 ...state,
-                talksNotReviewed:talks,
-                current: talks,
-                talksToBeReviewedLater
+                ...payload
+
             }
-        case ACTIONS.SET_NOT_REVIEWED_CURRENT:
-            return {
+        case ACTIONS.TALK_RATE_LATER :
+            let talks = state.talks.filter((item)=> item.id != payload.talk.id)
+            return{
                 ...state,
-                current:state.talksNotReviewed
-            }
-        case ACTIONS.SET_REVIEWED_LATER_CURRENT :
-            return {
-                ...state,
-                current:state.talksToBeReviewedLater
-            }
-        case ACTIONS.SET_REVIEWED_CURRENT:
-            return {
-                ...state,
-                current:state.talksReviewed
+                  talks:_.shuffle(talks)
             }
         default:
-            return state;
+            return {
+                ...state
+            }
     }
 }
-function filterList(list,slot) {
-    return list.filter((e) => e.talk.id != slot.talk.id)
-}
+

@@ -1,0 +1,8 @@
+
+module.exports = function getProducts(project) {
+  return project.pbxGroupByName('Products').children.map(function (c) {
+    return c.comment;
+  }).filter(function (c) {
+    return c.indexOf('.a') > -1;
+  });
+};

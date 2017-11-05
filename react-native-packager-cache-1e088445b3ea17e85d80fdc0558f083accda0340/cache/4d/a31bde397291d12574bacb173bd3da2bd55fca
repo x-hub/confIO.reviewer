@@ -1,0 +1,1558 @@
+'use strict';
+
+var objectAssign$1 = require('object-assign');
+var warning = require('fbjs/lib/warning');
+var emptyObject = require('fbjs/lib/emptyObject');
+var invariant = require('fbjs/lib/invariant');
+var emptyFunction = require('fbjs/lib/emptyFunction');
+var checkPropTypes = require('prop-types/checkPropTypes');
+var propTypes = require('prop-types');
+var factory = require('create-react-class/factory');
+
+function warnNoop(publicInstance, callerName) {
+  {
+    var constructor = publicInstance.constructor;
+    warning(false, '%s(...): Can only update a mounted or mounting component. ' + 'This usually means you called %s() on an unmounted component. ' + 'This is a no-op.\n\nPlease check the code for the %s component.', callerName, callerName, constructor && (constructor.displayName || constructor.name) || 'ReactClass');
+  }
+}
+
+var ReactNoopUpdateQueue = {
+  isMounted: function isMounted(publicInstance) {
+    return false;
+  },
+
+  enqueueForceUpdate: function enqueueForceUpdate(publicInstance, callback, callerName) {
+    warnNoop(publicInstance, 'forceUpdate');
+  },
+
+  enqueueReplaceState: function enqueueReplaceState(publicInstance, completeState, callback, callerName) {
+    warnNoop(publicInstance, 'replaceState');
+  },
+
+  enqueueSetState: function enqueueSetState(publicInstance, partialState, callback, callerName) {
+    warnNoop(publicInstance, 'setState');
+  }
+};
+
+var ReactNoopUpdateQueue_1 = ReactNoopUpdateQueue;
+
+var canDefineProperty$1 = false;
+{
+  try {
+    Object.defineProperty({}, 'x', { get: function get() {} });
+    canDefineProperty$1 = true;
+  } catch (x) {}
+}
+
+var canDefineProperty_1 = canDefineProperty$1;
+
+function ReactComponent(props, context, updater) {
+  this.props = props;
+  this.context = context;
+  this.refs = emptyObject;
+
+  this.updater = updater || ReactNoopUpdateQueue_1;
+}
+
+ReactComponent.prototype.isReactComponent = {};
+
+ReactComponent.prototype.setState = function (partialState, callback) {
+  !(typeof partialState === 'object' || typeof partialState === 'function' || partialState == null) ? invariant(false, 'setState(...): takes an object of state variables to update or a function which returns an object of state variables.') : void 0;
+  this.updater.enqueueSetState(this, partialState, callback, 'setState');
+};
+
+ReactComponent.prototype.forceUpdate = function (callback) {
+  this.updater.enqueueForceUpdate(this, callback, 'forceUpdate');
+};
+
+{
+  var deprecatedAPIs = {
+    isMounted: ['isMounted', 'Instead, make sure to clean up subscriptions and pending requests in ' + 'componentWillUnmount to prevent memory leaks.'],
+    replaceState: ['replaceState', 'Refactor your code to use setState instead (see ' + 'https://github.com/facebook/react/issues/3236).']
+  };
+  var defineDeprecationWarning = function defineDeprecationWarning(methodName, info) {
+    if (canDefineProperty_1) {
+      Object.defineProperty(ReactComponent.prototype, methodName, {
+        get: function get() {
+          warning(false, '%s(...) is deprecated in plain JavaScript React classes. %s', info[0], info[1]);
+          return undefined;
+        }
+      });
+    }
+  };
+  for (var fnName in deprecatedAPIs) {
+    if (deprecatedAPIs.hasOwnProperty(fnName)) {
+      defineDeprecationWarning(fnName, deprecatedAPIs[fnName]);
+    }
+  }
+}
+
+function ReactPureComponent(props, context, updater) {
+  this.props = props;
+  this.context = context;
+  this.refs = emptyObject;
+
+  this.updater = updater || ReactNoopUpdateQueue_1;
+}
+
+function ComponentDummy() {}
+ComponentDummy.prototype = ReactComponent.prototype;
+ReactPureComponent.prototype = new ComponentDummy();
+ReactPureComponent.prototype.constructor = ReactPureComponent;
+
+objectAssign$1(ReactPureComponent.prototype, ReactComponent.prototype);
+ReactPureComponent.prototype.isPureReactComponent = true;
+
+var ReactBaseClasses = {
+  Component: ReactComponent,
+  PureComponent: ReactPureComponent
+};
+
+var oneArgumentPooler = function oneArgumentPooler(copyFieldsFrom) {
+  var Klass = this;
+  if (Klass.instancePool.length) {
+    var instance = Klass.instancePool.pop();
+    Klass.call(instance, copyFieldsFrom);
+    return instance;
+  } else {
+    return new Klass(copyFieldsFrom);
+  }
+};
+
+var twoArgumentPooler$1 = function twoArgumentPooler$1(a1, a2) {
+  var Klass = this;
+  if (Klass.instancePool.length) {
+    var instance = Klass.instancePool.pop();
+    Klass.call(instance, a1, a2);
+    return instance;
+  } else {
+    return new Klass(a1, a2);
+  }
+};
+
+var threeArgumentPooler = function threeArgumentPooler(a1, a2, a3) {
+  var Klass = this;
+  if (Klass.instancePool.length) {
+    var instance = Klass.instancePool.pop();
+    Klass.call(instance, a1, a2, a3);
+    return instance;
+  } else {
+    return new Klass(a1, a2, a3);
+  }
+};
+
+var fourArgumentPooler$1 = function fourArgumentPooler$1(a1, a2, a3, a4) {
+  var Klass = this;
+  if (Klass.instancePool.length) {
+    var instance = Klass.instancePool.pop();
+    Klass.call(instance, a1, a2, a3, a4);
+    return instance;
+  } else {
+    return new Klass(a1, a2, a3, a4);
+  }
+};
+
+var standardReleaser = function standardReleaser(instance) {
+  var Klass = this;
+  !(instance instanceof Klass) ? invariant(false, 'Trying to release an instance into a pool of a different type.') : void 0;
+  instance.destructor();
+  if (Klass.instancePool.length < Klass.poolSize) {
+    Klass.instancePool.push(instance);
+  }
+};
+
+var DEFAULT_POOL_SIZE = 10;
+var DEFAULT_POOLER = oneArgumentPooler;
+
+var addPoolingTo = function addPoolingTo(CopyConstructor, pooler) {
+  var NewKlass = CopyConstructor;
+  NewKlass.instancePool = [];
+  NewKlass.getPooled = pooler || DEFAULT_POOLER;
+  if (!NewKlass.poolSize) {
+    NewKlass.poolSize = DEFAULT_POOL_SIZE;
+  }
+  NewKlass.release = standardReleaser;
+  return NewKlass;
+};
+
+var PooledClass = {
+  addPoolingTo: addPoolingTo,
+  oneArgumentPooler: oneArgumentPooler,
+  twoArgumentPooler: twoArgumentPooler$1,
+  threeArgumentPooler: threeArgumentPooler,
+  fourArgumentPooler: fourArgumentPooler$1
+};
+
+var PooledClass_1 = PooledClass;
+
+var ReactCurrentOwner = {
+  current: null
+};
+
+var ReactCurrentOwner_1 = ReactCurrentOwner;
+
+var REACT_ELEMENT_TYPE = typeof Symbol === 'function' && Symbol['for'] && Symbol['for']('react.element') || 0xeac7;
+
+var ReactElementSymbol = REACT_ELEMENT_TYPE;
+
+var hasOwnProperty = Object.prototype.hasOwnProperty;
+
+var RESERVED_PROPS = {
+  key: true,
+  ref: true,
+  __self: true,
+  __source: true
+};
+
+var specialPropKeyWarningShown;
+var specialPropRefWarningShown;
+
+function hasValidRef(config) {
+  {
+    if (hasOwnProperty.call(config, 'ref')) {
+      var getter = Object.getOwnPropertyDescriptor(config, 'ref').get;
+      if (getter && getter.isReactWarning) {
+        return false;
+      }
+    }
+  }
+  return config.ref !== undefined;
+}
+
+function hasValidKey(config) {
+  {
+    if (hasOwnProperty.call(config, 'key')) {
+      var getter = Object.getOwnPropertyDescriptor(config, 'key').get;
+      if (getter && getter.isReactWarning) {
+        return false;
+      }
+    }
+  }
+  return config.key !== undefined;
+}
+
+function defineKeyPropWarningGetter(props, displayName) {
+  var warnAboutAccessingKey = function warnAboutAccessingKey() {
+    if (!specialPropKeyWarningShown) {
+      specialPropKeyWarningShown = true;
+      warning(false, '%s: `key` is not a prop. Trying to access it will result ' + 'in `undefined` being returned. If you need to access the same ' + 'value within the child component, you should pass it as a different ' + 'prop. (https://fb.me/react-special-props)', displayName);
+    }
+  };
+  warnAboutAccessingKey.isReactWarning = true;
+  Object.defineProperty(props, 'key', {
+    get: warnAboutAccessingKey,
+    configurable: true
+  });
+}
+
+function defineRefPropWarningGetter(props, displayName) {
+  var warnAboutAccessingRef = function warnAboutAccessingRef() {
+    if (!specialPropRefWarningShown) {
+      specialPropRefWarningShown = true;
+      warning(false, '%s: `ref` is not a prop. Trying to access it will result ' + 'in `undefined` being returned. If you need to access the same ' + 'value within the child component, you should pass it as a different ' + 'prop. (https://fb.me/react-special-props)', displayName);
+    }
+  };
+  warnAboutAccessingRef.isReactWarning = true;
+  Object.defineProperty(props, 'ref', {
+    get: warnAboutAccessingRef,
+    configurable: true
+  });
+}
+
+var ReactElement = function ReactElement(type, key, ref, self, source, owner, props) {
+  var element = {
+    $$typeof: ReactElementSymbol,
+
+    type: type,
+    key: key,
+    ref: ref,
+    props: props,
+
+    _owner: owner
+  };
+
+  {
+    element._store = {};
+
+    if (canDefineProperty_1) {
+      Object.defineProperty(element._store, 'validated', {
+        configurable: false,
+        enumerable: false,
+        writable: true,
+        value: false
+      });
+
+      Object.defineProperty(element, '_self', {
+        configurable: false,
+        enumerable: false,
+        writable: false,
+        value: self
+      });
+
+      Object.defineProperty(element, '_source', {
+        configurable: false,
+        enumerable: false,
+        writable: false,
+        value: source
+      });
+    } else {
+      element._store.validated = false;
+      element._self = self;
+      element._source = source;
+    }
+    if (Object.freeze) {
+      Object.freeze(element.props);
+      Object.freeze(element);
+    }
+  }
+
+  return element;
+};
+
+ReactElement.createElement = function (type, config, children) {
+  var propName;
+
+  var props = {};
+
+  var key = null;
+  var ref = null;
+  var self = null;
+  var source = null;
+
+  if (config != null) {
+    if (hasValidRef(config)) {
+      ref = config.ref;
+    }
+    if (hasValidKey(config)) {
+      key = '' + config.key;
+    }
+
+    self = config.__self === undefined ? null : config.__self;
+    source = config.__source === undefined ? null : config.__source;
+
+    for (propName in config) {
+      if (hasOwnProperty.call(config, propName) && !RESERVED_PROPS.hasOwnProperty(propName)) {
+        props[propName] = config[propName];
+      }
+    }
+  }
+
+  var childrenLength = arguments.length - 2;
+  if (childrenLength === 1) {
+    props.children = children;
+  } else if (childrenLength > 1) {
+    var childArray = Array(childrenLength);
+    for (var i = 0; i < childrenLength; i++) {
+      childArray[i] = arguments[i + 2];
+    }
+    {
+      if (Object.freeze) {
+        Object.freeze(childArray);
+      }
+    }
+    props.children = childArray;
+  }
+
+  if (type && type.defaultProps) {
+    var defaultProps = type.defaultProps;
+    for (propName in defaultProps) {
+      if (props[propName] === undefined) {
+        props[propName] = defaultProps[propName];
+      }
+    }
+  }
+  {
+    if (key || ref) {
+      if (typeof props.$$typeof === 'undefined' || props.$$typeof !== ReactElementSymbol) {
+        var displayName = typeof type === 'function' ? type.displayName || type.name || 'Unknown' : type;
+        if (key) {
+          defineKeyPropWarningGetter(props, displayName);
+        }
+        if (ref) {
+          defineRefPropWarningGetter(props, displayName);
+        }
+      }
+    }
+  }
+  return ReactElement(type, key, ref, self, source, ReactCurrentOwner_1.current, props);
+};
+
+ReactElement.createFactory = function (type) {
+  var factory$$1 = ReactElement.createElement.bind(null, type);
+
+  factory$$1.type = type;
+  return factory$$1;
+};
+
+ReactElement.cloneAndReplaceKey = function (oldElement, newKey) {
+  var newElement = ReactElement(oldElement.type, newKey, oldElement.ref, oldElement._self, oldElement._source, oldElement._owner, oldElement.props);
+
+  return newElement;
+};
+
+ReactElement.cloneElement = function (element, config, children) {
+  var propName;
+
+  var props = objectAssign$1({}, element.props);
+
+  var key = element.key;
+  var ref = element.ref;
+
+  var self = element._self;
+
+  var source = element._source;
+
+  var owner = element._owner;
+
+  if (config != null) {
+    if (hasValidRef(config)) {
+      ref = config.ref;
+      owner = ReactCurrentOwner_1.current;
+    }
+    if (hasValidKey(config)) {
+      key = '' + config.key;
+    }
+
+    var defaultProps;
+    if (element.type && element.type.defaultProps) {
+      defaultProps = element.type.defaultProps;
+    }
+    for (propName in config) {
+      if (hasOwnProperty.call(config, propName) && !RESERVED_PROPS.hasOwnProperty(propName)) {
+        if (config[propName] === undefined && defaultProps !== undefined) {
+          props[propName] = defaultProps[propName];
+        } else {
+          props[propName] = config[propName];
+        }
+      }
+    }
+  }
+
+  var childrenLength = arguments.length - 2;
+  if (childrenLength === 1) {
+    props.children = children;
+  } else if (childrenLength > 1) {
+    var childArray = Array(childrenLength);
+    for (var i = 0; i < childrenLength; i++) {
+      childArray[i] = arguments[i + 2];
+    }
+    props.children = childArray;
+  }
+
+  return ReactElement(element.type, key, ref, self, source, owner, props);
+};
+
+ReactElement.isValidElement = function (object) {
+  return typeof object === 'object' && object !== null && object.$$typeof === ReactElementSymbol;
+};
+
+var ReactElement_1 = ReactElement;
+
+var ITERATOR_SYMBOL = typeof Symbol === 'function' && (typeof Symbol === 'function' ? Symbol.iterator : '@@iterator');
+var FAUX_ITERATOR_SYMBOL = '@@iterator';
+function getIteratorFn(maybeIterable) {
+  var iteratorFn = maybeIterable && (ITERATOR_SYMBOL && maybeIterable[ITERATOR_SYMBOL] || maybeIterable[FAUX_ITERATOR_SYMBOL]);
+  if (typeof iteratorFn === 'function') {
+    return iteratorFn;
+  }
+}
+
+var getIteratorFn_1 = getIteratorFn;
+
+function escape(key) {
+  var escapeRegex = /[=:]/g;
+  var escaperLookup = {
+    '=': '=0',
+    ':': '=2'
+  };
+  var escapedString = ('' + key).replace(escapeRegex, function (match) {
+    return escaperLookup[match];
+  });
+
+  return '$' + escapedString;
+}
+
+function unescape(key) {
+  var unescapeRegex = /(=0|=2)/g;
+  var unescaperLookup = {
+    '=0': '=',
+    '=2': ':'
+  };
+  var keySubstring = key[0] === '.' && key[1] === '$' ? key.substring(2) : key.substring(1);
+
+  return ('' + keySubstring).replace(unescapeRegex, function (match) {
+    return unescaperLookup[match];
+  });
+}
+
+var KeyEscapeUtils = {
+  escape: escape,
+  unescape: unescape
+};
+
+var KeyEscapeUtils_1 = KeyEscapeUtils;
+
+var ReactTypeOfWork = {
+  IndeterminateComponent: 0,
+  FunctionalComponent: 1,
+  ClassComponent: 2,
+  HostRoot: 3,
+  HostPortal: 4,
+  HostComponent: 5,
+  HostText: 6,
+  CoroutineComponent: 7,
+  CoroutineHandlerPhase: 8,
+  YieldComponent: 9,
+  Fragment: 10
+};
+
+function getComponentName(instanceOrFiber) {
+  if (typeof instanceOrFiber.getName === 'function') {
+    var instance = instanceOrFiber;
+    return instance.getName();
+  }
+  if (typeof instanceOrFiber.tag === 'number') {
+    var fiber = instanceOrFiber;
+    var type = fiber.type;
+
+    if (typeof type === 'string') {
+      return type;
+    }
+    if (typeof type === 'function') {
+      return type.displayName || type.name;
+    }
+  }
+  return null;
+}
+
+var getComponentName_1 = getComponentName;
+
+var IndeterminateComponent = ReactTypeOfWork.IndeterminateComponent;
+var FunctionalComponent = ReactTypeOfWork.FunctionalComponent;
+var ClassComponent = ReactTypeOfWork.ClassComponent;
+var HostComponent = ReactTypeOfWork.HostComponent;
+
+function describeComponentFrame$1(name, source, ownerName) {
+  return '\n    in ' + (name || 'Unknown') + (source ? ' (at ' + source.fileName.replace(/^.*[\\\/]/, '') + ':' + source.lineNumber + ')' : ownerName ? ' (created by ' + ownerName + ')' : '');
+}
+
+function describeFiber(fiber) {
+  switch (fiber.tag) {
+    case IndeterminateComponent:
+    case FunctionalComponent:
+    case ClassComponent:
+    case HostComponent:
+      var owner = fiber._debugOwner;
+      var source = fiber._debugSource;
+      var name = getComponentName_1(fiber);
+      var ownerName = null;
+      if (owner) {
+        ownerName = getComponentName_1(owner);
+      }
+      return describeComponentFrame$1(name, source, ownerName);
+    default:
+      return '';
+  }
+}
+
+function getStackAddendumByWorkInProgressFiber$1(workInProgress) {
+  var info = '';
+  var node = workInProgress;
+  do {
+    info += describeFiber(node);
+
+    node = node['return'];
+  } while (node);
+  return info;
+}
+
+var ReactFiberComponentTreeHook = {
+  getStackAddendumByWorkInProgressFiber: getStackAddendumByWorkInProgressFiber$1,
+  describeComponentFrame: describeComponentFrame$1
+};
+
+var getStackAddendumByWorkInProgressFiber = ReactFiberComponentTreeHook.getStackAddendumByWorkInProgressFiber;
+var describeComponentFrame = ReactFiberComponentTreeHook.describeComponentFrame;
+
+function isNative(fn) {
+  var funcToString = Function.prototype.toString;
+  var reIsNative = RegExp('^' + funcToString.call(Object.prototype.hasOwnProperty).replace(/[\\^$.*+?()[\]{}|]/g, '\\$&').replace(/hasOwnProperty|(function).*?(?=\\\()| for .+?(?=\\\])/g, '$1.*?') + '$');
+  try {
+    var source = funcToString.call(fn);
+    return reIsNative.test(source);
+  } catch (err) {
+    return false;
+  }
+}
+
+var canUseCollections = typeof Array.from === 'function' && typeof Map === 'function' && isNative(Map) && Map.prototype != null && typeof Map.prototype.keys === 'function' && isNative(Map.prototype.keys) && typeof Set === 'function' && isNative(Set) && Set.prototype != null && typeof Set.prototype.keys === 'function' && isNative(Set.prototype.keys);
+
+var setItem;
+var getItem;
+var removeItem;
+var getItemIDs;
+var addRoot;
+var removeRoot;
+var getRootIDs;
+
+if (canUseCollections) {
+  var itemMap = new Map();
+  var rootIDSet = new Set();
+
+  setItem = function setItem(id, item) {
+    itemMap.set(id, item);
+  };
+  getItem = function getItem(id) {
+    return itemMap.get(id);
+  };
+  removeItem = function removeItem(id) {
+    itemMap['delete'](id);
+  };
+  getItemIDs = function getItemIDs() {
+    return Array.from(itemMap.keys());
+  };
+
+  addRoot = function addRoot(id) {
+    rootIDSet.add(id);
+  };
+  removeRoot = function removeRoot(id) {
+    rootIDSet['delete'](id);
+  };
+  getRootIDs = function getRootIDs() {
+    return Array.from(rootIDSet.keys());
+  };
+} else {
+  var itemByKey = {};
+  var rootByKey = {};
+
+  var getKeyFromID = function getKeyFromID(id) {
+    return '.' + id;
+  };
+  var getIDFromKey = function getIDFromKey(key) {
+    return parseInt(key.substr(1), 10);
+  };
+
+  setItem = function setItem(id, item) {
+    var key = getKeyFromID(id);
+    itemByKey[key] = item;
+  };
+  getItem = function getItem(id) {
+    var key = getKeyFromID(id);
+    return itemByKey[key];
+  };
+  removeItem = function removeItem(id) {
+    var key = getKeyFromID(id);
+    delete itemByKey[key];
+  };
+  getItemIDs = function getItemIDs() {
+    return Object.keys(itemByKey).map(getIDFromKey);
+  };
+
+  addRoot = function addRoot(id) {
+    var key = getKeyFromID(id);
+    rootByKey[key] = true;
+  };
+  removeRoot = function removeRoot(id) {
+    var key = getKeyFromID(id);
+    delete rootByKey[key];
+  };
+  getRootIDs = function getRootIDs() {
+    return Object.keys(rootByKey).map(getIDFromKey);
+  };
+}
+
+var unmountedIDs = [];
+
+function purgeDeep(id) {
+  var item = getItem(id);
+  if (item) {
+    var childIDs = item.childIDs;
+
+    removeItem(id);
+    childIDs.forEach(purgeDeep);
+  }
+}
+
+function _getDisplayName(element) {
+  if (element == null) {
+    return '#empty';
+  } else if (typeof element === 'string' || typeof element === 'number') {
+    return '#text';
+  } else if (typeof element.type === 'string') {
+    return element.type;
+  } else {
+    return element.type.displayName || element.type.name || 'Unknown';
+  }
+}
+
+function describeID(id) {
+  var name = ReactComponentTreeHook.getDisplayName(id);
+  var element = ReactComponentTreeHook.getElement(id);
+  var ownerID = ReactComponentTreeHook.getOwnerID(id);
+  var ownerName = void 0;
+
+  if (ownerID) {
+    ownerName = ReactComponentTreeHook.getDisplayName(ownerID);
+  }
+  warning(element, 'ReactComponentTreeHook: Missing React element for debugID %s when ' + 'building stack', id);
+  return describeComponentFrame(name || '', element && element._source, ownerName || '');
+}
+
+var ReactComponentTreeHook = {
+  onSetChildren: function onSetChildren(id, nextChildIDs) {
+    var item = getItem(id);
+    invariant(item, 'Item must have been set');
+    item.childIDs = nextChildIDs;
+
+    for (var i = 0; i < nextChildIDs.length; i++) {
+      var nextChildID = nextChildIDs[i];
+      var nextChild = getItem(nextChildID);
+      !nextChild ? invariant(false, 'Expected hook events to fire for the child before its parent includes it in onSetChildren().') : void 0;
+      !(nextChild.childIDs != null || typeof nextChild.element !== 'object' || nextChild.element == null) ? invariant(false, 'Expected onSetChildren() to fire for a container child before its parent includes it in onSetChildren().') : void 0;
+      !nextChild.isMounted ? invariant(false, 'Expected onMountComponent() to fire for the child before its parent includes it in onSetChildren().') : void 0;
+      if (nextChild.parentID == null) {
+        nextChild.parentID = id;
+      }
+      !(nextChild.parentID === id) ? invariant(false, 'Expected onBeforeMountComponent() parent and onSetChildren() to be consistent (%s has parents %s and %s).', nextChildID, nextChild.parentID, id) : void 0;
+    }
+  },
+  onBeforeMountComponent: function onBeforeMountComponent(id, element, parentID) {
+    var item = {
+      element: element,
+      parentID: parentID,
+      text: null,
+      childIDs: [],
+      isMounted: false,
+      updateCount: 0
+    };
+    setItem(id, item);
+  },
+  onBeforeUpdateComponent: function onBeforeUpdateComponent(id, element) {
+    var item = getItem(id);
+    if (!item || !item.isMounted) {
+      return;
+    }
+    item.element = element;
+  },
+  onMountComponent: function onMountComponent(id) {
+    var item = getItem(id);
+    invariant(item, 'Item must have been set');
+    item.isMounted = true;
+    var isRoot = item.parentID === 0;
+    if (isRoot) {
+      addRoot(id);
+    }
+  },
+  onUpdateComponent: function onUpdateComponent(id) {
+    var item = getItem(id);
+    if (!item || !item.isMounted) {
+      return;
+    }
+    item.updateCount++;
+  },
+  onUnmountComponent: function onUnmountComponent(id) {
+    var item = getItem(id);
+    if (item) {
+      item.isMounted = false;
+      var isRoot = item.parentID === 0;
+      if (isRoot) {
+        removeRoot(id);
+      }
+    }
+    unmountedIDs.push(id);
+  },
+  purgeUnmountedComponents: function purgeUnmountedComponents() {
+    if (ReactComponentTreeHook._preventPurging) {
+      return;
+    }
+
+    for (var i = 0; i < unmountedIDs.length; i++) {
+      var id = unmountedIDs[i];
+      purgeDeep(id);
+    }
+    unmountedIDs.length = 0;
+  },
+  isMounted: function isMounted(id) {
+    var item = getItem(id);
+    return item ? item.isMounted : false;
+  },
+  getCurrentStackAddendum: function getCurrentStackAddendum(topElement) {
+    var info = '';
+    if (topElement) {
+      var name = _getDisplayName(topElement);
+      var owner = topElement._owner;
+      info += describeComponentFrame(name, topElement._source, owner && getComponentName_1(owner));
+    }
+
+    var currentOwner = ReactCurrentOwner_1.current;
+    if (currentOwner) {
+      if (typeof currentOwner.tag === 'number') {
+        var workInProgress = currentOwner;
+
+        info += getStackAddendumByWorkInProgressFiber(workInProgress);
+      } else if (typeof currentOwner._debugID === 'number') {
+        info += ReactComponentTreeHook.getStackAddendumByID(currentOwner._debugID);
+      }
+    }
+    return info;
+  },
+  getStackAddendumByID: function getStackAddendumByID(id) {
+    var info = '';
+    while (id) {
+      info += describeID(id);
+      id = ReactComponentTreeHook.getParentID(id);
+    }
+    return info;
+  },
+  getChildIDs: function getChildIDs(id) {
+    var item = getItem(id);
+    return item ? item.childIDs : [];
+  },
+  getDisplayName: function getDisplayName(id) {
+    var element = ReactComponentTreeHook.getElement(id);
+    if (!element) {
+      return null;
+    }
+    return _getDisplayName(element);
+  },
+  getElement: function getElement(id) {
+    var item = getItem(id);
+    return item ? item.element : null;
+  },
+  getOwnerID: function getOwnerID(id) {
+    var element = ReactComponentTreeHook.getElement(id);
+    if (!element || !element._owner) {
+      return null;
+    }
+    return element._owner._debugID;
+  },
+  getParentID: function getParentID(id) {
+    var item = getItem(id);
+    return item ? item.parentID : null;
+  },
+  getSource: function getSource(id) {
+    var item = getItem(id);
+    var element = item ? item.element : null;
+    var source = element != null ? element._source : null;
+    return source;
+  },
+  getText: function getText(id) {
+    var element = ReactComponentTreeHook.getElement(id);
+    if (typeof element === 'string') {
+      return element;
+    } else if (typeof element === 'number') {
+      return '' + element;
+    } else {
+      return null;
+    }
+  },
+  getUpdateCount: function getUpdateCount(id) {
+    var item = getItem(id);
+    return item ? item.updateCount : 0;
+  },
+
+  getRootIDs: getRootIDs,
+  getRegisteredIDs: getItemIDs
+};
+
+var ReactComponentTreeHook_1 = ReactComponentTreeHook;
+
+{
+  var _require = ReactComponentTreeHook_1,
+      getCurrentStackAddendum = _require.getCurrentStackAddendum;
+}
+
+var SEPARATOR = '.';
+var SUBSEPARATOR = ':';
+
+var didWarnAboutMaps = false;
+
+function getComponentKey(component, index) {
+  if (typeof component === 'object' && component !== null && component.key != null) {
+    return KeyEscapeUtils_1.escape(component.key);
+  }
+
+  return index.toString(36);
+}
+
+function traverseAllChildrenImpl(children, nameSoFar, callback, traverseContext) {
+  var type = typeof children;
+
+  if (type === 'undefined' || type === 'boolean') {
+    children = null;
+  }
+
+  if (children === null || type === 'string' || type === 'number' || type === 'object' && children.$$typeof === ReactElementSymbol) {
+    callback(traverseContext, children, nameSoFar === '' ? SEPARATOR + getComponentKey(children, 0) : nameSoFar);
+    return 1;
+  }
+
+  var child;
+  var nextName;
+  var subtreeCount = 0;
+  var nextNamePrefix = nameSoFar === '' ? SEPARATOR : nameSoFar + SUBSEPARATOR;
+
+  if (Array.isArray(children)) {
+    for (var i = 0; i < children.length; i++) {
+      child = children[i];
+      nextName = nextNamePrefix + getComponentKey(child, i);
+      subtreeCount += traverseAllChildrenImpl(child, nextName, callback, traverseContext);
+    }
+  } else {
+    var iteratorFn = getIteratorFn_1(children);
+    if (iteratorFn) {
+      {
+        if (iteratorFn === children.entries) {
+          warning(didWarnAboutMaps, 'Using Maps as children is unsupported and will likely yield ' + 'unexpected results. Convert it to a sequence/iterable of keyed ' + 'ReactElements instead.%s', getCurrentStackAddendum());
+          didWarnAboutMaps = true;
+        }
+      }
+
+      var iterator = iteratorFn.call(children);
+      var step;
+      var ii = 0;
+      while (!(step = iterator.next()).done) {
+        child = step.value;
+        nextName = nextNamePrefix + getComponentKey(child, ii++);
+        subtreeCount += traverseAllChildrenImpl(child, nextName, callback, traverseContext);
+      }
+    } else if (type === 'object') {
+      var addendum = '';
+      {
+        addendum = ' If you meant to render a collection of children, use an array ' + 'instead.' + getCurrentStackAddendum();
+      }
+      var childrenString = '' + children;
+      invariant(false, 'Objects are not valid as a React child (found: %s).%s', childrenString === '[object Object]' ? 'object with keys {' + Object.keys(children).join(', ') + '}' : childrenString, addendum);
+    }
+  }
+
+  return subtreeCount;
+}
+
+function traverseAllChildren(children, callback, traverseContext) {
+  if (children == null) {
+    return 0;
+  }
+
+  return traverseAllChildrenImpl(children, '', callback, traverseContext);
+}
+
+var traverseAllChildren_1 = traverseAllChildren;
+
+var twoArgumentPooler = PooledClass_1.twoArgumentPooler;
+var fourArgumentPooler = PooledClass_1.fourArgumentPooler;
+
+var userProvidedKeyEscapeRegex = /\/+/g;
+function escapeUserProvidedKey(text) {
+  return ('' + text).replace(userProvidedKeyEscapeRegex, '$&/');
+}
+
+function ForEachBookKeeping(forEachFunction, forEachContext) {
+  this.func = forEachFunction;
+  this.context = forEachContext;
+  this.count = 0;
+}
+ForEachBookKeeping.prototype.destructor = function () {
+  this.func = null;
+  this.context = null;
+  this.count = 0;
+};
+PooledClass_1.addPoolingTo(ForEachBookKeeping, twoArgumentPooler);
+
+function forEachSingleChild(bookKeeping, child, name) {
+  var func = bookKeeping.func,
+      context = bookKeeping.context;
+
+  func.call(context, child, bookKeeping.count++);
+}
+
+function forEachChildren(children, forEachFunc, forEachContext) {
+  if (children == null) {
+    return children;
+  }
+  var traverseContext = ForEachBookKeeping.getPooled(forEachFunc, forEachContext);
+  traverseAllChildren_1(children, forEachSingleChild, traverseContext);
+  ForEachBookKeeping.release(traverseContext);
+}
+
+function MapBookKeeping(mapResult, keyPrefix, mapFunction, mapContext) {
+  this.result = mapResult;
+  this.keyPrefix = keyPrefix;
+  this.func = mapFunction;
+  this.context = mapContext;
+  this.count = 0;
+}
+MapBookKeeping.prototype.destructor = function () {
+  this.result = null;
+  this.keyPrefix = null;
+  this.func = null;
+  this.context = null;
+  this.count = 0;
+};
+PooledClass_1.addPoolingTo(MapBookKeeping, fourArgumentPooler);
+
+function mapSingleChildIntoContext(bookKeeping, child, childKey) {
+  var result = bookKeeping.result,
+      keyPrefix = bookKeeping.keyPrefix,
+      func = bookKeeping.func,
+      context = bookKeeping.context;
+
+  var mappedChild = func.call(context, child, bookKeeping.count++);
+  if (Array.isArray(mappedChild)) {
+    mapIntoWithKeyPrefixInternal(mappedChild, result, childKey, emptyFunction.thatReturnsArgument);
+  } else if (mappedChild != null) {
+    if (ReactElement_1.isValidElement(mappedChild)) {
+      mappedChild = ReactElement_1.cloneAndReplaceKey(mappedChild, keyPrefix + (mappedChild.key && (!child || child.key !== mappedChild.key) ? escapeUserProvidedKey(mappedChild.key) + '/' : '') + childKey);
+    }
+    result.push(mappedChild);
+  }
+}
+
+function mapIntoWithKeyPrefixInternal(children, array, prefix, func, context) {
+  var escapedPrefix = '';
+  if (prefix != null) {
+    escapedPrefix = escapeUserProvidedKey(prefix) + '/';
+  }
+  var traverseContext = MapBookKeeping.getPooled(array, escapedPrefix, func, context);
+  traverseAllChildren_1(children, mapSingleChildIntoContext, traverseContext);
+  MapBookKeeping.release(traverseContext);
+}
+
+function mapChildren(children, func, context) {
+  if (children == null) {
+    return children;
+  }
+  var result = [];
+  mapIntoWithKeyPrefixInternal(children, result, null, func, context);
+  return result;
+}
+
+function forEachSingleChildDummy(traverseContext, child, name) {
+  return null;
+}
+
+function countChildren(children, context) {
+  return traverseAllChildren_1(children, forEachSingleChildDummy, null);
+}
+
+function toArray(children) {
+  var result = [];
+  mapIntoWithKeyPrefixInternal(children, result, null, emptyFunction.thatReturnsArgument);
+  return result;
+}
+
+var ReactChildren = {
+  forEach: forEachChildren,
+  map: mapChildren,
+  mapIntoWithKeyPrefixInternal: mapIntoWithKeyPrefixInternal,
+  count: countChildren,
+  toArray: toArray
+};
+
+var ReactChildren_1 = ReactChildren;
+
+var ReactDebugCurrentFrame$1 = {};
+
+{
+  var _require$2 = ReactComponentTreeHook_1,
+      getStackAddendumByID = _require$2.getStackAddendumByID,
+      getCurrentStackAddendum$2 = _require$2.getCurrentStackAddendum;
+
+  var _require2$1 = ReactFiberComponentTreeHook,
+      getStackAddendumByWorkInProgressFiber$2 = _require2$1.getStackAddendumByWorkInProgressFiber;
+
+  ReactDebugCurrentFrame$1.current = null;
+
+  ReactDebugCurrentFrame$1.element = null;
+
+  ReactDebugCurrentFrame$1.getStackAddendum = function () {
+    var stack = null;
+    var current = ReactDebugCurrentFrame$1.current;
+    var element = ReactDebugCurrentFrame$1.element;
+    if (current !== null) {
+      if (typeof current === 'number') {
+        var debugID = current;
+        stack = getStackAddendumByID(debugID);
+      } else if (typeof current.tag === 'number') {
+        var workInProgress = current;
+        stack = getStackAddendumByWorkInProgressFiber$2(workInProgress);
+      }
+    } else if (element !== null) {
+      stack = getCurrentStackAddendum$2(element);
+    }
+    return stack;
+  };
+}
+
+var ReactDebugCurrentFrame_1 = ReactDebugCurrentFrame$1;
+
+{
+  var checkPropTypes$1 = checkPropTypes;
+  var warning$2 = warning;
+  var ReactDebugCurrentFrame = ReactDebugCurrentFrame_1;
+
+  var _require$1 = ReactComponentTreeHook_1,
+      getCurrentStackAddendum$1 = _require$1.getCurrentStackAddendum;
+}
+
+function getDeclarationErrorAddendum() {
+  if (ReactCurrentOwner_1.current) {
+    var name = getComponentName_1(ReactCurrentOwner_1.current);
+    if (name) {
+      return '\n\nCheck the render method of `' + name + '`.';
+    }
+  }
+  return '';
+}
+
+function getSourceInfoErrorAddendum(elementProps) {
+  if (elementProps !== null && elementProps !== undefined && elementProps.__source !== undefined) {
+    var source = elementProps.__source;
+    var fileName = source.fileName.replace(/^.*[\\\/]/, '');
+    var lineNumber = source.lineNumber;
+    return '\n\nCheck your code at ' + fileName + ':' + lineNumber + '.';
+  }
+  return '';
+}
+
+var ownerHasKeyUseWarning = {};
+
+function getCurrentComponentErrorInfo(parentType) {
+  var info = getDeclarationErrorAddendum();
+
+  if (!info) {
+    var parentName = typeof parentType === 'string' ? parentType : parentType.displayName || parentType.name;
+    if (parentName) {
+      info = '\n\nCheck the top-level render call using <' + parentName + '>.';
+    }
+  }
+  return info;
+}
+
+function validateExplicitKey(element, parentType) {
+  if (!element._store || element._store.validated || element.key != null) {
+    return;
+  }
+  element._store.validated = true;
+
+  var currentComponentErrorInfo = getCurrentComponentErrorInfo(parentType);
+  if (ownerHasKeyUseWarning[currentComponentErrorInfo]) {
+    return;
+  }
+  ownerHasKeyUseWarning[currentComponentErrorInfo] = true;
+
+  var childOwner = '';
+  if (element && element._owner && element._owner !== ReactCurrentOwner_1.current) {
+    childOwner = ' It was passed a child from ' + getComponentName_1(element._owner) + '.';
+  }
+
+  warning$2(false, 'Each child in an array or iterator should have a unique "key" prop.' + '%s%s See https://fb.me/react-warning-keys for more information.%s', currentComponentErrorInfo, childOwner, getCurrentStackAddendum$1(element));
+}
+
+function validateChildKeys(node, parentType) {
+  if (typeof node !== 'object') {
+    return;
+  }
+  if (Array.isArray(node)) {
+    for (var i = 0; i < node.length; i++) {
+      var child = node[i];
+      if (ReactElement_1.isValidElement(child)) {
+        validateExplicitKey(child, parentType);
+      }
+    }
+  } else if (ReactElement_1.isValidElement(node)) {
+    if (node._store) {
+      node._store.validated = true;
+    }
+  } else if (node) {
+    var iteratorFn = getIteratorFn_1(node);
+
+    if (iteratorFn) {
+      if (iteratorFn !== node.entries) {
+        var iterator = iteratorFn.call(node);
+        var step;
+        while (!(step = iterator.next()).done) {
+          if (ReactElement_1.isValidElement(step.value)) {
+            validateExplicitKey(step.value, parentType);
+          }
+        }
+      }
+    }
+  }
+}
+
+function validatePropTypes(element) {
+  var componentClass = element.type;
+  if (typeof componentClass !== 'function') {
+    return;
+  }
+  var name = componentClass.displayName || componentClass.name;
+
+  var propTypes$$1 = typeof componentClass.__propTypesSecretDontUseThesePlease === 'object' ? componentClass.__propTypesSecretDontUseThesePlease : componentClass.propTypes;
+
+  if (propTypes$$1) {
+    checkPropTypes$1(propTypes$$1, element.props, 'prop', name, ReactDebugCurrentFrame.getStackAddendum);
+  }
+  if (typeof componentClass.getDefaultProps === 'function') {
+    warning$2(componentClass.getDefaultProps.isReactClassApproved, 'getDefaultProps is only used on classic React.createClass ' + 'definitions. Use a static property named `defaultProps` instead.');
+  }
+}
+
+var ReactElementValidator$2 = {
+  createElement: function createElement(type, props, children) {
+    var validType = typeof type === 'string' || typeof type === 'function';
+
+    if (!validType) {
+      var info = '';
+      if (type === undefined || typeof type === 'object' && type !== null && Object.keys(type).length === 0) {
+        info += ' You likely forgot to export your component from the file ' + "it's defined in.";
+      }
+
+      var sourceInfo = getSourceInfoErrorAddendum(props);
+      if (sourceInfo) {
+        info += sourceInfo;
+      } else {
+        info += getDeclarationErrorAddendum();
+      }
+
+      info += getCurrentStackAddendum$1();
+
+      warning$2(false, 'React.createElement: type is invalid -- expected a string (for ' + 'built-in components) or a class/function (for composite ' + 'components) but got: %s.%s', type == null ? type : typeof type, info);
+    }
+
+    var element = ReactElement_1.createElement.apply(this, arguments);
+
+    if (element == null) {
+      return element;
+    }
+
+    {
+      ReactDebugCurrentFrame.element = element;
+    }
+
+    if (validType) {
+      for (var i = 2; i < arguments.length; i++) {
+        validateChildKeys(arguments[i], type);
+      }
+    }
+
+    validatePropTypes(element);
+
+    {
+      ReactDebugCurrentFrame.element = null;
+    }
+
+    return element;
+  },
+
+  createFactory: function createFactory(type) {
+    var validatedFactory = ReactElementValidator$2.createElement.bind(null, type);
+
+    validatedFactory.type = type;
+
+    {
+      if (canDefineProperty_1) {
+        Object.defineProperty(validatedFactory, 'type', {
+          enumerable: false,
+          get: function get() {
+            warning$2(false, 'Factory.type is deprecated. Access the class directly ' + 'before passing it to createFactory.');
+            Object.defineProperty(this, 'type', {
+              value: type
+            });
+            return type;
+          }
+        });
+      }
+    }
+
+    return validatedFactory;
+  },
+
+  cloneElement: function cloneElement(element, props, children) {
+    var newElement = ReactElement_1.cloneElement.apply(this, arguments);
+    {
+      ReactDebugCurrentFrame.element = newElement;
+    }
+    for (var i = 2; i < arguments.length; i++) {
+      validateChildKeys(arguments[i], newElement.type);
+    }
+    validatePropTypes(newElement);
+    {
+      ReactDebugCurrentFrame.element = null;
+    }
+    return newElement;
+  }
+};
+
+var ReactElementValidator_1 = ReactElementValidator$2;
+
+var createDOMFactory = ReactElement_1.createFactory;
+{
+  var ReactElementValidator$1 = ReactElementValidator_1;
+  createDOMFactory = ReactElementValidator$1.createFactory;
+}
+
+var ReactDOMFactories = {
+  a: createDOMFactory('a'),
+  abbr: createDOMFactory('abbr'),
+  address: createDOMFactory('address'),
+  area: createDOMFactory('area'),
+  article: createDOMFactory('article'),
+  aside: createDOMFactory('aside'),
+  audio: createDOMFactory('audio'),
+  b: createDOMFactory('b'),
+  base: createDOMFactory('base'),
+  bdi: createDOMFactory('bdi'),
+  bdo: createDOMFactory('bdo'),
+  big: createDOMFactory('big'),
+  blockquote: createDOMFactory('blockquote'),
+  body: createDOMFactory('body'),
+  br: createDOMFactory('br'),
+  button: createDOMFactory('button'),
+  canvas: createDOMFactory('canvas'),
+  caption: createDOMFactory('caption'),
+  cite: createDOMFactory('cite'),
+  code: createDOMFactory('code'),
+  col: createDOMFactory('col'),
+  colgroup: createDOMFactory('colgroup'),
+  data: createDOMFactory('data'),
+  datalist: createDOMFactory('datalist'),
+  dd: createDOMFactory('dd'),
+  del: createDOMFactory('del'),
+  details: createDOMFactory('details'),
+  dfn: createDOMFactory('dfn'),
+  dialog: createDOMFactory('dialog'),
+  div: createDOMFactory('div'),
+  dl: createDOMFactory('dl'),
+  dt: createDOMFactory('dt'),
+  em: createDOMFactory('em'),
+  embed: createDOMFactory('embed'),
+  fieldset: createDOMFactory('fieldset'),
+  figcaption: createDOMFactory('figcaption'),
+  figure: createDOMFactory('figure'),
+  footer: createDOMFactory('footer'),
+  form: createDOMFactory('form'),
+  h1: createDOMFactory('h1'),
+  h2: createDOMFactory('h2'),
+  h3: createDOMFactory('h3'),
+  h4: createDOMFactory('h4'),
+  h5: createDOMFactory('h5'),
+  h6: createDOMFactory('h6'),
+  head: createDOMFactory('head'),
+  header: createDOMFactory('header'),
+  hgroup: createDOMFactory('hgroup'),
+  hr: createDOMFactory('hr'),
+  html: createDOMFactory('html'),
+  i: createDOMFactory('i'),
+  iframe: createDOMFactory('iframe'),
+  img: createDOMFactory('img'),
+  input: createDOMFactory('input'),
+  ins: createDOMFactory('ins'),
+  kbd: createDOMFactory('kbd'),
+  keygen: createDOMFactory('keygen'),
+  label: createDOMFactory('label'),
+  legend: createDOMFactory('legend'),
+  li: createDOMFactory('li'),
+  link: createDOMFactory('link'),
+  main: createDOMFactory('main'),
+  map: createDOMFactory('map'),
+  mark: createDOMFactory('mark'),
+  menu: createDOMFactory('menu'),
+  menuitem: createDOMFactory('menuitem'),
+  meta: createDOMFactory('meta'),
+  meter: createDOMFactory('meter'),
+  nav: createDOMFactory('nav'),
+  noscript: createDOMFactory('noscript'),
+  object: createDOMFactory('object'),
+  ol: createDOMFactory('ol'),
+  optgroup: createDOMFactory('optgroup'),
+  option: createDOMFactory('option'),
+  output: createDOMFactory('output'),
+  p: createDOMFactory('p'),
+  param: createDOMFactory('param'),
+  picture: createDOMFactory('picture'),
+  pre: createDOMFactory('pre'),
+  progress: createDOMFactory('progress'),
+  q: createDOMFactory('q'),
+  rp: createDOMFactory('rp'),
+  rt: createDOMFactory('rt'),
+  ruby: createDOMFactory('ruby'),
+  s: createDOMFactory('s'),
+  samp: createDOMFactory('samp'),
+  script: createDOMFactory('script'),
+  section: createDOMFactory('section'),
+  select: createDOMFactory('select'),
+  small: createDOMFactory('small'),
+  source: createDOMFactory('source'),
+  span: createDOMFactory('span'),
+  strong: createDOMFactory('strong'),
+  style: createDOMFactory('style'),
+  sub: createDOMFactory('sub'),
+  summary: createDOMFactory('summary'),
+  sup: createDOMFactory('sup'),
+  table: createDOMFactory('table'),
+  tbody: createDOMFactory('tbody'),
+  td: createDOMFactory('td'),
+  textarea: createDOMFactory('textarea'),
+  tfoot: createDOMFactory('tfoot'),
+  th: createDOMFactory('th'),
+  thead: createDOMFactory('thead'),
+  time: createDOMFactory('time'),
+  title: createDOMFactory('title'),
+  tr: createDOMFactory('tr'),
+  track: createDOMFactory('track'),
+  u: createDOMFactory('u'),
+  ul: createDOMFactory('ul'),
+  'var': createDOMFactory('var'),
+  video: createDOMFactory('video'),
+  wbr: createDOMFactory('wbr'),
+
+  circle: createDOMFactory('circle'),
+  clipPath: createDOMFactory('clipPath'),
+  defs: createDOMFactory('defs'),
+  ellipse: createDOMFactory('ellipse'),
+  g: createDOMFactory('g'),
+  image: createDOMFactory('image'),
+  line: createDOMFactory('line'),
+  linearGradient: createDOMFactory('linearGradient'),
+  mask: createDOMFactory('mask'),
+  path: createDOMFactory('path'),
+  pattern: createDOMFactory('pattern'),
+  polygon: createDOMFactory('polygon'),
+  polyline: createDOMFactory('polyline'),
+  radialGradient: createDOMFactory('radialGradient'),
+  rect: createDOMFactory('rect'),
+  stop: createDOMFactory('stop'),
+  svg: createDOMFactory('svg'),
+  text: createDOMFactory('text'),
+  tspan: createDOMFactory('tspan')
+};
+
+var ReactDOMFactories_1 = ReactDOMFactories;
+
+var ReactPropTypes = propTypes;
+
+var ReactVersion = '16.0.0-alpha.12';
+
+function onlyChild(children) {
+  !ReactElement_1.isValidElement(children) ? invariant(false, 'React.Children.only expected to receive a single React element child.') : void 0;
+  return children;
+}
+
+var onlyChild_1 = onlyChild;
+
+var Component = ReactBaseClasses.Component;
+
+var isValidElement = ReactElement_1.isValidElement;
+
+var createClass = factory(Component, isValidElement, ReactNoopUpdateQueue_1);
+
+var createElement = ReactElement_1.createElement;
+var createFactory = ReactElement_1.createFactory;
+var cloneElement = ReactElement_1.cloneElement;
+
+{
+  var warning$1 = warning;
+  var canDefineProperty = canDefineProperty_1;
+  var ReactElementValidator = ReactElementValidator_1;
+  createElement = ReactElementValidator.createElement;
+  createFactory = ReactElementValidator.createFactory;
+  cloneElement = ReactElementValidator.cloneElement;
+}
+
+var createMixin = function createMixin(mixin) {
+  return mixin;
+};
+
+var React = {
+
+  Children: {
+    map: ReactChildren_1.map,
+    forEach: ReactChildren_1.forEach,
+    count: ReactChildren_1.count,
+    toArray: ReactChildren_1.toArray,
+    only: onlyChild_1
+  },
+
+  Component: ReactBaseClasses.Component,
+  PureComponent: ReactBaseClasses.PureComponent,
+
+  createElement: createElement,
+  cloneElement: cloneElement,
+  isValidElement: ReactElement_1.isValidElement,
+
+  PropTypes: ReactPropTypes,
+  checkPropTypes: checkPropTypes,
+  createClass: createClass,
+
+  createFactory: createFactory,
+  createMixin: createMixin,
+
+  DOM: ReactDOMFactories_1,
+
+  version: ReactVersion,
+
+  __SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED: {
+    ReactCurrentOwner: ReactCurrentOwner_1
+  }
+};
+
+{
+  objectAssign$1(React.__SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED, {
+    ReactComponentTreeHook: ReactComponentTreeHook_1,
+    ReactDebugCurrentFrame: ReactDebugCurrentFrame_1
+  });
+
+  var warnedForCheckPropTypes = false;
+  var warnedForCreateMixin = false;
+  var warnedForCreateClass = false;
+  var warnedForPropTypes = false;
+
+  React.createMixin = function (mixin) {
+    warning$1(warnedForCreateMixin, 'React.createMixin is deprecated and should not be used. You ' + 'can use this mixin directly instead.');
+    warnedForCreateMixin = true;
+    return mixin;
+  };
+
+  if (canDefineProperty) {
+    Object.defineProperty(React, 'checkPropTypes', {
+      get: function get() {
+        warning$1(warnedForCheckPropTypes, 'checkPropTypes has been moved to a separate package. ' + 'Accessing React.checkPropTypes is no longer supported ' + 'and will be removed completely in React 16. ' + 'Use the prop-types package on npm instead. ' + '(https://fb.me/migrating-from-react-proptypes)');
+        warnedForCheckPropTypes = true;
+        return checkPropTypes;
+      }
+    });
+
+    Object.defineProperty(React, 'createClass', {
+      get: function get() {
+        warning$1(warnedForCreateClass, 'React.createClass is no longer supported. Use a plain JavaScript ' + "class instead. If you're not yet ready to migrate, " + 'create-react-class is available on npm as a drop-in replacement. ' + '(https://fb.me/migrating-from-react-create-class)');
+        warnedForCreateClass = true;
+        return createClass;
+      }
+    });
+
+    Object.defineProperty(React, 'PropTypes', {
+      get: function get() {
+        warning$1(warnedForPropTypes, 'PropTypes has been moved to a separate package. ' + 'Accessing React.PropTypes is no longer supported ' + 'and will be removed completely in React 16. ' + 'Use the prop-types package on npm instead. ' + '(https://fb.me/migrating-from-react-proptypes)');
+        warnedForPropTypes = true;
+        return ReactPropTypes;
+      }
+    });
+  }
+
+  React.DOM = {};
+  var warnedForFactories = false;
+  Object.keys(ReactDOMFactories_1).forEach(function (factory$$1) {
+    React.DOM[factory$$1] = function () {
+      if (!warnedForFactories) {
+        warning$1(false, 'Accessing factories like React.DOM.%s has been deprecated ' + 'and will be removed in the future. Use the ' + 'react-addons-dom-factories package instead.', factory$$1);
+        warnedForFactories = true;
+      }
+      return ReactDOMFactories_1[factory$$1].apply(ReactDOMFactories_1, arguments);
+    };
+  });
+}
+
+var React_1 = React;
+
+module.exports = React_1;

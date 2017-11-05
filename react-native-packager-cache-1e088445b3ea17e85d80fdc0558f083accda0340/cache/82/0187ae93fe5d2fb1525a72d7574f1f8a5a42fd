@@ -1,0 +1,52 @@
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+
+var _react = require('react');
+
+var _react2 = _interopRequireDefault(_react);
+
+var _redux = require('redux');
+
+var _reactRedux = require('react-redux');
+
+var _sync = require('./sync.template');
+
+var _sync2 = _interopRequireDefault(_sync);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var actions = {
+    REMOVE_ACTION: 'REMOVE_ACTION',
+    SYNC_ACTIONS: 'SYNC_ACTIONS'
+};
+
+var actionCreators = {
+    removeAction: removeAction,
+    syncActions: syncActions
+};
+
+function removeAction(_ref) {
+    var id = _ref.id;
+
+    return {
+        type: actions.REMOVE_ACTION,
+        payload: id
+    };
+}
+
+function syncActions() {
+    return {
+        type: actions.SYNC_ACTIONS
+    };
+}
+
+function mapStateToProps(state) {
+    return state.sync;
+}
+
+function mapDispatchToProps(dispatch) {
+    return (0, _redux.bindActionCreators)(actionCreators, dispatch);
+}
+
+exports.default = (0, _reactRedux.connect)(mapStateToProps, mapDispatchToProps)(_sync2.default);

@@ -1,0 +1,327 @@
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _react2 = require('react');
+
+var _react3 = _interopRequireDefault(_react2);
+
+var _index = require('./../react-transform-hmr/lib/index.js');
+
+var _index2 = _interopRequireDefault(_index);
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _class,
+    _temp,
+    _jsxFileName = '/home/bassihassan/Desktop/confIOReviewer/node_modules/react-native-qrcode-scanner/index.js';
+
+var _propTypes = require('prop-types');
+
+var _propTypes2 = _interopRequireDefault(_propTypes);
+
+var _reactNative = require('react-native');
+
+var _reactNativeCamera = require('react-native-camera');
+
+var _reactNativeCamera2 = _interopRequireDefault(_reactNativeCamera);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var _components = {
+  QRCodeScanner: {
+    displayName: 'QRCodeScanner'
+  }
+};
+
+var _reactTransformHmrLibIndexJs2 = (0, _index2.default)({
+  filename: '/home/bassihassan/Desktop/confIOReviewer/node_modules/react-native-qrcode-scanner/index.js',
+  components: _components,
+  locals: [module],
+  imports: [_react3.default]
+});
+
+function _wrapComponent(id) {
+  return function (Component) {
+    return _reactTransformHmrLibIndexJs2(Component, id);
+  };
+}
+
+var QRCodeScanner = _wrapComponent('QRCodeScanner')((_temp = _class = function (_Component) {
+  _inherits(QRCodeScanner, _Component);
+
+  function QRCodeScanner(props) {
+    _classCallCheck(this, QRCodeScanner);
+
+    var _this = _possibleConstructorReturn(this, (QRCodeScanner.__proto__ || Object.getPrototypeOf(QRCodeScanner)).call(this, props));
+
+    _this.state = {
+      scanning: false,
+      fadeInOpacity: new _reactNative.Animated.Value(0),
+      isAuthorized: false
+    };
+
+    _this._handleBarCodeRead = _this._handleBarCodeRead.bind(_this);
+    return _this;
+  }
+
+  _createClass(QRCodeScanner, [{
+    key: 'componentWillMount',
+    value: function componentWillMount() {
+      var _this2 = this;
+
+      if (_reactNative.Platform.OS === 'ios') {
+        _reactNativeCamera2.default.checkVideoAuthorizationStatus().then(function (isAuthorized) {
+          _this2.setState({ isAuthorized: isAuthorized });
+        });
+      } else {
+        this.setState({ isAuthorized: true });
+      }
+    }
+  }, {
+    key: 'componentDidMount',
+    value: function componentDidMount() {
+      if (this.props.fadeIn) {
+        _reactNative.Animated.sequence([_reactNative.Animated.delay(1000), _reactNative.Animated.timing(this.state.fadeInOpacity, {
+          toValue: 1,
+          easing: _reactNative.Easing.inOut(_reactNative.Easing.quad)
+        })]).start();
+      }
+    }
+  }, {
+    key: '_setScanning',
+    value: function _setScanning(value) {
+      this.setState({ scanning: value });
+    }
+  }, {
+    key: '_handleBarCodeRead',
+    value: function _handleBarCodeRead(e) {
+      var _this3 = this;
+
+      if (!this.state.scanning) {
+        _reactNative.Vibration.vibrate();
+        this._setScanning(true);
+        this.props.onRead(e);
+        if (this.props.reactivate) {
+          setTimeout(function () {
+            return _this3._setScanning(false);
+          }, this.props.reactivateTimeout);
+        }
+      }
+    }
+  }, {
+    key: '_renderTopContent',
+    value: function _renderTopContent() {
+      if (this.props.topContent) {
+        return this.props.topContent;
+      }
+      return null;
+    }
+  }, {
+    key: '_renderBottomContent',
+    value: function _renderBottomContent() {
+      if (this.props.bottomContent) {
+        return this.props.bottomContent;
+      }
+      return null;
+    }
+  }, {
+    key: '_renderCameraMarker',
+    value: function _renderCameraMarker() {
+      if (this.props.showMarker) {
+        if (this.props.customMarker) {
+          return this.props.customMarker;
+        } else {
+          return _react3.default.createElement(
+            _reactNative.View,
+            { style: styles.rectangleContainer, __source: {
+                fileName: _jsxFileName,
+                lineNumber: 138
+              }
+            },
+            _react3.default.createElement(_reactNative.View, { style: styles.rectangle, __source: {
+                fileName: _jsxFileName,
+                lineNumber: 139
+              }
+            })
+          );
+        }
+      }
+      return null;
+    }
+  }, {
+    key: '_renderCamera',
+    value: function _renderCamera() {
+      var notAuthorizedView = this.props.notAuthorizedView;
+      var isAuthorized = this.state.isAuthorized;
+
+      if (isAuthorized) {
+        if (this.props.fadeIn) {
+          return _react3.default.createElement(
+            _reactNative.Animated.View,
+            {
+              style: {
+                opacity: this.state.fadeInOpacity,
+                backgroundColor: 'transparent'
+              }, __source: {
+                fileName: _jsxFileName,
+                lineNumber: 153
+              }
+            },
+            _react3.default.createElement(
+              _reactNativeCamera2.default,
+              { style: [styles.camera, this.props.cameraStyle], onBarCodeRead: this._handleBarCodeRead.bind(this), __source: {
+                  fileName: _jsxFileName,
+                  lineNumber: 158
+                }
+              },
+              this._renderCameraMarker()
+            )
+          );
+        }
+        return _react3.default.createElement(
+          _reactNativeCamera2.default,
+          { style: [styles.camera, this.props.cameraStyle], onBarCodeRead: this._handleBarCodeRead.bind(this), __source: {
+              fileName: _jsxFileName,
+              lineNumber: 165
+            }
+          },
+          this._renderCameraMarker()
+        );
+      } else {
+        return notAuthorizedView;
+      }
+    }
+  }, {
+    key: 'reactivate',
+    value: function reactivate() {
+      this._setScanning(false);
+    }
+  }, {
+    key: 'render',
+    value: function render() {
+      return _react3.default.createElement(
+        _reactNative.View,
+        { style: [styles.mainContainer, this.props.containerStyle], __source: {
+            fileName: _jsxFileName,
+            lineNumber: 180
+          }
+        },
+        _react3.default.createElement(
+          _reactNative.View,
+          { style: [styles.infoView, this.props.topViewStyle], __source: {
+              fileName: _jsxFileName,
+              lineNumber: 181
+            }
+          },
+          this._renderTopContent()
+        ),
+        this._renderCamera(),
+        _react3.default.createElement(
+          _reactNative.View,
+          { style: [styles.infoView, this.props.bottomViewStyle], __source: {
+              fileName: _jsxFileName,
+              lineNumber: 185
+            }
+          },
+          this._renderBottomContent()
+        )
+      );
+    }
+  }]);
+
+  return QRCodeScanner;
+}(_react2.Component), _class.propTypes = {
+  onRead: _propTypes2.default.func.isRequired,
+  reactivate: _propTypes2.default.bool,
+  reactivateTimeout: _propTypes2.default.number,
+  fadeIn: _propTypes2.default.bool,
+  showMarker: _propTypes2.default.bool,
+  customMarker: _propTypes2.default.element,
+  containerStyle: _propTypes2.default.any,
+  cameraStyle: _propTypes2.default.any,
+  topViewStyle: _propTypes2.default.any,
+  bottomViewStyle: _propTypes2.default.any,
+  topContent: _propTypes2.default.oneOfType([_propTypes2.default.element, _propTypes2.default.string]),
+  bottomContent: _propTypes2.default.oneOfType([_propTypes2.default.element, _propTypes2.default.string]),
+  notAuthorizedView: _propTypes2.default.element
+}, _class.defaultProps = {
+  onRead: function onRead() {
+    return console.log('QR code scanned!');
+  },
+  reactivate: false,
+  reactivateTimeout: 0,
+  fadeIn: true,
+  showMarker: false,
+  notAuthorizedView: _react3.default.createElement(
+    _reactNative.View,
+    { style: {
+        flex: 1,
+        alignItems: 'center',
+        justifyContent: 'center'
+      }, __source: {
+        fileName: _jsxFileName,
+        lineNumber: 50
+      }
+    },
+    _react3.default.createElement(
+      _reactNative.Text,
+      { style: {
+          textAlign: 'center',
+          fontSize: 16
+        }, __source: {
+          fileName: _jsxFileName,
+          lineNumber: 55
+        }
+      },
+      'Camera not authorized'
+    )
+  )
+}, _temp));
+
+exports.default = QRCodeScanner;
+
+
+var styles = _reactNative.StyleSheet.create({
+  mainContainer: {
+    flex: 1
+  },
+  infoView: {
+    flex: 2,
+    justifyContent: 'center',
+    alignItems: 'center',
+    width: _reactNative.Dimensions.get('window').width
+  },
+
+  camera: {
+    flex: 0,
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: 'transparent',
+    height: _reactNative.Dimensions.get('window').width,
+    width: _reactNative.Dimensions.get('window').width
+  },
+
+  rectangleContainer: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: 'transparent'
+  },
+
+  rectangle: {
+    height: 250,
+    width: 250,
+    borderWidth: 2,
+    borderColor: '#00FF00',
+    backgroundColor: 'transparent'
+  }
+});

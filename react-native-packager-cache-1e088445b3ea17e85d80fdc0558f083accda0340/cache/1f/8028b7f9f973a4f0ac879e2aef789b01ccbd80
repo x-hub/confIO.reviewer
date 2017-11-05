@@ -1,0 +1,9 @@
+var PbxFile = require('xcode/lib/pbxFile');
+
+module.exports = function addFileToProject(project, filePath) {
+  var file = new PbxFile(filePath);
+  file.uuid = project.generateUuid();
+  file.fileRef = project.generateUuid();
+  project.addToPbxFileReferenceSection(file);
+  return file;
+};

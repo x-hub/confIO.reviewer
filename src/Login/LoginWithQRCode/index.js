@@ -4,7 +4,9 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { AsyncStorage } from 'react-native';
 import navActions from 'app/Navigator/navigator.actions';
-
+import nativeStorage from "app/App/Services/nativeStorage"
+import Http from "app/App/Services/Http"
+import {Observable} from "rxjs"
 export const actions = {
     QR_CODE_READ: 'QR_CODE_READ',
 };
@@ -22,36 +24,17 @@ function unescapeHtml(safe) {
 }
 
 function handleQRCode(data) {
-    const { authToken, authEndpoint, eventDetailsEndpoint } = JSON.parse(unescapeHtml(data));
-    return Promise.all([
-        fetch(eventDetailsEndpoint).then((response) => response.json()),
-        AsyncStorage.getItem('events'),
-        fetch(authEndpoint, {
-			method: 'POST',
-			headers: { 'content-type': 'application/json' },
-			body: JSON.stringify({ token: authToken }),
-			credentials: 'include' 
-		}).then((response) => response.text()),
-    ])
-	.then(([ event, eventsString ]) => {
-		const events = eventsString? JSON.parse(eventsString) : [];
-		let saveEventsPromise = Promise.resolve(events);
-		if(!events.includes(event.code)) {
-			events.push(event.code);
-			saveEventsPromise = AsyncStorage.setItem('events', JSON.stringify(events));
-		}
-		return saveEventsPromise.then(() => {
-			return AsyncStorage.setItem(`events:${event.code}`, JSON.stringify(event));
-        }).then(() => event);
-    }).catch(console.log);
+   // const { authToken, authEndpoint, eventDetailsEndpoint } = JSON.parse(unescapeHtml(data));
+    const { authToken, authEndpoint, eventDetailsEndpoint } = JSON.parse(data);
+    if(!authToken || !authEndpoint || !eventDetailsEndpoint)
+        return Promise.resolve({type:actions.QR_CODE_READ,payload:{error:true}})
+    return Promise.resolve({type:navActions.GOTO_Feed,payload:JSON.parse(data)})
 }
 
 
 function onQRCodeRead({ data }) {
-    return {
-        type: navActions.GOTO_Feed,
-        payload: handleQRCode(data)
-    }
+    // check if valid QRCODE
+    return handleQRCode(data)
 }
 
 function mapStateToProps(state) {

@@ -1,0 +1,60 @@
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+
+var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
+var _actionsType = require("../App/actionsType");
+
+var _index = require("../Login/LoginWithSavedSession/index");
+
+var _navigator = require("../Navigator/navigator.actions");
+
+var _navigator2 = _interopRequireDefault(_navigator);
+
+var _lodash = require("lodash");
+
+var _lodash2 = _interopRequireDefault(_lodash);
+
+var _index2 = require("../Home/index");
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+exports.default = function () {
+    var state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {
+        event: {},
+        talks: [],
+
+        type: _index2.talkStatus.NotReviewed
+    };
+    var _ref = arguments[1];
+    var type = _ref.type,
+        payload = _ref.payload;
+
+    switch (type) {
+        case _index.actions.SELECT_EVENT:
+        case _navigator2.default.GOTO_Home:
+            return _extends({}, state, {
+                event: payload.event
+            });
+        case _navigator2.default.GOTO_Swiper:
+            if (payload.hasOwnProperty('talk')) {
+                var _talks = state.talks.filter(function (item) {
+                    return item.id != payload.talk.id;
+                });
+                _talks = _lodash2.default.shuffle(_talks);
+                delete payload['talk'];
+                payload.talks = _talks;
+            }
+            return _extends({}, state, payload);
+        case _actionsType.ACTIONS.TALK_RATE_LATER:
+            var talks = state.talks.filter(function (item) {
+                return item.id != payload.talk.id;
+            });
+            return _extends({}, state, {
+                talks: _lodash2.default.shuffle(talks)
+            });
+        default:
+            return _extends({}, state);
+    }
+};

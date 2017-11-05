@@ -1,0 +1,19 @@
+
+
+'use strict';
+
+var BatchedBridge = require('BatchedBridge');
+var Recording = require('NativeModules').Recording;
+
+var TestJSLocaleModule = {
+  toUpper: function toUpper(s) {
+    Recording.record(s.toUpperCase());
+  },
+  toLower: function toLower(s) {
+    Recording.record(s.toLowerCase());
+  }
+};
+
+BatchedBridge.registerCallableModule('TestJSLocaleModule', TestJSLocaleModule);
+
+module.exports = TestJSLocaleModule;

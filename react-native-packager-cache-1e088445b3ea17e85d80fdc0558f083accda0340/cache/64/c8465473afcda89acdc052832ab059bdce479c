@@ -1,0 +1,100 @@
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+exports.actionCreators = undefined;
+
+var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
+var _slicedToArray = function () { function sliceIterator(arr, i) { var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[typeof Symbol === "function" ? Symbol.iterator : "@@iterator"](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"]) _i["return"](); } finally { if (_d) throw _e; } } return _arr; } return function (arr, i) { if (Array.isArray(arr)) { return arr; } else if ((typeof Symbol === "function" ? Symbol.iterator : "@@iterator") in Object(arr)) { return sliceIterator(arr, i); } else { throw new TypeError("Invalid attempt to destructure non-iterable instance"); } }; }();
+
+var _react = require("react");
+
+var _react2 = _interopRequireDefault(_react);
+
+var _reactRedux = require("react-redux");
+
+var _redux = require("redux");
+
+var _actionsType = require("../App/actionsType");
+
+var _navigator = require("../Navigator/navigator.actions");
+
+var _navigator2 = _interopRequireDefault(_navigator);
+
+var _talkswiper = require("./talkswiper.template");
+
+var _talkswiper2 = _interopRequireDefault(_talkswiper);
+
+var _lodash = require("lodash");
+
+var _lodash2 = _interopRequireDefault(_lodash);
+
+var _nativeStorage = require("../App/Services/nativeStorage");
+
+var _nativeStorage2 = _interopRequireDefault(_nativeStorage);
+
+var _rxjs = require("rxjs");
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var actionCreators = exports.actionCreators = {
+    RateLater: RateLater,
+    showDetail: showDetail
+};
+
+function updateStorage(event, talk) {
+    return _rxjs.Observable.forkJoin([_nativeStorage2.default.get(event.code + "-talks"), _nativeStorage2.default.get(event.code + "-talks-later")]).switchMap(function (_ref) {
+        var _ref2 = _slicedToArray(_ref, 2),
+            Talks = _ref2[0],
+            Later = _ref2[1];
+
+        var talks = _lodash2.default.filter(Talks, function (item) {
+            return item != talk.id;
+        });
+        var later = Later.slice();
+        later.push(talk.id);
+        later = _lodash2.default.sortedUniq(later);
+        return _rxjs.Observable.forkJoin([_nativeStorage2.default.save(event.code + "-talks", talks), _nativeStorage2.default.save(event.code + "-talks-later", later)]).switchMap(function () {
+            return _rxjs.Observable.of({ type: _actionsType.ACTIONS.TALK_RATE_LATER,
+                payload: {
+                    event: event,
+                    talk: talk,
+                    talks: talks,
+                    later: Later
+                }
+            });
+        });
+    }).toPromise();
+}
+function showDetail(event, talk, type) {
+    var speakers = talk.speakers;
+
+    var keys = speakers.map(function (speaker) {
+        return event.code + "-speaker-" + speaker.link.uuid;
+    });
+    return _nativeStorage2.default.getArray(keys).switchMap(function (e) {
+        return _rxjs.Observable.of({
+            type: _navigator2.default.GOTO_Detail,
+            payload: {
+                event: event,
+                talk: talk,
+                speakers: e,
+                type: type
+            }
+        });
+    }).toPromise();
+}
+function RateLater(event, talk) {
+    return updateStorage(event, talk);
+}
+
+function mapStateToProps(state) {
+
+    return _extends({}, state.talkswiper);
+}
+
+function mapDispatchToProps(dispatch) {
+    return (0, _redux.bindActionCreators)(actionCreators, dispatch);
+}
+
+exports.default = (0, _reactRedux.connect)(mapStateToProps, mapDispatchToProps)(_talkswiper2.default);

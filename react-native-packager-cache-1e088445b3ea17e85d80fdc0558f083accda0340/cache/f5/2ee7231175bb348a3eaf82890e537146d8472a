@@ -1,0 +1,20 @@
+
+'use strict';
+
+var fs = require('fs');
+var glob = require('glob');
+var path = require('path');
+
+module.exports = function getPackageClassName(folder) {
+  var files = glob.sync('**/+(*.java|*.kt)', { cwd: folder });
+
+  var packages = files.map(function (filePath) {
+    return fs.readFileSync(path.join(folder, filePath), 'utf8');
+  }).map(function (file) {
+    return file.match(/class (.*) +(implements|:) ReactPackage/);
+  }).filter(function (match) {
+    return match;
+  });
+
+  return packages.length ? packages[0][1] : null;
+};

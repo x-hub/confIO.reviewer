@@ -1,0 +1,75 @@
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _reactNative = require('react-native');
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var density = _reactNative.PixelRatio.get();
+
+var TIME_CONTANT = 325;
+
+var FlickAnimation = function () {
+  function FlickAnimation(animation, min, max) {
+    _classCallCheck(this, FlickAnimation);
+
+    this._animation = animation;
+    this._min = min;
+    this._max = max;
+  }
+
+  _createClass(FlickAnimation, [{
+    key: '_scroll',
+    value: function _scroll(toValue) {
+      var offset = toValue > this._max ? this._max : toValue < this._min ? this._min : toValue;
+      this._animation.setValue(offset);
+
+      if (offset === this._min || offset === this._max) {
+        this.stop();
+      }
+    }
+  }, {
+    key: 'start',
+    value: function start(config) {
+      this._active = true;
+
+      this._amplitude = config.amplitude != null ? config.amplitude : 0.8;
+      this._velocity = -config.velocity * density * 10;
+      this._toValue = config.fromValue;
+      this._startTime = Date.now();
+      this._animationFrame = requestAnimationFrame(this.onUpdate.bind(this));
+    }
+  }, {
+    key: 'onUpdate',
+    value: function onUpdate() {
+      if (!this._active) {
+        return;
+      }
+
+      var elapsedTime = Date.now() - this._startTime;
+      var delta = -(this._amplitude * this._velocity) * Math.exp(-elapsedTime / TIME_CONTANT);
+
+      if (Math.abs(delta) < 0.5) {
+        return;
+      }
+
+      this._toValue += delta;
+      this._scroll(this._toValue);
+      this._animationFrame = requestAnimationFrame(this.onUpdate.bind(this));
+    }
+  }, {
+    key: 'stop',
+    value: function stop() {
+      this._active = false;
+      this._animation.stopAnimation();
+      global.cancelAnimationFrame(this._animationFrame);
+    }
+  }]);
+
+  return FlickAnimation;
+}();
+
+exports.default = FlickAnimation;

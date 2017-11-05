@@ -1,0 +1,43 @@
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+
+var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
+var _ = require('./');
+
+var INITIAL_STATE = {
+    events: []
+};
+
+exports.default = function () {
+    var state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : INITIAL_STATE;
+    var action = arguments[1];
+
+    switch (action.type) {
+        case _.actions.FETCH_ALL_EVENTS:
+            return _extends({}, state, {
+                events: action.payload
+            });
+        case _.actions.SELECT_EVENT:
+            return _extends({}, state, {
+                selectedEvent: action.payload.event
+            });
+        case _.actions.SHOW_EVENT_DETAILS:
+            return _extends({}, state, {
+                selectedEvent: action.payload,
+                dialogVisible: true
+            });
+        case _.actions.HIDE_EVENT_DETAILS:
+            return _extends({}, state, {
+                selectedEvent: null,
+                dialogVisible: false
+            });
+        case _.actions.DELETE_EVENT:
+            return _extends({}, state, {
+                events: action.payload
+            });
+        default:
+            return state;
+    }
+};

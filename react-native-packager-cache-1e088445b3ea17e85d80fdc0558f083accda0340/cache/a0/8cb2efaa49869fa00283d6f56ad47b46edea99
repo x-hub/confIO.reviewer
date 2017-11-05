@@ -1,0 +1,4 @@
+
+module.exports = function () {
+  return Function.call.apply(Array.prototype.concat, arguments);
+};

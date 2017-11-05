@@ -25,9 +25,11 @@ export default class Template extends React.Component {
         const {navigate, goBack} = this.props.navigation;
         this.navigate = navigate;
         this.goBack = goBack;
+
     }
 
     render() {
+
         return (
             <Container>
                 <Header backgroundColor={colors.primary}>
@@ -45,37 +47,42 @@ export default class Template extends React.Component {
                     </Body>
 
                 </Header>
-                <View style={{margin: 10}}>
-                    <DeckSwiper
-                        renderEmpty={() =>
-                            <View style={{alignSelf: "center"}}>
-                                <Text>Over</Text>
-                            </View>
-                        }
-                        dataSource={this.props.current}
-                        onSwipeRight={(e) => {
-                            setTimeout(() => this.navigate('Detail', {slot: e}), 200)
-                        }}
-                        renderItem={item =>
-                            <Card style={{elevation: 3}}>
-                                <CardItem>
-                                    <Text style={styles.title}>{item.talk.title}</Text>
-                                    <Right style={styles.rateLater}>
-                                        <Icon onPress={this.props.RateLater.bind(this, item)} name="md-time"/>
-                                    </Right>
-                                </CardItem>
-                                <CardItem cardBody style={styles.body}>
-                                    <Image style={styles.trackImg} source={trackImgs(item.talk.trackId)}/>
-                                    <Text style={styles.trackLabel}>{item.talk.track}</Text>
-                                </CardItem>
-                                <CardItem>
-                                    <Text style={styles.talkLabel}>{item.talk.talkType}</Text>
-                                </CardItem>
 
-                            </Card>
-                        }
-                    />
-                </View>
+                    <View style={{margin: 10}}>
+                        <DeckSwiper
+                            renderEmpty={() =>
+                                <View style={{alignSelf: "center"}}>
+                                    <Text>Over</Text>
+                                </View>
+                            }
+                            dataSource={this.props.talks}
+                            onSwipeRight={(e) => {
+                                this.props.showDetail(this.props.event,e,this.props.type)
+                            }}
+                            renderItem={item =>
+                                <Card style={{elevation: 3}}>
+                                    <CardItem>
+                                        <Text style={styles.title}>{item.title}</Text>
+                                        <Right style={styles.rateLater}>
+                                            {this.props.type == "" ?
+                                                <Icon onPress={this.props.RateLater.bind(this,this.props.event,item)} name="md-time"/>
+                                                : <View />
+                                            }
+                                        </Right>
+                                    </CardItem>
+                                    <CardItem cardBody style={styles.body}>
+                                        <Image style={styles.trackImg} source={trackImgs(item.trackId)}/>
+                                        <Text style={styles.trackLabel}>{item.track}</Text>
+                                    </CardItem>
+                                    <CardItem>
+                                        <Text style={styles.talkLabel}>{item.talkType}</Text>
+                                    </CardItem>
+
+                                </Card>
+                            }
+                        />
+                    </View>
+
             </Container> )
     }
 }

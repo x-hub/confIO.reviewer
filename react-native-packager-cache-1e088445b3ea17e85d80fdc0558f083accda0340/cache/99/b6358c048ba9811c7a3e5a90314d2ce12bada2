@@ -1,0 +1,41 @@
+
+'use strict';
+
+var opn = require('opn');
+var execSync = require('child_process').execSync;
+
+function commandExistsUnixSync(commandName, callback) {
+  try {
+    var stdout = execSync('command -v ' + commandName + ' 2>/dev/null' + ' && { echo >&1 \'' + commandName + ' found\'; exit 0; }');
+    return !!stdout;
+  } catch (error) {
+    return false;
+  }
+}
+
+function getChromeAppName() {
+  switch (process.platform) {
+    case 'darwin':
+      return 'google chrome';
+    case 'win32':
+      return 'chrome';
+    case 'linux':
+      if (commandExistsUnixSync('google-chrome')) {
+        return 'google-chrome';
+      } else {
+        return 'chromium';
+      }
+    default:
+      return 'google-chrome';
+  }
+}
+
+function launchChrome(url) {
+  opn(url, { app: [getChromeAppName()] }, function (err) {
+    if (err) {
+      console.error('Google Chrome exited with error:', err);
+    }
+  });
+}
+
+module.exports = launchChrome;

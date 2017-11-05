@@ -1,0 +1,152 @@
+
+
+'use strict';
+
+var _jsxFileName = '/home/bassihassan/Desktop/confIOReviewer/node_modules/react-native/Libraries/Lists/__flowtests__/FlatList-flowtest.js';
+var FlatList = require('FlatList');
+var React = require('react');
+
+function renderMyListItem(info) {
+  return React.createElement('span', {
+    __source: {
+      fileName: _jsxFileName,
+      lineNumber: 19
+    }
+  });
+}
+
+module.exports = {
+  testEverythingIsFine: function testEverythingIsFine() {
+    var data = [{
+      title: 'Title Text',
+      key: 1
+    }];
+    return React.createElement(FlatList, { renderItem: renderMyListItem, data: data, __source: {
+        fileName: _jsxFileName,
+        lineNumber: 30
+      }
+    });
+  },
+  testBadDataWithTypicalItem: function testBadDataWithTypicalItem() {
+    var data = [{
+      title: 6,
+      key: 1
+    }];
+    return React.createElement(FlatList, { renderItem: renderMyListItem, data: data, __source: {
+        fileName: _jsxFileName,
+        lineNumber: 41
+      }
+    });
+  },
+  testMissingFieldWithTypicalItem: function testMissingFieldWithTypicalItem() {
+    var data = [{
+      key: 1
+    }];
+
+    return React.createElement(FlatList, { renderItem: renderMyListItem, data: data, __source: {
+        fileName: _jsxFileName,
+        lineNumber: 51
+      }
+    });
+  },
+  testGoodDataWithBadCustomRenderItemFunction: function testGoodDataWithBadCustomRenderItemFunction() {
+    var data = [{
+      widget: 6,
+      key: 1
+    }];
+    return React.createElement(FlatList, {
+      renderItem: function renderItem(info) {
+        return React.createElement(
+          'span',
+          {
+            __source: {
+              fileName: _jsxFileName,
+              lineNumber: 64
+            }
+          },
+          info.item.widget.missingProp
+        );
+      },
+      data: data,
+      __source: {
+        fileName: _jsxFileName,
+        lineNumber: 62
+      }
+    });
+  },
+  testBadRenderItemFunction: function testBadRenderItemFunction() {
+    var data = [{
+      title: 'foo',
+      key: 1
+    }];
+    return [React.createElement(FlatList, { renderItem: function renderItem(info) {
+        return React.createElement('span', {
+          __source: {
+            fileName: _jsxFileName,
+            lineNumber: 84
+          }
+        });
+      }, data: data, __source: {
+        fileName: _jsxFileName,
+        lineNumber: 84
+      }
+    }), React.createElement(FlatList, {
+      renderItem: function renderItem(info) {
+        return React.createElement('span', {
+          __source: {
+            fileName: _jsxFileName,
+            lineNumber: 87
+          }
+        });
+      },
+      data: data,
+      __source: {
+        fileName: _jsxFileName,
+        lineNumber: 85
+      }
+    }), React.createElement(FlatList, {
+      renderItem: function renderItem(info) {
+        return React.createElement('span', {
+          __source: {
+            fileName: _jsxFileName,
+            lineNumber: 92
+          }
+        });
+      },
+      data: data,
+      __source: {
+        fileName: _jsxFileName,
+        lineNumber: 90
+      }
+    }), React.createElement(FlatList, {
+      renderItem: function renderItem(info) {
+        return React.createElement('span', {
+          __source: {
+            fileName: _jsxFileName,
+            lineNumber: 97
+          }
+        });
+      },
+      data: data,
+      __source: {
+        fileName: _jsxFileName,
+        lineNumber: 96
+      }
+    })];
+  },
+  testOtherBadProps: function testOtherBadProps() {
+    return [React.createElement(FlatList, { renderItem: renderMyListItem, data: [], numColumns: 'lots', __source: {
+        fileName: _jsxFileName,
+        lineNumber: 106
+      }
+    }), React.createElement(FlatList, { renderItem: renderMyListItem, data: [], windowSize: 'big', __source: {
+        fileName: _jsxFileName,
+        lineNumber: 108
+      }
+    }), React.createElement(FlatList, { renderItem: renderMyListItem, __source: {
+        fileName: _jsxFileName,
+        lineNumber: 110
+      }
+    })];
+  }
+};

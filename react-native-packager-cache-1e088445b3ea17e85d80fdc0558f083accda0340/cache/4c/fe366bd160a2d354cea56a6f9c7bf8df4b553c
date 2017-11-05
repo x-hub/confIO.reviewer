@@ -1,0 +1,7 @@
+
+module.exports = function addProjectToLibraries(libraries, file) {
+  return libraries.children.push({
+    value: file.fileRef,
+    comment: file.basename
+  });
+};

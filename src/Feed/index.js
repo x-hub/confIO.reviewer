@@ -3,25 +3,21 @@ import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import {ACTIONS} from "app/App/actionsType"
 import template from './feed.template';
-
-
+import navActions from 'app/Navigator/navigator.actions';
+import {actions} from "app/Login/LoginWithSavedSession/index"
+import {fetchTalks} from "app/Login"
 const actionCreators = {
-    initTalks,
-    initSpeakers
+    GOTOHome
 };
 
-function initTalks(event, talks) {
-    return {
-        type: ACTIONS.INIT_TALKS,
-        payload: {event, talks}
-    }
-}
+export function GOTOHome(event) {
+    return fetchTalks(event).then((payload)=>{
+        return {
+            type:navActions.GOTO_Home,
+            payload
+        }
+    })
 
-function initSpeakers(event, speakers) {
-    return {
-        type: ACTIONS.INIT_SPEAKERS,
-        payload: {event, speakers}
-    }
 }
 
 function mapStateToProps(state) {

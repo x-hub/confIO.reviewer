@@ -1,0 +1,133 @@
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _react2 = require('react');
+
+var _react3 = _interopRequireDefault(_react2);
+
+var _index = require('./../../../../../react-transform-hmr/lib/index.js');
+
+var _index2 = _interopRequireDefault(_index);
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _jsxFileName = '/home/bassihassan/Desktop/confIOReviewer/node_modules/react-native/local-cli/templates/HelloNavigation/components/KeyboardSpacer.js',
+    _class,
+    _temp2;
+
+var _propTypes = require('prop-types');
+
+var _propTypes2 = _interopRequireDefault(_propTypes);
+
+var _reactNative = require('react-native');
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var _components = {
+  KeyboardSpacerIOS: {
+    displayName: 'KeyboardSpacerIOS'
+  }
+};
+
+var _reactTransformHmrLibIndexJs2 = (0, _index2.default)({
+  filename: '/home/bassihassan/Desktop/confIOReviewer/node_modules/react-native/local-cli/templates/HelloNavigation/components/KeyboardSpacer.js',
+  components: _components,
+  locals: [module],
+  imports: [_react3.default]
+});
+
+function _wrapComponent(id) {
+  return function (Component) {
+    return _reactTransformHmrLibIndexJs2(Component, id);
+  };
+}
+
+var KeyboardSpacer = function KeyboardSpacer() {
+  return _reactNative.Platform.OS === 'ios' ? _react3.default.createElement(KeyboardSpacerIOS, {
+    __source: {
+      fileName: _jsxFileName,
+      lineNumber: 46
+    }
+  }) : null;
+};
+
+var KeyboardSpacerIOS = _wrapComponent('KeyboardSpacerIOS')((_temp2 = _class = function (_Component) {
+  _inherits(KeyboardSpacerIOS, _Component);
+
+  function KeyboardSpacerIOS() {
+    var _ref;
+
+    var _temp, _this, _ret;
+
+    _classCallCheck(this, KeyboardSpacerIOS);
+
+    for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
+      args[_key] = arguments[_key];
+    }
+
+    return _ret = (_temp = (_this = _possibleConstructorReturn(this, (_ref = KeyboardSpacerIOS.__proto__ || Object.getPrototypeOf(KeyboardSpacerIOS)).call.apply(_ref, [this].concat(args))), _this), _this.state = {
+      keyboardHeight: 0
+    }, _this._registerEvents = function () {
+      _this._keyboardWillShowSubscription = _reactNative.Keyboard.addListener('keyboardWillShow', _this._keyboardWillShow);
+      _this._keyboardWillHideSubscription = _reactNative.Keyboard.addListener('keyboardWillHide', _this._keyboardWillHide);
+    }, _this._unRegisterEvents = function () {
+      _this._keyboardWillShowSubscription.remove();
+      _this._keyboardWillHideSubscription.remove();
+    }, _this._configureLayoutAnimation = function () {
+      _reactNative.LayoutAnimation.configureNext({
+        duration: 100,
+        update: {
+          type: 'keyboard'
+        }
+      });
+    }, _this._keyboardWillShow = function (e) {
+      _this._configureLayoutAnimation();
+      _this.setState({
+        keyboardHeight: e.endCoordinates.height - (_this.props.offset || 0)
+      });
+    }, _this._keyboardWillHide = function () {
+      _this._configureLayoutAnimation();
+      _this.setState({
+        keyboardHeight: 0
+      });
+    }, _temp), _possibleConstructorReturn(_this, _ret);
+  }
+
+  _createClass(KeyboardSpacerIOS, [{
+    key: 'componentWillMount',
+    value: function componentWillMount() {
+      this._registerEvents();
+    }
+  }, {
+    key: 'componentWillUnmount',
+    value: function componentWillUnmount() {
+      this._unRegisterEvents();
+    }
+  }, {
+    key: 'render',
+    value: function render() {
+      return _react3.default.createElement(_reactNative.View, { style: { height: this.state.keyboardHeight }, __source: {
+          fileName: _jsxFileName,
+          lineNumber: 114
+        }
+      });
+    }
+  }]);
+
+  return KeyboardSpacerIOS;
+}(_react2.Component), _class.propTypes = {
+  offset: _propTypes2.default.number
+}, _class.defaultProps = {
+  offset: 0
+}, _temp2));
+
+exports.default = KeyboardSpacer;

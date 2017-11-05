@@ -1,0 +1,16 @@
+var log = require('npmlog');
+
+var createGroup = require('./createGroup');
+var getGroup = require('./getGroup');
+
+module.exports = function createGroupWithMessage(project, path) {
+  var group = getGroup(project, path);
+
+  if (!group) {
+    group = createGroup(project, path);
+
+    log.warn('ERRGROUP', 'Group \'' + path + '\' does not exist in your Xcode project. We have created it automatically for you.');
+  }
+
+  return group;
+};

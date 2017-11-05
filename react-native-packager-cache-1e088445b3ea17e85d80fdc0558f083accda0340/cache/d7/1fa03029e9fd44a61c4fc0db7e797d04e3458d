@@ -1,0 +1,6 @@
+
+module.exports = function hasLibraryImported(libraries, packageName) {
+  return libraries.children.filter(function (library) {
+    return library.comment === packageName;
+  }).length > 0;
+};

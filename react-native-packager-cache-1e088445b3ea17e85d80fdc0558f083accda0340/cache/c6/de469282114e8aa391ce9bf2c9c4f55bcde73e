@@ -1,0 +1,221 @@
+
+
+'use strict';
+
+var _react2 = require('react');
+
+var _react3 = _interopRequireDefault(_react2);
+
+var _index = require('./../../../../../react-transform-hmr/lib/index.js');
+
+var _index2 = _interopRequireDefault(_index);
+
+var _jsxFileName = '/home/bassihassan/Desktop/confIOReviewer/node_modules/react-native/ReactAndroid/src/androidTest/js/ScrollViewTestModule.js';
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var _components = {
+  Item: {
+    displayName: 'Item'
+  }
+};
+
+var _reactTransformHmrLibIndexJs2 = (0, _index2.default)({
+  filename: '/home/bassihassan/Desktop/confIOReviewer/node_modules/react-native/ReactAndroid/src/androidTest/js/ScrollViewTestModule.js',
+  components: _components,
+  locals: [module],
+  imports: [_react3.default]
+});
+
+function _wrapComponent(id) {
+  return function (Component) {
+    return _reactTransformHmrLibIndexJs2(Component, id);
+  };
+}
+
+var BatchedBridge = require('BatchedBridge');
+var React = require('React');
+var createReactClass = require('create-react-class');
+var View = require('View');
+var ScrollView = require('ScrollView');
+var Text = require('Text');
+var StyleSheet = require('StyleSheet');
+var TouchableWithoutFeedback = require('TouchableWithoutFeedback');
+var ScrollListener = require('NativeModules').ScrollListener;
+
+var NUM_ITEMS = 100;
+
+var scrollViewApp;
+
+var Item = _wrapComponent('Item')(function (_React$Component) {
+  _inherits(Item, _React$Component);
+
+  function Item() {
+    _classCallCheck(this, Item);
+
+    return _possibleConstructorReturn(this, (Item.__proto__ || Object.getPrototypeOf(Item)).apply(this, arguments));
+  }
+
+  _createClass(Item, [{
+    key: 'render',
+    value: function render() {
+      return React.createElement(
+        TouchableWithoutFeedback,
+        { onPress: this.props.onPress, __source: {
+            fileName: _jsxFileName,
+            lineNumber: 33
+          }
+        },
+        React.createElement(
+          View,
+          { style: styles.item_container, __source: {
+              fileName: _jsxFileName,
+              lineNumber: 34
+            }
+          },
+          React.createElement(
+            Text,
+            { style: styles.item_text, __source: {
+                fileName: _jsxFileName,
+                lineNumber: 35
+              }
+            },
+            this.props.text
+          )
+        )
+      );
+    }
+  }]);
+
+  return Item;
+}(React.Component));
+
+var getInitialState = function getInitialState() {
+  var data = [];
+  for (var i = 0; i < NUM_ITEMS; i++) {
+    data[i] = { text: 'Item ' + i + '!' };
+  }
+  return {
+    data: data
+  };
+};
+
+var onScroll = function onScroll(e) {
+  ScrollListener.onScroll(e.nativeEvent.contentOffset.x, e.nativeEvent.contentOffset.y);
+};
+
+var onScrollBeginDrag = function onScrollBeginDrag(e) {
+  ScrollListener.onScrollBeginDrag(e.nativeEvent.contentOffset.x, e.nativeEvent.contentOffset.y);
+};
+
+var onScrollEndDrag = function onScrollEndDrag(e) {
+  ScrollListener.onScrollEndDrag(e.nativeEvent.contentOffset.x, e.nativeEvent.contentOffset.y);
+};
+
+var onItemPress = function onItemPress(itemNumber) {
+  ScrollListener.onItemPress(itemNumber);
+};
+
+var ScrollViewTestApp = createReactClass({
+  displayName: 'ScrollViewTestApp',
+  getInitialState: getInitialState,
+  onScroll: onScroll,
+  onItemPress: onItemPress,
+  onScrollBeginDrag: onScrollBeginDrag,
+  onScrollEndDrag: onScrollEndDrag,
+
+  scrollTo: function scrollTo(destX, destY) {
+    this.refs.scrollView.scrollTo(destY, destX);
+  },
+
+  render: function render() {
+    var _this2 = this;
+
+    scrollViewApp = this;
+    var children = this.state.data.map(function (item, index) {
+      return React.createElement(Item, {
+        key: index, text: item.text,
+        onPress: _this2.onItemPress.bind(_this2, index), __source: {
+          fileName: _jsxFileName,
+          lineNumber: 83
+        }
+      });
+    });
+    return React.createElement(
+      ScrollView,
+      { onScroll: this.onScroll, onScrollBeginDrag: this.onScrollBeginDrag, onScrollEndDrag: this.onScrollEndDrag, ref: 'scrollView', __source: {
+          fileName: _jsxFileName,
+          lineNumber: 88
+        }
+      },
+      children
+    );
+  }
+});
+
+var HorizontalScrollViewTestApp = createReactClass({
+  displayName: 'HorizontalScrollViewTestApp',
+  getInitialState: getInitialState,
+  onScroll: onScroll,
+  onItemPress: onItemPress,
+
+  scrollTo: function scrollTo(destX, destY) {
+    this.refs.scrollView.scrollTo(destY, destX);
+  },
+
+  render: function render() {
+    var _this3 = this;
+
+    scrollViewApp = this;
+    var children = this.state.data.map(function (item, index) {
+      return React.createElement(Item, {
+        key: index, text: item.text,
+        onPress: _this3.onItemPress.bind(_this3, index), __source: {
+          fileName: _jsxFileName,
+          lineNumber: 108
+        }
+      });
+    });
+    return React.createElement(
+      ScrollView,
+      { horizontal: true, onScroll: this.onScroll, ref: 'scrollView', __source: {
+          fileName: _jsxFileName,
+          lineNumber: 113
+        }
+      },
+      children
+    );
+  }
+});
+
+var styles = StyleSheet.create({
+  item_container: {
+    padding: 30,
+    backgroundColor: '#ffffff'
+  },
+  item_text: {
+    flex: 1,
+    fontSize: 18,
+    alignSelf: 'center'
+  }
+});
+
+var ScrollViewTestModule = {
+  ScrollViewTestApp: ScrollViewTestApp,
+  HorizontalScrollViewTestApp: HorizontalScrollViewTestApp,
+  scrollTo: function scrollTo(destX, destY) {
+    scrollViewApp.scrollTo(destX, destY);
+  }
+};
+
+BatchedBridge.registerCallableModule('ScrollViewTestModule', ScrollViewTestModule);
+
+module.exports = ScrollViewTestModule;

@@ -1,0 +1,14 @@
+
+'use strict';
+
+var glob = require('glob');
+var path = require('path');
+
+module.exports = function findManifest(folder) {
+  var csprojPath = glob.sync(path.join('**', '*.csproj'), {
+    cwd: folder,
+    ignore: ['node_modules/**', '**/build/**', 'Examples/**', 'examples/**']
+  })[0];
+
+  return csprojPath ? path.join(folder, csprojPath) : null;
+};

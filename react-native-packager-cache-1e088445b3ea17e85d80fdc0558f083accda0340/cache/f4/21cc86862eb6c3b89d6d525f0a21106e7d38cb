@@ -1,0 +1,127 @@
+
+
+'use strict';
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var WebSocket = require('ws');
+
+var parseMessage = require('./messageSocket').parseMessage;
+
+var PROTOCOL_VERSION = 2;
+var TARGET_SERVER = 'server';
+
+function getMessageId() {
+  return Date.now() + ':' + Math.random();
+}
+
+var JsPackagerClient = function () {
+  function JsPackagerClient(url) {
+    var _this = this;
+
+    _classCallCheck(this, JsPackagerClient);
+
+    this.ws = new WebSocket(url);
+    this.msgCallbacks = new Map();
+
+    this.openPromise = new Promise(function (resolve, reject) {
+      _this.ws.on('error', function (error) {
+        return reject(error);
+      });
+      _this.ws.on('open', resolve);
+    });
+
+    this.ws.on('message', function (data, flags) {
+      var message = parseMessage(data, flags.binary);
+      var msgCallback = _this.msgCallbacks.get(message.id);
+      if (message === undefined || message.id === undefined) {} else if (msgCallback === undefined) {
+        console.warn('Response with non-existing message id: \'' + message.id + '\'');
+      } else {
+        if (message.error === undefined) {
+          msgCallback.resolve(message.result);
+        } else {
+          msgCallback.reject(message.error);
+        }
+      }
+    });
+  }
+
+  _createClass(JsPackagerClient, [{
+    key: 'sendRequest',
+    value: function sendRequest(method, target, params) {
+      var _this2 = this;
+
+      return this.openPromise.then(function () {
+        return new Promise(function (resolve, reject) {
+          var messageId = getMessageId();
+          _this2.msgCallbacks.set(messageId, { resolve: resolve, reject: reject });
+          _this2.ws.send(JSON.stringify({
+            version: PROTOCOL_VERSION,
+            target: target,
+            method: method,
+            id: messageId,
+            params: params
+          }), function (error) {
+            if (error !== undefined) {
+              _this2.msgCallbacks.delete(messageId);
+              reject(error);
+            }
+          });
+        });
+      });
+    }
+  }, {
+    key: 'sendNotification',
+    value: function sendNotification(method, target, params) {
+      var _this3 = this;
+
+      return this.openPromise.then(function () {
+        return new Promise(function (resolve, reject) {
+          _this3.ws.send(JSON.stringify({
+            version: PROTOCOL_VERSION,
+            target: target,
+            method: method,
+            params: params
+          }), function (error) {
+            if (error !== undefined) {
+              reject(error);
+            } else {
+              resolve();
+            }
+          });
+        });
+      });
+    }
+  }, {
+    key: 'sendBroadcast',
+    value: function sendBroadcast(method, params) {
+      return this.sendNotification(method, undefined, params);
+    }
+  }, {
+    key: 'getPeers',
+    value: function getPeers() {
+      var _this4 = this;
+
+      return new Promise(function (resolve, reject) {
+        _this4.sendRequest('getpeers', TARGET_SERVER, undefined).then(function (response) {
+          if (!response instanceof Map) {
+            reject('Results received from server are of wrong format:\n' + JSON.stringify(response));
+          } else {
+            resolve(response);
+          }
+        }, reject);
+      });
+    }
+  }, {
+    key: 'getId',
+    value: function getId() {
+      return this.sendRequest('getid', TARGET_SERVER, undefined);
+    }
+  }]);
+
+  return JsPackagerClient;
+}();
+
+module.exports = JsPackagerClient;

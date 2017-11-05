@@ -1,0 +1,10 @@
+var _require = require('react-native'),
+    Dimensions = _require.Dimensions;
+
+var layout = {
+  get visibleHeight() {
+    return Dimensions.get('window').height;
+  }
+};
+
+module.exports = layout;

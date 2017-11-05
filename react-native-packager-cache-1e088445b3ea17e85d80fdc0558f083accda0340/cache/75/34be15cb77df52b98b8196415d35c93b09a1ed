@@ -1,0 +1,507 @@
+
+
+'use strict';
+
+var _slicedToArray = function () { function sliceIterator(arr, i) { var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[typeof Symbol === 'function' ? Symbol.iterator : '@@iterator'](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"]) _i["return"](); } finally { if (_d) throw _e; } } return _arr; } return function (arr, i) { if (Array.isArray(arr)) { return arr; } else if ((typeof Symbol === 'function' ? Symbol.iterator : '@@iterator') in Object(arr)) { return sliceIterator(arr, i); } else { throw new TypeError("Invalid attempt to destructure non-iterable instance"); } }; }();
+
+var getInverseDependencies = require('./getInverseDependencies');
+var querystring = require('querystring');
+var url = require('url');
+
+var blacklist = ['Libraries/Utilities/HMRClient.js'];
+
+function attachHMRServer(_ref) {
+  var _this2 = this;
+
+  var httpServer = _ref.httpServer,
+      path = _ref.path,
+      packagerServer = _ref.packagerServer;
+
+
+  var clients = new Set();
+
+  function disconnect(client) {
+    clients.delete(client);
+
+    if (clients.size === 0) {
+      packagerServer.setHMRFileChangeListener(null);
+    }
+  }
+
+  function getDependencies(platform, bundleEntry) {
+    var _this = this;
+
+    var response, getModuleId, deps, dependenciesCache, moduleToFilenameCache, shallowDependencies, dependenciesModulesCache, inverseDependenciesCache, inverseDependencies, _iterator, _isArray, _i, _ref4, _ref2, _ref3, _module, dependents;
+
+    return regeneratorRuntime.async(function getDependencies$(_context2) {
+      while (1) {
+        switch (_context2.prev = _context2.next) {
+          case 0:
+            _context2.next = 2;
+            return regeneratorRuntime.awrap(packagerServer.getDependencies({
+              dev: true,
+              entryFile: bundleEntry,
+              rootEntryFile: bundleEntry,
+              hot: true,
+              minify: false,
+              platform: platform,
+              recursive: true
+            }));
+
+          case 2:
+            response = _context2.sent;
+            getModuleId = response.getModuleId;
+            _context2.next = 6;
+            return regeneratorRuntime.awrap(Promise.all(response.dependencies.map(function _callee(dep) {
+              var depName, dependencies;
+              return regeneratorRuntime.async(function _callee$(_context) {
+                while (1) {
+                  switch (_context.prev = _context.next) {
+                    case 0:
+                      _context.next = 2;
+                      return regeneratorRuntime.awrap(dep.getName());
+
+                    case 2:
+                      depName = _context.sent;
+
+                      if (!(dep.isAsset() || dep.isJSON())) {
+                        _context.next = 5;
+                        break;
+                      }
+
+                      return _context.abrupt('return', { path: dep.path, deps: [] });
+
+                    case 5:
+                      _context.next = 7;
+                      return regeneratorRuntime.awrap(packagerServer.getShallowDependencies({
+                        dev: true,
+                        entryFile: dep.path,
+                        rootEntryFile: bundleEntry,
+                        hot: true,
+                        minify: false,
+                        platform: platform,
+                        recursive: true
+                      }));
+
+                    case 7:
+                      dependencies = _context.sent;
+                      return _context.abrupt('return', {
+                        path: dep.path,
+                        name: depName,
+                        deps: dependencies
+                      });
+
+                    case 9:
+                    case 'end':
+                      return _context.stop();
+                  }
+                }
+              }, null, _this);
+            })));
+
+          case 6:
+            deps = _context2.sent;
+            dependenciesCache = response.dependencies.map(function (dep) {
+              return dep.path;
+            });
+            moduleToFilenameCache = Object.create(null);
+
+            deps.forEach(function (dep) {
+              moduleToFilenameCache[dep.name] = dep.path;
+            });
+
+            shallowDependencies = Object.create(null);
+
+            deps.forEach(function (dep) {
+              shallowDependencies[dep.path] = dep.deps;
+            });
+
+            dependenciesModulesCache = Object.create(null);
+
+            response.dependencies.forEach(function (dep) {
+              dependenciesModulesCache[getModuleId(dep)] = dep;
+            });
+
+            inverseDependenciesCache = Object.create(null);
+            inverseDependencies = getInverseDependencies(response);
+            _iterator = inverseDependencies, _isArray = Array.isArray(_iterator), _i = 0, _iterator = _isArray ? _iterator : _iterator[typeof Symbol === 'function' ? typeof Symbol === 'function' ? Symbol.iterator : '@@iterator' : '@@iterator']();
+
+          case 17:
+            if (!_isArray) {
+              _context2.next = 23;
+              break;
+            }
+
+            if (!(_i >= _iterator.length)) {
+              _context2.next = 20;
+              break;
+            }
+
+            return _context2.abrupt('break', 34);
+
+          case 20:
+            _ref4 = _iterator[_i++];
+            _context2.next = 27;
+            break;
+
+          case 23:
+            _i = _iterator.next();
+
+            if (!_i.done) {
+              _context2.next = 26;
+              break;
+            }
+
+            return _context2.abrupt('break', 34);
+
+          case 26:
+            _ref4 = _i.value;
+
+          case 27:
+            _ref2 = _ref4;
+            _ref3 = _slicedToArray(_ref2, 2);
+            _module = _ref3[0];
+            dependents = _ref3[1];
+
+            inverseDependenciesCache[getModuleId(_module)] = Array.from(dependents).map(getModuleId);
+
+          case 32:
+            _context2.next = 17;
+            break;
+
+          case 34:
+            return _context2.abrupt('return', {
+              dependenciesCache: dependenciesCache,
+              dependenciesModulesCache: dependenciesModulesCache,
+              shallowDependencies: shallowDependencies,
+              inverseDependenciesCache: inverseDependenciesCache,
+              resolutionResponse: response
+            });
+
+          case 35:
+          case 'end':
+            return _context2.stop();
+        }
+      }
+    }, null, this);
+  }
+
+  function prepareResponse(client, filename) {
+    var bundle, body;
+    return regeneratorRuntime.async(function prepareResponse$(_context3) {
+      while (1) {
+        switch (_context3.prev = _context3.next) {
+          case 0:
+            _context3.prev = 0;
+            _context3.next = 3;
+            return regeneratorRuntime.awrap(generateBundle(client, filename));
+
+          case 3:
+            bundle = _context3.sent;
+
+            if (!(!bundle || bundle.isEmpty())) {
+              _context3.next = 6;
+              break;
+            }
+
+            return _context3.abrupt('return');
+
+          case 6:
+            return _context3.abrupt('return', {
+              type: 'update',
+              body: {
+                modules: bundle.getModulesIdsAndCode(),
+                inverseDependencies: client.inverseDependenciesCache,
+                sourceURLs: bundle.getSourceURLs(),
+                sourceMappingURLs: bundle.getSourceMappingURLs()
+              }
+            });
+
+          case 9:
+            _context3.prev = 9;
+            _context3.t0 = _context3['catch'](0);
+            body = void 0;
+
+            if (_context3.t0.type === 'TransformError' || _context3.t0.type === 'NotFoundError' || _context3.t0.type === 'UnableToResolveError') {
+              body = {
+                type: _context3.t0.type,
+                description: _context3.t0.description,
+                filename: _context3.t0.filename,
+                lineNumber: _context3.t0.lineNumber
+              };
+            } else {
+              console.error(_context3.t0.stack || _context3.t0);
+              body = {
+                type: 'InternalError',
+                description: 'react-packager has encountered an internal error, ' + 'please check your terminal error output for more details'
+              };
+            }
+
+            return _context3.abrupt('return', { type: 'error', body: body });
+
+          case 14:
+          case 'end':
+            return _context3.stop();
+        }
+      }
+    }, null, this, [[0, 9]]);
+  }
+
+  function generateBundle(client, filename) {
+    var moduleToUpdate, deps, oldDependencies, resolutionResponse, response, _ref5, depsCache, depsModulesCache, shallowDeps, inverseDepsCache, myResolutionReponse, modulesToUpdate, httpServerAddress, packagerHost, bundle;
+
+    return regeneratorRuntime.async(function generateBundle$(_context4) {
+      while (1) {
+        switch (_context4.prev = _context4.next) {
+          case 0:
+            _context4.next = 2;
+            return regeneratorRuntime.awrap(packagerServer.getModuleForPath(filename));
+
+          case 2:
+            moduleToUpdate = _context4.sent;
+
+            if (!moduleToUpdate.isAsset()) {
+              _context4.next = 5;
+              break;
+            }
+
+            return _context4.abrupt('return');
+
+          case 5:
+            _context4.next = 7;
+            return regeneratorRuntime.awrap(packagerServer.getShallowDependencies({
+              dev: true,
+              minify: false,
+              entryFile: filename,
+              rootEntryFile: client.bundleEntry,
+              hot: true,
+              platform: client.platform,
+              recursive: true
+            }));
+
+          case 7:
+            deps = _context4.sent;
+            oldDependencies = client.shallowDependencies[filename];
+            resolutionResponse = void 0;
+
+            if (!arrayEquals(deps, oldDependencies)) {
+              _context4.next = 19;
+              break;
+            }
+
+            _context4.next = 13;
+            return regeneratorRuntime.awrap(packagerServer.getDependencies({
+              dev: true,
+              entryFile: filename,
+              rootEntryFile: client.bundleEntry,
+              hot: true,
+              minify: false,
+              platform: client.platform,
+              recursive: true
+            }));
+
+          case 13:
+            response = _context4.sent;
+            _context4.next = 16;
+            return regeneratorRuntime.awrap(response.copy({
+              dependencies: [moduleToUpdate] }));
+
+          case 16:
+            resolutionResponse = _context4.sent;
+            _context4.next = 37;
+            break;
+
+          case 19:
+            _context4.next = 21;
+            return regeneratorRuntime.awrap(getDependencies(client.platform, client.bundleEntry));
+
+          case 21:
+            _ref5 = _context4.sent;
+            depsCache = _ref5.dependenciesCache;
+            depsModulesCache = _ref5.dependenciesModulesCache;
+            shallowDeps = _ref5.shallowDependencies;
+            inverseDepsCache = _ref5.inverseDependenciesCache;
+            myResolutionReponse = _ref5.resolutionResponse;
+            modulesToUpdate = [moduleToUpdate];
+
+            Object.keys(depsModulesCache).forEach(function (module) {
+              if (!client.dependenciesModulesCache[module]) {
+                modulesToUpdate.push(depsModulesCache[module]);
+              }
+            });
+
+            modulesToUpdate.reverse();
+
+            client.dependenciesCache = depsCache;
+            client.dependenciesModulesCache = depsModulesCache;
+            client.shallowDependencies = shallowDeps;
+            client.inverseDependenciesCache = inverseDepsCache;
+
+            _context4.next = 36;
+            return regeneratorRuntime.awrap(myResolutionReponse.copy({
+              dependencies: modulesToUpdate
+            }));
+
+          case 36:
+            resolutionResponse = _context4.sent;
+
+          case 37:
+            if (client.shallowDependencies[filename]) {
+              _context4.next = 39;
+              break;
+            }
+
+            return _context4.abrupt('return');
+
+          case 39:
+            httpServerAddress = httpServer.address();
+            packagerHost = 'localhost';
+
+            if (httpServer.address().address && httpServer.address().address !== '::' && httpServer.address().address !== '') {
+              packagerHost = httpServerAddress.address;
+            }
+
+            _context4.next = 44;
+            return regeneratorRuntime.awrap(packagerServer.buildBundleForHMR({
+              entryFile: client.bundleEntry,
+              platform: client.platform,
+              resolutionResponse: resolutionResponse
+            }, packagerHost, httpServerAddress.port));
+
+          case 44:
+            bundle = _context4.sent;
+            return _context4.abrupt('return', bundle);
+
+          case 46:
+          case 'end':
+            return _context4.stop();
+        }
+      }
+    }, null, this);
+  }
+
+  function handleFileChange(type, filename) {
+    clients.forEach(function (client) {
+      return sendFileChangeToClient(client, type, filename);
+    });
+  }
+
+  function sendFileChangeToClient(client, type, filename) {
+    var blacklisted, response;
+    return regeneratorRuntime.async(function sendFileChangeToClient$(_context5) {
+      while (1) {
+        switch (_context5.prev = _context5.next) {
+          case 0:
+            blacklisted = blacklist.find(function (blacklistedPath) {
+              return filename.indexOf(blacklistedPath) !== -1;
+            });
+
+            if (!blacklisted) {
+              _context5.next = 3;
+              break;
+            }
+
+            return _context5.abrupt('return');
+
+          case 3:
+
+            if (clients.has(client)) {
+              client.ws.send(JSON.stringify({ type: 'update-start' }));
+            }
+
+            if (!(type !== 'delete')) {
+              _context5.next = 9;
+              break;
+            }
+
+            _context5.next = 7;
+            return regeneratorRuntime.awrap(prepareResponse(client, filename));
+
+          case 7:
+            response = _context5.sent;
+
+
+            if (response && clients.has(client)) {
+              client.ws.send(JSON.stringify(response));
+            }
+
+          case 9:
+
+            if (clients.has(client)) {
+              client.ws.send(JSON.stringify({ type: 'update-done' }));
+            }
+
+          case 10:
+          case 'end':
+            return _context5.stop();
+        }
+      }
+    }, null, this);
+  }
+
+  var WebSocketServer = require('ws').Server;
+  var wss = new WebSocketServer({
+    server: httpServer,
+    path: path
+  });
+
+  wss.on('connection', function _callee2(ws) {
+    var params, _ref6, dependenciesCache, dependenciesModulesCache, shallowDependencies, inverseDependenciesCache, client;
+
+    return regeneratorRuntime.async(function _callee2$(_context6) {
+      while (1) {
+        switch (_context6.prev = _context6.next) {
+          case 0:
+            params = querystring.parse(url.parse(ws.upgradeReq.url).query);
+            _context6.next = 3;
+            return regeneratorRuntime.awrap(getDependencies(params.platform, params.bundleEntry));
+
+          case 3:
+            _ref6 = _context6.sent;
+            dependenciesCache = _ref6.dependenciesCache;
+            dependenciesModulesCache = _ref6.dependenciesModulesCache;
+            shallowDependencies = _ref6.shallowDependencies;
+            inverseDependenciesCache = _ref6.inverseDependenciesCache;
+            client = {
+              ws: ws,
+              platform: params.platform,
+              bundleEntry: params.bundleEntry,
+              dependenciesCache: dependenciesCache,
+              dependenciesModulesCache: dependenciesModulesCache,
+              shallowDependencies: shallowDependencies,
+              inverseDependenciesCache: inverseDependenciesCache
+            };
+
+            clients.add(client);
+
+            if (clients.size === 1) {
+              packagerServer.setHMRFileChangeListener(handleFileChange);
+            }
+
+            client.ws.on('error', function (e) {
+              console.error('[Hot Module Replacement] Unexpected error', e);
+              disconnect(client);
+            });
+
+            client.ws.on('close', function () {
+              return disconnect(client);
+            });
+
+          case 13:
+          case 'end':
+            return _context6.stop();
+        }
+      }
+    }, null, _this2);
+  });
+}
+
+function arrayEquals(arrayA, arrayB) {
+  arrayA = arrayA || [];
+  arrayB = arrayB || [];
+  return arrayA.length === arrayB.length && arrayA.every(function (element, index) {
+    return element === arrayB[index];
+  });
+}
+
+module.exports = attachHMRServer;

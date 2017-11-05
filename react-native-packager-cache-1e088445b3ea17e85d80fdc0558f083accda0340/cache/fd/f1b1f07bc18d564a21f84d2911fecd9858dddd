@@ -1,0 +1,200 @@
+
+
+'use strict';
+
+var _react2 = require('react');
+
+var _react3 = _interopRequireDefault(_react2);
+
+var _index = require('./../../../../../react-transform-hmr/lib/index.js');
+
+var _index2 = _interopRequireDefault(_index);
+
+var _jsxFileName = '/home/bassihassan/Desktop/confIOReviewer/node_modules/react-native/ReactAndroid/src/androidTest/js/NativeIdTestModule.js';
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var _components = {
+  NativeIdTestApp: {
+    displayName: 'NativeIdTestApp'
+  }
+};
+
+var _reactTransformHmrLibIndexJs2 = (0, _index2.default)({
+  filename: '/home/bassihassan/Desktop/confIOReviewer/node_modules/react-native/ReactAndroid/src/androidTest/js/NativeIdTestModule.js',
+  components: _components,
+  locals: [module],
+  imports: [_react3.default]
+});
+
+function _wrapComponent(id) {
+  return function (Component) {
+    return _reactTransformHmrLibIndexJs2(Component, id);
+  };
+}
+
+var Image = require('Image');
+var React = require('React');
+var StyleSheet = require('StyleSheet');
+var Text = require('Text');
+var TextInput = require('TextInput');
+var TouchableBounce = require('TouchableBounce');
+var TouchableHighlight = require('TouchableHighlight');
+var TouchableOpacity = require('TouchableOpacity');
+var TouchableWithoutFeedback = require('TouchableWithoutFeedback');
+var View = require('View');
+
+var NativeIdTestApp = _wrapComponent('NativeIdTestApp')(function (_React$Component) {
+  _inherits(NativeIdTestApp, _React$Component);
+
+  function NativeIdTestApp() {
+    _classCallCheck(this, NativeIdTestApp);
+
+    return _possibleConstructorReturn(this, (NativeIdTestApp.__proto__ || Object.getPrototypeOf(NativeIdTestApp)).apply(this, arguments));
+  }
+
+  _createClass(NativeIdTestApp, [{
+    key: 'render',
+    value: function render() {
+      var uri = 'data:image/gif;base64,' + 'R0lGODdhMAAwAPAAAAAAAP///ywAAAAAMAAwAAAC8IyPqcvt3wCcDkiLc7C0qwyGHhSWpjQu5yqmCYsapy' + 'uvUUlvONmOZtfzgFzByTB10QgxOR0TqBQejhRNzOfkVJ+5YiUqrXF5Y5lKh/DeuNcP5yLWGsEbtLiOSpa/' + 'TPg7JpJHxyendzWTBfX0cxOnKPjgBzi4diinWGdkF8kjdfnycQZXZeYGejmJlZeGl9i2icVqaNVailT6F5' + 'iJ90m6mvuTS4OK05M0vDk0Q4XUtwvKOzrcd3iq9uisF81M1OIcR7lEewwcLp7tuNNkM3uNna3F2JQFo97V' + 'riy/Xl4/f1cf5VWzXyym7PHhhx4dbgYKAAA7';
+      return React.createElement(
+        View,
+        {
+          __source: {
+            fileName: _jsxFileName,
+            lineNumber: 41
+          }
+        },
+        React.createElement(Image, {
+          nativeID: 'Image',
+          source: { uri: uri },
+          style: styles.base, __source: {
+            fileName: _jsxFileName,
+            lineNumber: 42
+          }
+        }),
+        React.createElement(
+          Text,
+          { nativeID: 'Text', __source: {
+              fileName: _jsxFileName,
+              lineNumber: 46
+            }
+          },
+          'text'
+        ),
+        React.createElement(TextInput, { nativeID: 'TextInput', value: 'Text input', __source: {
+            fileName: _jsxFileName,
+            lineNumber: 47
+          }
+        }),
+        React.createElement(
+          TouchableBounce,
+          { nativeID: 'TouchableBounce', __source: {
+              fileName: _jsxFileName,
+              lineNumber: 48
+            }
+          },
+          React.createElement(
+            Text,
+            {
+              __source: {
+                fileName: _jsxFileName,
+                lineNumber: 49
+              }
+            },
+            'TouchableBounce'
+          )
+        ),
+        React.createElement(
+          TouchableHighlight,
+          { nativeID: 'TouchableHighlight', __source: {
+              fileName: _jsxFileName,
+              lineNumber: 51
+            }
+          },
+          React.createElement(
+            Text,
+            {
+              __source: {
+                fileName: _jsxFileName,
+                lineNumber: 52
+              }
+            },
+            'TouchableHighlight'
+          )
+        ),
+        React.createElement(
+          TouchableOpacity,
+          { nativeID: 'TouchableOpacity', __source: {
+              fileName: _jsxFileName,
+              lineNumber: 54
+            }
+          },
+          React.createElement(
+            Text,
+            {
+              __source: {
+                fileName: _jsxFileName,
+                lineNumber: 55
+              }
+            },
+            'TouchableOpacity'
+          )
+        ),
+        React.createElement(
+          TouchableWithoutFeedback,
+          { nativeID: 'TouchableWithoutFeedback', __source: {
+              fileName: _jsxFileName,
+              lineNumber: 57
+            }
+          },
+          React.createElement(
+            View,
+            {
+              __source: {
+                fileName: _jsxFileName,
+                lineNumber: 58
+              }
+            },
+            React.createElement(
+              Text,
+              {
+                __source: {
+                  fileName: _jsxFileName,
+                  lineNumber: 59
+                }
+              },
+              'TouchableWithoutFeedback'
+            )
+          )
+        ),
+        React.createElement(View, { nativeID: 'View', __source: {
+            fileName: _jsxFileName,
+            lineNumber: 62
+          }
+        })
+      );
+    }
+  }]);
+
+  return NativeIdTestApp;
+}(React.Component));
+
+var styles = StyleSheet.create({
+  base: {
+    width: 150,
+    height: 50
+  }
+});
+
+module.exports = {
+  NativeIdTestApp: NativeIdTestApp
+};

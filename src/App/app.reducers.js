@@ -5,9 +5,11 @@ import talkswiperReducer from 'app/TalkSwiper/talkswiper.reducer'
 import talkDetailReducer from 'app/TalkDetail/talkdetail.reducer'
 import syncReducer from 'app/Sync/sync.reducer';
 import navigatorReducer from 'app/Navigator/navigator.reducer';
+import homeReducer from 'app/Home/home.reducer';
 import feedReducer from 'app/Feed/feed.reducer';
 
 export const login = loginReducer;
+export const home = homeReducer;
 export const loginWithSavedSession = loginWithSavedSessionReducer;
 export const loginWithQRCode = loginWithQRCodeReducer;
 export const talkswiper = talkswiperReducer;

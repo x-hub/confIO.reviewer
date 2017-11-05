@@ -1,0 +1,10 @@
+module.exports = function makeProjectPatch(windowsConfig) {
+
+  var projectInsert = '<ProjectReference Include="..\\' + windowsConfig.relativeProjPath + '">\n      <Project>{' + windowsConfig.pathGUID + '}</Project>\n      <Name>' + windowsConfig.projectName + '</Name>\n    </ProjectReference>\n    ';
+
+  return {
+    pattern: '<ProjectReference Include="..\\..\\node_modules\\react-native-windows\\ReactWindows\\ReactNative\\ReactNative.csproj">',
+    patch: projectInsert,
+    unpatch: new RegExp('<ProjectReference.+\\s+.+\\s+.+' + windowsConfig.projectName + '.+\\s+.+\\s')
+  };
+};

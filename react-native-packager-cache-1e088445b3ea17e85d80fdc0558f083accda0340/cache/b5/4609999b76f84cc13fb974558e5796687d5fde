@@ -1,0 +1,76 @@
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+exports.talkStatus = undefined;
+
+var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
+var _react = require('react');
+
+var _react2 = _interopRequireDefault(_react);
+
+var _reactRedux = require('react-redux');
+
+var _redux = require('redux');
+
+var _actionsType = require('../App/actionsType');
+
+var _navigator = require('../Navigator/navigator.actions');
+
+var _navigator2 = _interopRequireDefault(_navigator);
+
+var _home = require('./home.template');
+
+var _home2 = _interopRequireDefault(_home);
+
+var _nativeStorage = require('../App/Services/nativeStorage');
+
+var _nativeStorage2 = _interopRequireDefault(_nativeStorage);
+
+var _rxjs = require('rxjs');
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var talkStatus = exports.talkStatus = {
+    NotReviewed: "",
+    Reviewed: "reviewed",
+    Later: "later"
+};
+var actionCreators = {
+    toNotReviewedTalks: toNotReviewedTalks,
+    toReviewedLaterTalks: toReviewedLaterTalks,
+    toReviewedTalks: toReviewedTalks
+
+};
+function fetchTalkDetail(actionType, event, talksId, type) {
+    var ids = talksId.map(function (id) {
+        return event.code + '-talk-' + id;
+    });
+    return _nativeStorage2.default.getArray(ids).switchMap(function (e) {
+        return _rxjs.Observable.of({
+            type: actionType,
+            payload: {
+                talks: e,
+                type: type
+            }
+        });
+    }).toPromise();
+}
+function toReviewedTalks(event, talksId) {
+    return fetchTalkDetail(_navigator2.default.GOTO_Swiper, event, talksId, talkStatus.Reviewed);
+}
+function toReviewedLaterTalks(event, talksId) {
+    return fetchTalkDetail(_navigator2.default.GOTO_Swiper, event, talksId, talkStatus.Later);
+}
+function toNotReviewedTalks(event, talksId) {
+    return fetchTalkDetail(_navigator2.default.GOTO_Swiper, event, talksId, talkStatus.NotReviewed);
+}
+function mapStateToProps(state) {
+    return _extends({}, state.home);
+}
+
+function mapDispatchToProps(dispatch) {
+    return (0, _redux.bindActionCreators)(actionCreators, dispatch);
+}
+
+exports.default = (0, _reactRedux.connect)(mapStateToProps, mapDispatchToProps)(_home2.default);

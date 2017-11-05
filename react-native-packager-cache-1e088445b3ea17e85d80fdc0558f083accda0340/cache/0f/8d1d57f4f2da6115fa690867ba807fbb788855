@@ -1,0 +1,13 @@
+var plistParser = require('plist');
+var getPlistPath = require('./getPlistPath');
+var fs = require('fs');
+
+module.exports = function writePlist(project, sourceDir, plist) {
+  var plistPath = getPlistPath(project, sourceDir);
+
+  if (!plistPath) {
+    return null;
+  }
+
+  return fs.writeFileSync(plistPath, plistParser.build(plist, { indent: '\t', offset: -1 }) + '\n');
+};

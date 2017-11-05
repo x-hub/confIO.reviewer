@@ -1,0 +1,24 @@
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+var _jsxFileName = '/home/bassihassan/Desktop/confIOReviewer/node_modules/rn-placeholder/src/line/line.js';
+
+exports.default = function (props) {
+  return _react2.default.createElement(_reactNative.View, { style: (0, _line2.default)(props), __source: {
+      fileName: _jsxFileName,
+      lineNumber: 9
+    }
+  });
+};
+
+var _react = require('react');
+
+var _react2 = _interopRequireDefault(_react);
+
+var _reactNative = require('react-native');
+
+var _line = require('./line.style');
+
+var _line2 = _interopRequireDefault(_line);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }

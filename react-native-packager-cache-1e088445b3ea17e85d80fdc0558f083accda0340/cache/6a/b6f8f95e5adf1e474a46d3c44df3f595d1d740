@@ -1,0 +1,24 @@
+var fs = require('fs');
+var path = require('path');
+var android = require('./android');
+var ios = require('./ios');
+
+var flat = {
+  android: android.valid,
+  ios: ios.valid
+};
+
+var nested = {
+  android: {
+    app: android.valid
+  },
+  ios: ios.valid
+};
+
+var withExamples = {
+  Examples: flat,
+  ios: ios.valid,
+  android: android.valid
+};
+
+module.exports = { flat: flat, nested: nested, withExamples: withExamples };

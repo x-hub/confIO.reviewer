@@ -1,0 +1,77 @@
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+var _jsxFileName = '/home/bassihassan/Desktop/confIOReviewer/node_modules/rn-placeholder/src/multiWords/multiWords.js';
+
+var _react = require('react');
+
+var _react2 = _interopRequireDefault(_react);
+
+var _reactNative = require('react-native');
+
+var _propTypes = require('prop-types');
+
+var _propTypes2 = _interopRequireDefault(_propTypes);
+
+var _line = require('./../line/line');
+
+var _line2 = _interopRequireDefault(_line);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var styles = _reactNative.StyleSheet.create({
+  container: {
+    flexDirection: 'row'
+  }
+});
+
+function MultiWords(_ref) {
+  var words = _ref.words,
+      textSize = _ref.textSize;
+
+  var borderStyle = {
+    borderRightWidth: textSize,
+    borderRightColor: 'transparent'
+  };
+
+  var lastIndex = words.length - 1;
+
+  return _react2.default.createElement(
+    _reactNative.View,
+    { style: styles.container, __source: {
+        fileName: _jsxFileName,
+        lineNumber: 21
+      }
+    },
+    words.map(function (word, index) {
+      return _react2.default.createElement(
+        _reactNative.View,
+        { key: index, style: [lastIndex !== index && borderStyle, { width: word.width }], __source: {
+            fileName: _jsxFileName,
+            lineNumber: 23
+          }
+        },
+        _react2.default.createElement(_line2.default, { textSize: textSize, color: word.color, __source: {
+            fileName: _jsxFileName,
+            lineNumber: 24
+          }
+        })
+      );
+    })
+  );
+}
+
+MultiWords.propTypes = {
+  words: _propTypes2.default.arrayOf(_propTypes2.default.shape({
+    color: _propTypes2.default.string,
+    width: _propTypes2.default.string.isRequired
+  })),
+  textSize: _propTypes2.default.number
+};
+
+MultiWords.defaultProps = {
+  words: [],
+  textSize: 12
+};
+
+exports.default = MultiWords;

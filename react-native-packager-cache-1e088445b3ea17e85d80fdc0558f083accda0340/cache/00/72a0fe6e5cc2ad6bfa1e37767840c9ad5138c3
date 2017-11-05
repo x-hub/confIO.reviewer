@@ -1,0 +1,34 @@
+var fs = require('fs-extra');
+var path = require('path');
+var xcode = require('xcode');
+var log = require('npmlog');
+var groupFilesByType = require('../groupFilesByType');
+var getPlist = require('./getPlist');
+var writePlist = require('./writePlist');
+var difference = require('lodash').difference;
+
+module.exports = function unlinkAssetsIOS(files, projectConfig) {
+  var project = xcode.project(projectConfig.pbxprojPath).parseSync();
+  var assets = groupFilesByType(files);
+  var plist = getPlist(project, projectConfig.sourceDir);
+
+  if (!plist) {
+    return log.error('ERRPLIST', 'Could not locate Info.plist file. Check if your project has \'INFOPLIST_FILE\' set properly');
+  }
+
+  if (!project.pbxGroupByName('Resources')) {
+    return log.error('ERRGROUP', 'Group \'Resources\' does not exist in your Xcode project. There is nothing to unlink.');
+  }
+
+  var fonts = (assets.font || []).map(function (asset) {
+    return project.removeResourceFile(path.relative(projectConfig.sourceDir, asset), { target: project.getFirstTarget().uuid });
+  }).map(function (file) {
+    return file.basename;
+  });
+
+  plist.UIAppFonts = difference(plist.UIAppFonts || [], fonts);
+
+  fs.writeFileSync(projectConfig.pbxprojPath, project.writeSync());
+
+  writePlist(project, projectConfig.sourceDir, plist);
+};

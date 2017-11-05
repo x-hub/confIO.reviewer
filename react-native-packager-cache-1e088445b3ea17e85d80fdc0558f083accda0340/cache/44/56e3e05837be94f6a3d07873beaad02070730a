@@ -1,0 +1,79 @@
+'use strict';
+
+var _react = require('react');
+
+var _react2 = _interopRequireDefault(_react);
+
+var _reactNative = require('react-native');
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var localStorage = {
+  save: function save(key_s_, value) {
+    if (!Array.isArray(key_s_)) {
+      return _reactNative.AsyncStorage.setItem(key_s_, JSON.stringify(value));
+    } else {
+      var keyValArray = [];
+      for (var i = 0; i < key_s_.length; i++) {
+        keyValArray.push([key_s_[i], JSON.stringify(value_s_[i])]);
+      }
+      return _reactNative.AsyncStorage.multiSet(keyValArray);
+    }
+  },
+  getSet: function getSet(key_s_, ssFunction) {
+    if (!Array.isArray(key_s_)) {
+      return _reactNative.AsyncStorage.getItem(key_s_).then(function (value) {
+        ssFunction(key_s_, JSON.parse(value));
+      });
+    } else {
+      return _reactNative.AsyncStorage.multiGet(key_s_).then(function (values) {
+        for (var i = 0; i < values.length; i++) {
+          ssFunction(values[i][0], JSON.parse(values[i][1]));
+        }
+        return;
+      });
+    }
+  },
+  get: function get(key_s_) {
+    if (!Array.isArray(key_s_)) {
+      return _reactNative.AsyncStorage.getItem(key_s_).then(function (value) {
+        return JSON.parse(value);
+      });
+    } else {
+      return _reactNative.AsyncStorage.multiGet(key_s_).then(function (values) {
+        return values.map(function (value) {
+          return JSON.parse(value[1]);
+        });
+      });
+    }
+  },
+  getAllKeys: function getAllKeys() {
+    return _reactNative.AsyncStorage.getAllKeys();
+  },
+  update: function update(key_s_, value) {
+    return _reactNative.AsyncStorage.setItem(key_s_, value);
+  },
+  merge: function merge(key_s_, value_s_) {
+    if (!Array.isArray(key_s_)) {
+      return _reactNative.AsyncStorage.mergeItem(key_s_, JSON.stringify(value_s_));
+    } else {
+      var keyValArray = [];
+      for (var i = 0; i < key_s_.length; i++) {
+        keyValArray.push([key_s_[i], JSON.stringify(value_s_[i])]);
+      }
+      return _reactNative.AsyncStorage.multiMerge(keyValArray);
+    }
+  },
+  remove: function remove(key_s_) {
+    if (!Array.isArray(key_s_)) {
+      return _reactNative.AsyncStorage.removeItem(key_s_);
+    } else {
+      return _reactNative.AsyncStorage.multiRemove(key_s_);
+    }
+  },
+  clear: function clear() {
+    return _reactNative.AsyncStorage.clear();
+  }
+};
+
+module.exports = localStorage;
