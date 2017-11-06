@@ -7,6 +7,8 @@ import {Observable} from "rxjs"
 import {
     AsyncStorage,
 } from 'react-native';
+import navActions from 'app/Navigator/navigator.actions';
+
 
 export const actions = {
     FETCH_DEFAULT_EVENT: 'FETCH_DEFAULT_EVENT',
@@ -14,6 +16,7 @@ export const actions = {
 
 const actionCreators = {
     fetchDefaultEvent,
+    navigateToQRScanner,
 };
 
 class Login extends Component {
@@ -25,6 +28,7 @@ class Login extends Component {
         return template(this.props);
     }
 }
+
 export function fetchTalks(event) {
     let talks = nativeStorage.get(`${event.code}-talks`)
     let talksReviewed = nativeStorage.get(`${event.code}-talks-reviewed`)
@@ -35,6 +39,13 @@ export function fetchTalks(event) {
         .switchMap(([talks,reviewed,later,user])=>Observable.of({event,talks,reviewed,later,user}))
         .toPromise()
 }
+
+function navigateToQRScanner() {
+    return {
+        type: navActions.GOTO_LoginWithQRCode,
+    };
+}
+
 function fetchDefaultEvent() {
     const defaultEvent = AsyncStorage.getItem('events')
     .then((events) => {

@@ -24,11 +24,14 @@ function unescapeHtml(safe) {
 }
 
 function handleQRCode(data) {
-   // const { authToken, authEndpoint, eventDetailsEndpoint } = JSON.parse(unescapeHtml(data));
-    const { authToken, authEndpoint, eventDetailsEndpoint } = JSON.parse(data);
-    if(!authToken || !authEndpoint || !eventDetailsEndpoint)
-        return Promise.resolve({type:actions.QR_CODE_READ,payload:{error:true}})
-    return Promise.resolve({type:navActions.GOTO_Feed,payload:JSON.parse(data)})
+    const QRCodeData = JSON.parse(unescapeHtml(data));
+    const { authToken, authEndpoint, eventDetailsEndpoint }  = QRCodeData;
+    if(!authToken || !authEndpoint || !eventDetailsEndpoint) {
+        return Promise.resolve({ type: actions.QR_CODE_READ, payload:{ error: true } })
+    }
+    else {
+        return Promise.resolve({ type:navActions.GOTO_Feed, payload: QRCodeData })
+    }
 }
 
 
