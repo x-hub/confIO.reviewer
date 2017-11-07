@@ -9,10 +9,12 @@ import Http from "app/App/Services/Http"
 import {Observable} from "rxjs"
 export const actions = {
     QR_CODE_READ: 'QR_CODE_READ',
+    REACTIVATE_SCANNER: 'REACTIVATE_SCANNER',
 };
 
 const actionCreators = {
-    onQRCodeRead
+    onQRCodeRead,
+    reactivateQRCodeScanner,
 };
 
 function unescapeHtml(safe) {
@@ -24,16 +26,25 @@ function unescapeHtml(safe) {
 }
 
 function handleQRCode(data) {
-    const QRCodeData = JSON.parse(unescapeHtml(data));
+    let possibleQRCode = {};
+    try {
+        possibleQRCode = JSON.parse(unescapeHtml(data))
+    } catch(e) {}
+    const QRCodeData = possibleQRCode;
     const { authToken, authEndpoint, eventDetailsEndpoint }  = QRCodeData;
     if(!authToken || !authEndpoint || !eventDetailsEndpoint) {
-        return Promise.resolve({ type: actions.QR_CODE_READ, payload:{ error: true } })
+        return Promise.resolve({ type: actions.QR_CODE_READ, payload: { error: true } })
     }
     else {
-        return Promise.resolve({ type:navActions.GOTO_Feed, payload: QRCodeData })
+        return Promise.resolve({ type:navActions.GOTO_Feed, payload: { ...QRCodeData, reactivateQRScanner: false } })
     }
 }
 
+function reactivateQRCodeScanner() {
+    return {
+        type: 'REACTIVATE_SCANNER',
+    };
+}
 
 function onQRCodeRead({ data }) {
     // check if valid QRCODE
