@@ -9,10 +9,11 @@ export default (props) => {
     const EventSelector = props.event ?
         renderEventSelectorWithUpdate.bind(this, props.event) :
         renderEventSelector.bind(this);
+    const { navigateToQRScanner } = props;
 
     return (
         <View style={style.loginContainer}>
-            <Image style={{position: 'absolute', width: "100%", height: "100%", top: 0, right: 0, left: 0, bottom: 0}}
+            <Image style={{position: 'absolute', width: '100%', height: '100%', top: 0, right: 0, left: 0, bottom: 0}}
                    source={require('assets/loginBackgroundImage.jpg')}/>
             <View style={style.loginContainer}>
                 <View style={style.logoContainer}>
@@ -31,7 +32,7 @@ export default (props) => {
         return (
             <View>
                 <Button style={style.selectEventBtn}
-                        onPress={navigate.bind(this, 'LoginWithQRCode')} rounded>
+                        onPress={ navigateToQRScanner } rounded>
                     <Icon style={style.icon} name='swap'/>
                     <Text style={style.selectEvent}>Select Event</Text>
                 </Button>

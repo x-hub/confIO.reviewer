@@ -31,7 +31,7 @@ export default (props) => {
         <View style={styles.container}>
             <Image source={background} style={styles.background} resizeMode="cover">
                 <Container>
-                    <Header style={{Opacity: 0}} noShadow={true} backgroundColor="rgba(0,0,0,0.01)">
+                    <Header style={{opacity: 0}} noShadow={true} backgroundColor="rgba(0,0,0,0.01)">
                         <Body>
                         <Text style={styles.labelM}>{props.event.name}</Text>
                         </Body>
