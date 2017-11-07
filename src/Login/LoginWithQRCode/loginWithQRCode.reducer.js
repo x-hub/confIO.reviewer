@@ -5,6 +5,7 @@ const INITIAL_STATE = {};
 
 export default (state = INITIAL_STATE, action) => {
     switch(action.type) {
+        case actions.REACTIVATE_SCANNER:
         case navActions.GOTO_LoginWithQRCode:
             return {
                 ...state,

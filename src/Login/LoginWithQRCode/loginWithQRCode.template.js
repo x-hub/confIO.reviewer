@@ -17,7 +17,8 @@ import QRCodeScanner from 'react-native-qrcode-scanner';
 import style from './loginWithQRCode.style';
 
 export default (props) => {
-	const { goBack, navigate, reactivateQRScanner } = props.navigation;
+	const { goBack, navigate } = props.navigation;
+    const { reactivateQRScanner } = props;
     return (
         <Container>
             <Header style={ style.header }>
@@ -42,6 +43,7 @@ export default (props) => {
                 <View>
                     <QRCodeScanner
                     reactivate={ reactivateQRScanner }
+                    reactivateTimeout={ 5000 }
                     showMarker={ true }
                     onRead={ props.onQRCodeRead.bind(this) }
                     />
