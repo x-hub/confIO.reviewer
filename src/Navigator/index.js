@@ -64,6 +64,7 @@ class NavigatorWithState extends Component {
 	}
 
 	onBackPress() {
+        console.log("onBackPress");
 		const { dispatch, nav } = this.props;
 		if(nav.index === 0) {
 			return false;

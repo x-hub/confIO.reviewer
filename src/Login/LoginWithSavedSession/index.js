@@ -7,8 +7,8 @@ import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import {actionCreators as eventDetailsDialog} from 'app/EventDetailsDialog';
 import nativeStorage from "app/App/Services/nativeStorage"
-import {fetchTalks} from "app/Login"
-import {GOTOHome} from "app/Feed/index"
+import { fetchTalks } from 'app/App/Services/EventService';
+import navActions from 'app/Navigator/navigator.actions';
 import {Observable} from "rxjs"
 
 
@@ -28,6 +28,14 @@ const actionCreators = {
     deleteEvent,
     GOTOHome,
 };
+
+function GOTOHome(event) {
+    const promise = fetchTalks(event);
+    return {
+        type: navActions.GOTO_Home,
+        payload: promise,
+    };
+}
 
 function readEventsFromStorage() {
     return nativeStorage.get('events').switchMap((events) => {
