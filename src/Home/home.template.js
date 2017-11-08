@@ -13,16 +13,55 @@ import {
     Left,
     Right,
     Thumbnail,
-    TouchableOpacity
 } from "native-base"
+import {
+    TouchableOpacity
+} from 'react-native';
 import styles from "./home.style"
 import {colors} from "shared/theme"
 const {width, height} = Dimensions.get("window");
 const background = require("assets/Homebg.png");
 
+function TouchableCTA(props) {
+    const { backgroundColor, list, event, onPress } = props;
+    const CTAContainer = list.length? EnabledCTA : DisabledCTA;
+    return (
+        <CTAContainer>
+            <View style={{...styles.center, flex: 1, flexDirection: "row"}}>
+                <Text style={{...styles.labelL, fontSize: 33, color: colors.black}}>{list.length}</Text>
+                <Text style={{fontFamily: "Roboto-Light", fontSize: 22, marginLeft: 10}}>To Review</Text>
+            </View>
+            <View style={{marginHorizontal: 10, justifyContent: 'center'}}>
+                {list.length ?  <View style={{alignSelf: 'stretch'}}>
+                    <Icon style={{color: colors.black}} name="md-arrow-dropright"/>
+                </View> :<View/>}
+            </View>
+        </CTAContainer>
+    );
+
+    function EnabledCTA(props) {
+        return (
+            <TouchableOpacity
+            onPress={()=>{onPress(event, list)}}
+            style={{ ...styles.card, backgroundColor }}
+            >
+                { props.children }
+            </TouchableOpacity>
+        );
+    }
+
+    function DisabledCTA(props) {
+        return (
+            <View style={{ ...styles.card, backgroundColor }}>
+                { props.children }
+            </View>
+        );
+    }
+}
 
 export default (props) => {
     const { navigate, goBack } = props.navigation;
+    const { user } = props;
     function Navigate(callback,name="Swiper") {
         callback()
         navigate(name);
@@ -46,57 +85,39 @@ export default (props) => {
                         }}>
                             <View style={{flexDirection: "row", ...styles.center}}>
                                 <Thumbnail style={styles.avatar}
-                                           source={{uri: 'https://lh6.googleusercontent.com/-0SpETtlSIGY/AAAAAAAAAAI/AAAAAAAAAA4/_6bdXciDHB0/photo.jpg'}}/>
+                                           source={ {uri: user.pictureurl} }/>
                                 <View style={{marginLeft: 16, alignItems: "center"}}>
                                     <Text style={{...styles.labelL, fontSize: 18}}>
-                                        {props.user.firstName}
-                                        {props.user.lastName}
+                                        {user.firstName}
+                                        {user.lastName}
                                     </Text>
                                     <Text style={{marginTop: 5, color: colors.gris}}>
-                                        @Java
+                                        @{ user.company }
                                     </Text>
                                 </View>
 
                             </View>
 
-                            <View style={{...styles.card, backgroundColor: "#78C4E8"}}>
-                                <View style={{...styles.center, flex: 1, flexDirection: "row"}}>
-                                    <Text style={{...styles.labelL, fontSize: 33, color: colors.black}}>{props.talks.length}</Text>
-                                    <Text style={{fontFamily: "Roboto-Light", fontSize: 22, marginLeft: 10}}>Not
-                                        Reviewed</Text>
-                                </View>
-                                <View style={{marginHorizontal: 10}}>
-                                    {props.talks.length ? <Button onPress={()=>props.toNotReviewedTalks(props.event,props.talks)} style={{alignSelf: "stretch"}} transparent>
-                                        <Icon style={{color: colors.white}} name="md-arrow-dropright"/>
-                                    </Button> : <View/>}
-                                </View>
-                            </View>
-                            <View style={{...styles.card, backgroundColor: "#e8a652"}}>
-                                <View style={{...styles.center, flex: 1, flexDirection: "row"}}>
-                                    <Text style={{...styles.labelL, fontSize: 33, color: colors.black}}>{props.reviewed.length}</Text>
-                                    <Text style={{
-                                        fontFamily: "Roboto-Light",
-                                        fontSize: 22,
-                                        marginLeft: 10
-                                    }}>Reviewed</Text>
-                                </View>
-                                <View style={{marginHorizontal: 10}}>
-                                    {props.reviewed.length ? <Button onPress={()=>{props.toReviewedTalks(props.event,props.reviewed)}} style={{alignSelf: "stretch"}} transparent>
-                                        <Icon style={{color: colors.white}} name="md-arrow-dropright"/>
-                                    </Button> : <View/>}
-                                </View>
-                            </View>
-                            <View style={{...styles.card, backgroundColor: "#E36B86"}}>
-                                <View style={{...styles.center, flex: 1, flexDirection: "row"}}>
-                                    <Text style={{...styles.labelL, fontSize: 33, color: colors.black}}>{props.later.length}</Text>
-                                    <Text style={{fontFamily: "Roboto-Light", fontSize: 22, marginLeft: 10}}>To Review</Text>
-                                </View>
-                                <View style={{marginHorizontal: 10}}>
-                                    {props.later.length ?  <Button onPress={()=>{props.toReviewedLaterTalks(props.event,props.later)}} style={{alignSelf: "stretch"}} transparent>
-                                        <Icon style={{color: colors.white}} name="md-arrow-dropright"/>
-                                    </Button> :<View/>}
-                                </View>
-                            </View>
+                            <TouchableCTA
+                            onPress={ props.toNotReviewedTalks }
+                            backgroundColor='#78C4E8'
+                            event={ props.event }
+                            list={ props.talks }
+                            />
+
+                            <TouchableCTA
+                            onPress={ props.toReviewedTalks }
+                            backgroundColor='#e8a652'
+                            event={ props.event }
+                            list={ props.reviewed }
+                            />
+
+                            <TouchableCTA
+                            onPress={ props.toReviewedLasterTalks }
+                            backgroundColor='#E36B86'
+                            event={ props.event }
+                            list={ props.later }
+                            />
 
                             <View style={{ ...styles.card }}>
                                 <View style={{flex: 1, flexDirection: "row"}}>
