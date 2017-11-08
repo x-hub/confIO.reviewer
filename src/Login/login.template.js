@@ -1,5 +1,10 @@
 import React from 'react';
-import {Image, Text, View,} from 'react-native';
+import {
+    Image,
+    Text,
+    View,
+    TouchableOpacity,
+} from 'react-native';
 import {Button, Icon, Thumbnail,} from 'native-base';
 import style from './login.style';
 import logo from 'assets/logo.png';
@@ -9,7 +14,7 @@ export default (props) => {
     const EventSelector = props.event ?
         renderEventSelectorWithUpdate.bind(this, props.event) :
         renderEventSelector.bind(this);
-    const { navigateToQRScanner } = props;
+    const { navigateToQRScanner, navigateToHome } = props;
 
     return (
         <View style={style.loginContainer}>
@@ -40,14 +45,19 @@ export default (props) => {
         );
     }
 
-    function renderEventSelectorWithUpdate({ type, name, image }) {
+    function renderEventSelectorWithUpdate(event) {
+        const { type, name, image } = event;
         return (
             <View style={ style.eventInfos }>
                 <Text style={ style.eventType }>Selected { type }</Text>
-                <Text style={ style.eventName }>{ name }</Text>
-                <View style={ style.eventImageContainer }>
-                    <Image style={ style.eventImage } source={ {uri: image} }/>
-                </View>
+                <TouchableOpacity
+                onPress={ navigateToHome.bind(this, event) }
+                >
+                    <Text style={ style.eventName }>{ name }</Text>
+                    <View style={ style.eventImageContainer }>
+                        <Image style={ style.eventImage } source={ {uri: image} }/>
+                    </View>
+                </TouchableOpacity>
                 <Button style={ style.selectEventBtn }
                         onPress={ navigate.bind(this, 'LoginWithQRCode') } rounded>
                     <Icon style={ style.icon } name='swap'/>
