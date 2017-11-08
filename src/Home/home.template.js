@@ -98,15 +98,26 @@ export default (props) => {
                                 </View>
                             </View>
 
+                            <View style={{ ...styles.card }}>
+                                <View style={{flex: 1, flexDirection: "row"}}>
+                                    <Button iconLeft transparent
+                                    style={{
+                                        flex: 1,
+                                        borderWidth: 1, padding: 15,
+                                        borderColor: colors.white,
+                                        justifyContent: 'center'
+                                    }}
+                                    onPress={ navigate.bind(this, 'Sync') }
+                                    >
+                                        <View style={ {flexDirection: 'row'} }>
+                                            <Icon style={ {color: colors.white, textAlignVertical: 'center'} } name='swap'/>
+                                            <Text style={ {color: colors.white, marginLeft: 5, textAlignVertical: 'center'} }>Sync With conf.io</Text>
+                                        </View>
+                                    </Button>
+                                </View>
+                            </View>
 
-                            <View style={{marginTop: 10}}>
-                                <Button style={{
-                                    borderWidth: 1, padding: 15,
-                                    borderColor: colors.white, justifyContent: "space-between"
-                                }} iconLeft transparent>
-                                    <Icon style={{color: colors.white}} name='swap'/>
-                                    <Text style={{color: colors.white, marginLeft: 5}}>Sync Your Reviewers</Text>
-                                </Button>
+                            <View style={{...styles.card, marginTop: 10}}>
                             </View>
                         </View>
                     </Content>
