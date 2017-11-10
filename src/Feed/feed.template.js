@@ -15,7 +15,7 @@ export default class Template extends Component {
     }
 
     componentWillMount() {
-        const {authToken, authEndpoint, eventDetailsEndpoint} = this.props.data;
+        const {authToken, authEndpoint, eventDetailsEndpoint} = this.props.navigation.state.params;
         let eventDetail = Http.getBody(eventDetailsEndpoint);
         let events = nativeStorage.get('events');
         let auth = Http.post(authEndpoint, {

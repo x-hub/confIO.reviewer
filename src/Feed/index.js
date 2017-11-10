@@ -3,21 +3,17 @@ import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import {ACTIONS} from "app/App/actionsType"
 import template from './feed.template';
-import navActions from 'app/Navigator/navigator.actions';
+import { creators as navActionCreators } from 'app/Navigator/navigator.actions';
 import {actions} from "app/Login/LoginWithSavedSession/index"
-import {fetchTalks} from "app/Login"
+import { fetchTalks } from 'app/App/Services/EventService'
 const actionCreators = {
     GOTOHome
 };
 
 export function GOTOHome(event) {
-    return fetchTalks(event).then((payload)=>{
-        return {
-            type:navActions.GOTO_Home,
-            payload
-        }
-    })
-
+  return navActionCreators.navigateToHome(
+    fetchTalks(event)
+  )
 }
 
 function mapStateToProps(state) {

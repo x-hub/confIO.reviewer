@@ -27,14 +27,6 @@ const screens = {
     Feed,
 };
 
-function GOTOActions() {
-    return _.mapValues(
-        screens,
-        (value, key) => {
-            return `GOTO_${key}`;
-        }
-    );
-}
 
 function navigatorConfig() {
     return _.mapValues(
@@ -92,5 +84,3 @@ function mapDispatchToProps(dispatch) {
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(NavigatorWithState);
-
-

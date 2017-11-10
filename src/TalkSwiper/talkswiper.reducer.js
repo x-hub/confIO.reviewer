@@ -10,12 +10,12 @@ export default (state = {
     type:talkStatus.NotReviewed
 }, {type,payload}) => {
     switch (type) {
-        case actions.SELECT_EVENT :
-        case  navActions.GOTO_Home :
-            return{
+        case 'Swiper_INIT':
+            return {
                 ...state,
-                event:payload.event
+                ...payload,
             }
+        case actions.SELECT_EVENT :
         case navActions.GOTO_Swiper :
             if(payload.hasOwnProperty('talk')) {
                 let talks = state.talks.filter((item) => item.id != payload.talk.id)
@@ -40,4 +40,3 @@ export default (state = {
             }
     }
 }
-

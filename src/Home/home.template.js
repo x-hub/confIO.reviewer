@@ -61,18 +61,25 @@ function TouchableCTA(props) {
 
 export default (props) => {
     const { navigate, goBack } = props.navigation;
-    const { user } = props;
-    function Navigate(callback,name="Swiper") {
-        callback()
-        navigate(name);
-    }
+    const {
+        user,
+        event,
+        talks,
+        reviewed,
+        later,
+    } = props.navigation.state.params;
+    const {
+        toNotReviewedTalks,
+        toReviewedLaterTalks,
+        toReviewedTalks,
+    } = props;
     return (
         <View style={styles.container}>
             <Image source={background} style={styles.background} resizeMode="cover">
                 <Container>
                     <Header style={{opacity: 0}} noShadow={true} backgroundColor="rgba(0,0,0,0.01)">
                         <Body>
-                        <Text style={styles.labelM}>{props.event.name}</Text>
+                        <Text style={styles.labelM}>{event.name}</Text>
                         </Body>
                         <Right>
                             <Icon onPress={()=>goBack()} style={{color: colors.white}} name="md-log-out"/>
@@ -99,24 +106,24 @@ export default (props) => {
                             </View>
 
                             <TouchableCTA
-                            onPress={ props.toNotReviewedTalks }
+                            onPress={ toNotReviewedTalks }
                             backgroundColor='#78C4E8'
-                            event={ props.event }
-                            list={ props.talks }
+                            event={ event }
+                            list={ talks }
                             />
 
                             <TouchableCTA
-                            onPress={ props.toReviewedTalks }
+                            onPress={ toReviewedTalks }
                             backgroundColor='#e8a652'
-                            event={ props.event }
-                            list={ props.reviewed }
+                            event={ event }
+                            list={ reviewed }
                             />
 
                             <TouchableCTA
-                            onPress={ props.toReviewedLasterTalks }
+                            onPress={ toReviewedLaterTalks }
                             backgroundColor='#E36B86'
-                            event={ props.event }
-                            list={ props.later }
+                            event={ event }
+                            list={ later }
                             />
 
                             <View style={{ ...styles.card }}>

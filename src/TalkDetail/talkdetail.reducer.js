@@ -12,19 +12,17 @@ export default (state = {
     type:""
 }, {type,payload}) => {
     switch (type) {
+        case 'INIT_TalkDetail':
+            return {
+                ...state,
+                ...payload,
+                IsReady: true,
+            }
         case actions.SELECT_EVENT :
-        case navActions.GOTO_Home :
             return{
                 ...state,
                 event:payload.event
             }
-        case navActions.GOTO_Detail :
-            return {
-                ...state,
-                ...payload,
-                IsReady:true
-            }
-
         case ACTIONS.SELECT_SPEAKER :
             return {
                 ...state,

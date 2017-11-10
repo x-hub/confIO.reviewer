@@ -3,7 +3,7 @@ import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import template from "./talkdetail.template"
 import {ACTIONS} from "app/App/actionsType"
-import navActions from 'app/Navigator/navigator.actions';
+import { creators as navActionCreators } from 'app/Navigator/navigator.actions';
 import {talkStatus} from "app/Home/index"
 import _ from "lodash"
 import nativeStorage from "app/App/Services/nativeStorage"
@@ -42,19 +42,25 @@ function OnRate(event, talk, type, score) {
                         })
                     })
             }))
-    return observable.switchMap(({others, reviewed}) => {
-        let action = {type: navActions.GOTO_Swiper, payload: {}}
+    const payload = observable.switchMap(({others, reviewed}) => {
+        let payload = { event }
         if (type != talkStatus.Reviewed) {
-            action.payload.talk = talk
-            action.payload.reviewed = reviewed
-            if (type == talkStatus.NotReviewed) action.payload.talks = others
-            else action.payload.later = others
+            payload.talk = talk
+            payload.reviewed = reviewed
+            if (type == talkStatus.NotReviewed) payload.talks = others
+            else payload.later = others
         }
-        return Observable.of(action)
+        return Observable.of(payload)
     }).toPromise()
-
+    return navActionCreators.navigateToSwiper(payload)
 }
 
+function init(params) {
+    return {
+        type: 'INIT_TalkDetail',
+        payload: params,
+    }
+}
 
 function getSpeaker(position) {
     return {
@@ -81,7 +87,8 @@ const actionCreators = {
     OnRate,
     getSpeaker,
     toggleSpeakerDetail,
-    toggleContentLoader
+    toggleContentLoader,
+    init,
 };
 
 function mapStateToProps(state) {

@@ -7,11 +7,6 @@ const INITIAL_STATE = {
 
 export default (state = INITIAL_STATE, { type, payload }) => {
     switch(type) {
-        case navActions.GOTO_Feed:
-            return {
-                ...state,
-                data: payload,
-            };
         default:
             return state;
     }

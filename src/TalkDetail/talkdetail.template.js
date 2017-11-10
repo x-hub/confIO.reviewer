@@ -19,10 +19,12 @@ export default class Template extends Component {
 
     constructor(props) {
         super(props)
+        const params = this.props.navigation.state.params
         const {navigate, goBack} = this.props.navigation;
         this.navigate = navigate;
         this.goBack = goBack;
         this.score=0;
+        this.props.init(params)
     }
     updateScore(value){
         this.score = value;
