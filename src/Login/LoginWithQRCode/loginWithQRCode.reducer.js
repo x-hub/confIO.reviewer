@@ -1,22 +1,17 @@
 import { actions } from 'app/Login/LoginWithQRCode';
 import navActions from 'app/Navigator/navigator.actions';
 
-const INITIAL_STATE = {};
+const INITIAL_STATE = {}
 
 export default (state = INITIAL_STATE, action) => {
     switch(action.type) {
         case actions.REACTIVATE_SCANNER:
-        case navActions.GOTO_LoginWithQRCode:
+        case navActions.Navigate:
             return {
                 ...state,
-               reactivateQRScanner: true
-            };
-        case actions.QR_CODE_READ:
-            return {
-                ...state,
-                ...action.payload
-            };
+               reactivateQRScanner: true,
+            }
         default:
-            return state;
+            return state
     }
 }

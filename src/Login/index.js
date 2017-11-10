@@ -8,7 +8,7 @@ import {
     AsyncStorage,
 } from 'react-native';
 import { fetchTalks } from 'app/App/Services/EventService';
-import navActions from 'app/Navigator/navigator.actions';
+import { creators as navActionCreators } from 'app/Navigator/navigator.actions';
 
 
 export const actions = {
@@ -32,17 +32,13 @@ class Login extends Component {
 }
 
 function navigateToQRScanner() {
-    return {
-        type: navActions.GOTO_LoginWithQRCode,
-    };
+    return navActionCreators.navigateToQRScanner()
 }
 
 function navigateToHome(event) {
-    const promise = fetchTalks(event);
-    return {
-        type: navActions.GOTO_Home,
-        payload: promise,
-    };
+    return navActionCreators.navigateToHome(
+        fetchTalks(event)
+    )
 }
 
 function fetchDefaultEvent() {

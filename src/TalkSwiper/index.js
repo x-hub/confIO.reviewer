@@ -2,7 +2,7 @@ import React from "react"
 import {connect} from "react-redux"
 import {bindActionCreators} from "redux"
 import {ACTIONS} from "app/App/actionsType"
-import navActions from 'app/Navigator/navigator.actions';
+import { creators as navActionCreators } from 'app/Navigator/navigator.actions';
 import template from "./talkswiper.template"
 import _ from "lodash"
 import nativeStorage from "app/App/Services/nativeStorage"
@@ -11,8 +11,16 @@ import {Observable} from "rxjs"
 
 export const actionCreators = {
     RateLater,
-    showDetail
+    showDetail,
+    init,
 };
+
+function init(obj) {
+    return {
+        type: 'Swiper_INIT',
+        payload: obj,
+    }
+}
 
 function updateStorage(event, talk) {
     return Observable.forkJoin([
@@ -42,27 +50,26 @@ function updateStorage(event, talk) {
         })
     }).toPromise()
 }
+
 function showDetail(event,talk,type) {
-    let {speakers} = talk
-    let keys = speakers.map((speaker)=>`${event.code}-speaker-${speaker.link.uuid}`)
-    return nativeStorage.getArray(keys).switchMap((e)=>{
+    const {speakers} = talk
+    const keys = speakers.map((speaker)=>`${event.code}-speaker-${speaker.link.uuid}`)
+    const payload = nativeStorage.getArray(keys).switchMap((e)=>{
         return Observable.of({
-            type:navActions.GOTO_Detail,
-            payload:{
-                event,
-                talk,
-                speakers:e,
-                type
-            }
+          event,
+          talk,
+          speakers:e,
+          type
         })
     }).toPromise()
+    return navActionCreators.navigateToTalkDetails(payload)
 }
+
 function RateLater(event, talk) {
     return updateStorage(event,talk)
 }
 
 function mapStateToProps(state) {
-
     return {...state.talkswiper}
 }
 
