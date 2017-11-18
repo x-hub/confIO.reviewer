@@ -23,13 +23,13 @@ const {width, height} = Dimensions.get("window");
 const background = require("assets/Homebg.png");
 
 function TouchableCTA(props) {
-    const { backgroundColor, list, event, onPress } = props;
+    const { backgroundColor, list, event, onPress, name } = props;
     const CTAContainer = list.length? EnabledCTA : DisabledCTA;
     return (
         <CTAContainer>
             <View style={{...styles.center, flex: 1, flexDirection: "row"}}>
                 <Text style={{...styles.labelL, fontSize: 33, color: colors.black}}>{list.length}</Text>
-                <Text style={{fontFamily: "Roboto-Light", fontSize: 22, marginLeft: 10}}>To Review</Text>
+                <Text style={{fontFamily: "Roboto-Light", fontSize: 22, marginLeft: 10}}>{ name }</Text>
             </View>
             <View style={{marginHorizontal: 10, justifyContent: 'center'}}>
                 {list.length ?  <View style={{alignSelf: 'stretch'}}>
@@ -106,6 +106,7 @@ export default (props) => {
                             </View>
 
                             <TouchableCTA
+                            name='To Review'
                             onPress={ toNotReviewedTalks }
                             backgroundColor='#78C4E8'
                             event={ event }
@@ -113,6 +114,7 @@ export default (props) => {
                             />
 
                             <TouchableCTA
+                            name='Reviewed'
                             onPress={ toReviewedTalks }
                             backgroundColor='#e8a652'
                             event={ event }
@@ -120,6 +122,7 @@ export default (props) => {
                             />
 
                             <TouchableCTA
+                            name='To Review Later'
                             onPress={ toReviewedLaterTalks }
                             backgroundColor='#E36B86'
                             event={ event }
