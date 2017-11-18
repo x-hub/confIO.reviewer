@@ -6,27 +6,27 @@ import {talkStatus} from "app/Home/index"
 export default (state = {
     event:{},
     talks:[],
-
     type:talkStatus.NotReviewed
-}, {type,payload}) => {
+}, {type,payload,routeName,params}) => {
     switch (type) {
-        case 'Swiper_INIT':
-            return {
-                ...state,
-                ...payload,
+        case navActions.Navigate :
+            if(routeName === "Swiper"){
+                if(params && params.hasOwnProperty('talk')) {
+                    let talks = state.talks.filter((item) => item.id != params.talk.id)
+                    talks = _.shuffle(talks);
+                    delete payload['talk']
+                    return {
+                        ...state,
+                        talks
+                    }
+                }
+                return {
+                    ...state,
+                    ...params
+                }
             }
-        case actions.SELECT_EVENT :
-        case navActions.GOTO_Swiper :
-            if(payload.hasOwnProperty('talk')) {
-                let talks = state.talks.filter((item) => item.id != payload.talk.id)
-                talks = _.shuffle(talks);
-                delete payload['talk']
-                payload.talks = talks;
-            }
             return {
-                ...state,
-                ...payload
-
+                ...state
             }
         case ACTIONS.TALK_RATE_LATER :
             let talks = state.talks.filter((item)=> item.id != payload.talk.id)

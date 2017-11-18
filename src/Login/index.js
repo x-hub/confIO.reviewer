@@ -2,12 +2,10 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import template from './login.template';
-import nativeStorage from "app/App/Services/nativeStorage"
-import {Observable} from "rxjs"
 import {
     AsyncStorage,
 } from 'react-native';
-import { fetchTalks } from 'app/App/Services/EventService';
+import {fetchTalks} from 'app/App/Services/EventService';
 import { creators as navActionCreators } from 'app/Navigator/navigator.actions';
 
 
@@ -35,7 +33,7 @@ function navigateToQRScanner() {
     return navActionCreators.navigateToQRScanner()
 }
 
-function navigateToHome(event) {
+export function navigateToHome(event) {
     return navActionCreators.navigateToHome(
         fetchTalks(event)
     )

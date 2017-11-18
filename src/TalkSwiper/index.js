@@ -58,7 +58,7 @@ function showDetail(event,talk,type) {
         return Observable.of({
           event,
           talk,
-          speakers:e,
+          speakers:(e && e[0] == null ? [] : e),
           type
         })
     }).toPromise()

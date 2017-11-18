@@ -20,10 +20,13 @@ function navigateWithPayload(routeName, payload) {
     }
     if(payload && _.isFunction(payload.then)) {
         action.payload = payload.then(
-            (p) => ({
-                routeName,
-                params: p,
-            })
+            (p) => {
+                console.log("swiper payload", p)
+                return  {
+                    routeName,
+                    params: p
+                    }
+            }
         )
     } else {
         action.payload = {

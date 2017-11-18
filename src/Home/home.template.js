@@ -23,13 +23,13 @@ const {width, height} = Dimensions.get("window");
 const background = require("assets/Homebg.png");
 
 function TouchableCTA(props) {
-    const { backgroundColor, list, event, onPress } = props;
+    const { backgroundColor, list, event, onPress, name } = props;
     const CTAContainer = list.length? EnabledCTA : DisabledCTA;
     return (
         <CTAContainer>
             <View style={{...styles.center, flex: 1, flexDirection: "row"}}>
                 <Text style={{...styles.labelL, fontSize: 33, color: colors.black}}>{list.length}</Text>
-                <Text style={{fontFamily: "Roboto-Light", fontSize: 22, marginLeft: 10}}>To Review</Text>
+                <Text style={{fontFamily: "Roboto-Light", fontSize: 22, marginLeft: 10}}>{ name }</Text>
             </View>
             <View style={{marginHorizontal: 10, justifyContent: 'center'}}>
                 {list.length ?  <View style={{alignSelf: 'stretch'}}>
@@ -61,25 +61,13 @@ function TouchableCTA(props) {
 
 export default (props) => {
     const { navigate, goBack } = props.navigation;
-    const {
-        user,
-        event,
-        talks,
-        reviewed,
-        later,
-    } = props.navigation.state.params;
-    const {
-        toNotReviewedTalks,
-        toReviewedLaterTalks,
-        toReviewedTalks,
-    } = props;
     return (
         <View style={styles.container}>
             <Image source={background} style={styles.background} resizeMode="cover">
                 <Container>
                     <Header style={{opacity: 0}} noShadow={true} backgroundColor="rgba(0,0,0,0.01)">
                         <Body>
-                        <Text style={styles.labelM}>{event.name}</Text>
+                        <Text style={styles.labelM}>{props.event.name}</Text>
                         </Body>
                         <Right>
                             <Icon onPress={()=>goBack()} style={{color: colors.white}} name="md-log-out"/>
@@ -92,40 +80,43 @@ export default (props) => {
                         }}>
                             <View style={{flexDirection: "row", ...styles.center}}>
                                 <Thumbnail style={styles.avatar}
-                                           source={ {uri: user.pictureurl} }/>
+                                           source={ {uri: props.user.pictureurl} }/>
                                 <View style={{marginLeft: 16, alignItems: "center"}}>
                                     <Text style={{...styles.labelL, fontSize: 18}}>
-                                        {user.firstName}
-                                        {user.lastName}
+                                        {props.user.firstName}
+                                        {props.user.lastName}
                                     </Text>
                                     <Text style={{marginTop: 5, color: colors.gris}}>
-                                        @{ user.company }
+                                        @{ props.user.company }
                                     </Text>
                                 </View>
 
                             </View>
 
                             <TouchableCTA
-                            onPress={ toNotReviewedTalks }
+                            name='To Review'
+                            onPress={ props.toNotReviewedTalks }
+
                             backgroundColor='#78C4E8'
-                            event={ event }
-                            list={ talks }
+                            event={ props.event }
+                            list={ props.talks }
                             />
 
                             <TouchableCTA
-                            onPress={ toReviewedTalks }
+                            name='Reviewed'
+                            onPress={ props.toReviewedTalks }
                             backgroundColor='#e8a652'
-                            event={ event }
-                            list={ reviewed }
+                            event={ props.event }
+                            list={ props.reviewed }
                             />
 
                             <TouchableCTA
-                            onPress={ toReviewedLaterTalks }
+                            name='To Review Later'
+                            onPress={ props.toReviewedLaterTalks }
                             backgroundColor='#E36B86'
-                            event={ event }
-                            list={ later }
+                            event={ props.event }
+                            list={ props.later }
                             />
-
                             <View style={{ ...styles.card }}>
                                 <View style={{flex: 1, flexDirection: "row"}}>
                                     <Button iconLeft transparent
