@@ -12,6 +12,7 @@ export const creators = {
     navigateToQRScanner,
     navigateToSwiper,
     navigateToTalkDetails,
+    navigateToSync,
 }
 
 function navigateWithPayload(routeName, payload) {
@@ -35,6 +36,10 @@ function navigateWithPayload(routeName, payload) {
         }
     }
     return action
+}
+
+function navigateToSync(payload) {
+    return navigateWithPayload('Sync', payload)
 }
 
 function navigateToFeed(payload) {

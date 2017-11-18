@@ -32,31 +32,10 @@ const actionTypes = {
 };
 
 export default (props) => {
-    const { actions, isRefreshing, syncActions, removeAction } = props;
+    const { actions } = props.navigation.state.params;
+    const { isRefreshing, syncActions, removeAction } = props;
     const { goBack, navigate } = props.navigation;
-    const ActionsList = () => (
-        <PullToRefresh
-        isRefreshing={ isRefreshing }
-        onRefresh={ syncActions }
-        animationBackgroundColor={ style.animationBackgroundColor }
-        pullHeight={ 180 }
-        contentView={ renderContent() }
-        onPullAnimationSrc={ animations.coffee_pull }
-        onStartRefreshAnimationSrc={ animations.coffee_start }
-        onRefreshAnimationSrc={ animations.coffee_repeat }
-        onEndRefreshAnimationSrc={ animations.coffee_end }
-        />
-    );
-    const EmptyActionsList = () => (
-        <View>
-            <AutoPlayAnimation
-            style={ style.emptyActionAnimation }
-            source={ animations.empty_box }
-            />
-            <Text style={ style.emptyActionsListText }>You're Lazy, No actions to Sync</Text>
-        </View>
-    );
-    const SyncBody = actions.lenght? ActionsList : EmptyActionsList;
+    const SyncBody = !!actions.length? ActionsList : EmptyActionsList;
     return (
         <Container>
             <Header style={ style.header }>
@@ -73,6 +52,35 @@ export default (props) => {
         </Container>
     );
 
+    function ActionsList() {
+        return (
+            <PullToRefresh
+            isRefreshing={ isRefreshing }
+            onRefresh={ syncActions }
+            animationBackgroundColor={ style.animationBackgroundColor }
+            pullHeight={ 180 }
+            contentView={ renderContent() }
+            onPullAnimationSrc={ animations.coffee_pull }
+            onStartRefreshAnimationSrc={ animations.coffee_start }
+            onRefreshAnimationSrc={ animations.coffee_repeat }
+            onEndRefreshAnimationSrc={ animations.coffee_end }
+            />
+        )
+    }
+
+    function EmptyActionsList() {
+        return (
+            <View>
+                <AutoPlayAnimation
+                style={ style.emptyActionAnimation }
+                source={ animations.empty_box }
+                />
+                <Text style={ style.emptyActionsListText }>You're Lazy, No actions to Sync</Text>
+            </View>
+
+        )
+    }
+
     function renderContent() {
         return (
             <View>
@@ -85,7 +93,7 @@ export default (props) => {
         );
     }
 
-    function renderAction({ item: { type, target, payload, timestamp }}) {
+    function renderAction({ item: { target, score, timestamp }}) {
         return (
             <View key={ target } style={ style.actionContainer }>
                 <Left style={ style.actionTextContainer }>
@@ -100,19 +108,15 @@ export default (props) => {
                 </Right>
             </View>
         );
+
         function humanReadable() {
-            switch(type) {
-                case actionTypes.VOTE:
-                    return (
-                        <Text style={ style.actionText }>
-                            Voted for <Text style={ style.actionVoteTarget  }>{ target }</Text>
-                            <Text> with </Text>
-                            <Text style={ style.actionVoteResult }>{ payload }</Text>
-                        </Text>
-                    );
-                default:
-                    return <Text style={ style.actionText }>Unkown Event</Text>
-            }
+            return (
+                <Text style={ style.actionText }>
+                    Voted for <Text style={ style.actionVoteTarget  }>{ target }</Text>
+                    <Text> with </Text>
+                    <Text style={ style.actionVoteResult }>{ score }</Text>
+                </Text>
+            );
         }
     }
 

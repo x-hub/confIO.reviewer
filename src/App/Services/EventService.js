@@ -12,3 +12,9 @@ export function fetchTalks(event) {
         .toPromise()
 }
 
+
+export function fetchActivities(eventCode) {
+    return nativeStorage.get(`${eventCode}-activity`)
+        .switchMap(actions => Observable.of({ actions }))
+        .toPromise()
+}

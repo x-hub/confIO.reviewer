@@ -4,6 +4,7 @@ import {bindActionCreators} from 'redux';
 import {ACTIONS} from "app/App/actionsType"
 import navActions, { creators as navActionCreators } from 'app/Navigator/navigator.actions';
 import template from './home.template';
+import {  fetchActivities } from 'app/App/Services/EventService';
 import nativeStorage from "app/App/Services/nativeStorage"
 import {Observable} from "rxjs"
 
@@ -15,9 +16,17 @@ export const talkStatus = {
 const actionCreators = {
     toNotReviewedTalks,
     toReviewedLaterTalks,
-    toReviewedTalks
-
+    toReviewedTalks,
+    fetchActionsAndNavigateToSync,
 };
+
+function fetchActionsAndNavigateToSync(event) {
+    const payload = fetchActivities(event.code)
+    return navActionCreators.navigateToSync(
+        payload
+    )
+}
+
 function fetchTalkDetail(event,talksId,type) {
     let ids = talksId.map((id)=>`${event.code}-talk-${id}`);
     const payload = nativeStorage.getArray(ids).switchMap((e)=>{
