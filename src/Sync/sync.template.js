@@ -18,24 +18,16 @@ import Animation from 'lottie-react-native';
 import { AutoPlayAnimation } from 'shared';
 import PullToRefresh from 'react-native-pull-refresh';
 import style from './sync.style';
-
-const animations = {
-    coffee_start: require('./animations/coffee_start.json'),
-    coffee_pull: require('./animations/coffee_pull.json'),
-    coffee_repeat: require('./animations/coffee_repeat.json'),
-    coffee_end: require('./animations/coffee_end.json'),
-    empty_box: require('./animations/empty_box.json'),
-};
-
-const actionTypes = {
-    VOTE: 'VOTE',
-};
+import animations from 'shared/animations';
 
 export default (props) => {
-    const { actions } = props.navigation.state.params;
-    const { isRefreshing, syncActions, removeAction } = props;
+    const { event } = props.navigation.state.params;
+    const { actionsDirty, syncSuccess, isRefreshing, syncActions, removeAction } = props;
+    const actionsFromProps = props.actions;
+    const actionsFromParams = props.navigation.state.params.actions;
+    const actions = actionsDirty? actionsFromProps : actionsFromParams;
     const { goBack, navigate } = props.navigation;
-    const SyncBody = !!actions.length? ActionsList : EmptyActionsList;
+    const SyncBody = syncSuccess? SyncSuccess : !!actions.length? ActionsList : EmptyActionsList;
     return (
         <Container>
             <Header style={ style.header }>
@@ -56,7 +48,7 @@ export default (props) => {
         return (
             <PullToRefresh
             isRefreshing={ isRefreshing }
-            onRefresh={ syncActions }
+            onRefresh={ syncActions.bind(this, event, actions) }
             animationBackgroundColor={ style.animationBackgroundColor }
             pullHeight={ 180 }
             contentView={ renderContent() }
@@ -77,7 +69,18 @@ export default (props) => {
                 />
                 <Text style={ style.emptyActionsListText }>You're Lazy, No actions to Sync</Text>
             </View>
+        )
+    }
 
+    function SyncSuccess() {
+        return (
+            <View>
+                <AutoPlayAnimation
+                style={ style.doneAnimation }
+                source={ animations.done }
+                />
+                <Text style={ style.syncSuccessText }>Sync Success!</Text>
+            </View>
         )
     }
 
@@ -87,13 +90,14 @@ export default (props) => {
                 <FlatList
                     data={ actions }
                     renderItem={ renderAction }
-                    keyExtractor={ ({ id }) => id }
+                    keyExtractor={ ({ timestamp }) => timestamp }
                 />
             </View>
         );
     }
 
-    function renderAction({ item: { target, score, timestamp }}) {
+    function renderAction({ item }) {
+        const { target, score, timestamp } = item
         return (
             <View key={ target } style={ style.actionContainer }>
                 <Left style={ style.actionTextContainer }>
@@ -101,7 +105,7 @@ export default (props) => {
                 </Left>
                 <Right style={ style.actionRemoveContainer }>
                     <Button danger
-                    onPress={ removeAction }
+                    onPress={ removeAction.bind(this, event, item) }
                     >
                         <Icon name='trash'/>
                     </Button>

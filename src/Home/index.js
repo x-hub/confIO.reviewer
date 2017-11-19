@@ -7,6 +7,7 @@ import template from './home.template';
 import {  fetchActivities } from 'app/App/Services/EventService';
 import nativeStorage from "app/App/Services/nativeStorage"
 import {Observable} from "rxjs"
+import _ from 'lodash'
 
 export const talkStatus = {
     NotReviewed:"",
@@ -22,6 +23,7 @@ const actionCreators = {
 
 function fetchActionsAndNavigateToSync(event) {
     const payload = fetchActivities(event.code)
+    .then(({ actions }) => _.merge({}, { event }, { actions })) 
     return navActionCreators.navigateToSync(
         payload
     )

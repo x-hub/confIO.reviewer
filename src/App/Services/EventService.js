@@ -1,5 +1,6 @@
 import nativeStorage from "app/App/Services/nativeStorage"
 import { Observable } from 'rxjs';
+import _ from 'lodash';
 
 export function fetchTalks(event) {
     let talks = nativeStorage.get(`${event.code}-talks`)
@@ -18,3 +19,22 @@ export function fetchActivities(eventCode) {
         .switchMap(actions => Observable.of({ actions }))
         .toPromise()
 }
+
+export function saveActivities(eventCode, actions) {
+    return nativeStorage.save(`${eventCode}-activity`, actions)
+        .switchMap(actions => Observable.of({ actions }))
+        .toPromise()
+}
+
+export function removeActivity(eventCode, action) {
+    return fetchActivities(eventCode)
+    .then(({ actions }) => {
+        return _.filter(actions, ({ timestamp }) => timestamp !== action.timestamp)
+    })
+    .then((actions) => {
+        return nativeStorage.save(`${eventCode}-activity`, actions)
+            .toPromise()
+            .then(() => ({ actions }))
+    })
+}
+
