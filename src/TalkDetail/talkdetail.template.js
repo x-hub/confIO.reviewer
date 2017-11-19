@@ -51,19 +51,14 @@ export default class Template extends Component {
     render() {
 
         return ( <Container>
-            <Header style={styles.Header}>
-                <Left>
-                    <Button onPress={() => {
-                        this.goBack()
-                     //   setTimeout(() => this.props.toggleContentLoader(false), 200)
-                    }} transparent>
-                        <Icon name='arrow-back'/>
-                    </Button>
-                </Left>
+            <Header style={styles.header}>
+				<Left>
+                    <Button onPress={ () => goBack() } transparent>
+						<Icon style={ styles.goBackIcon } name='arrow-back' />
+					</Button>
+				</Left>
                 <Body style={{alignItems: "flex-start"}}>
-                <Text style={styles.Label}>
-                    Talk Detail {this.props.type}
-                </Text>
+                <Text style={ styles.sceneTitle }>Talk Description</Text>
                 </Body>
                 <Right>
                     <Button transparent onPress={() => {
@@ -72,7 +67,7 @@ export default class Template extends Component {
                         this.props.OnRate(event,talk,type,this.score,updateHome.bind(this));
                         this.props.toggleContentLoader(false)
                     }}>
-                        <Icon style={{color: "white"}} name="md-checkmark-circle-outline"/>
+                        <Icon style={ styles.reviewLaterIcon } name="md-checkmark-circle-outline"/>
                     </Button>
 
                 </Right>
