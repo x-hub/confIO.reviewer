@@ -1,9 +1,11 @@
-import React from 'react';
+import React, { Component } from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import template from './sync.template';
+import { removeActivity, saveActivities } from 'app/App/Services/EventService'
+import _ from 'lodash'
 
-const actions = {
+export const actions = {
     REMOVE_ACTION: 'REMOVE_ACTION',
     SYNC_ACTIONS: 'SYNC_ACTIONS',
 };
@@ -13,16 +15,60 @@ const actionCreators = {
     syncActions,
 };
 
-function removeAction({ id }) {
+function removeAction(event, action) {
+    const payload = removeActivity(event.code, action)
     return {
         type: actions.REMOVE_ACTION,
-        payload: id,
-    };
+        payload: payload,
+    }
 }
 
-function syncActions() {
+function syncActions({ code, baseUrl }, actionsToSync) {
+    const payload = Promise.all(
+        _.map(
+            actionsToSync
+            , function({ target, score, timestamp }) {
+                return fetch(baseUrl.concat(`cfpadmin/proposal/${target}/vote?vote=${score}&_=${timestamp}`))
+                .then((response) => _.merge(response, { timestamp }))
+            }
+        )
+    )
+    .then(
+        (responses) => {
+            const syncedActions = _.map(responses, ({ timestamp }) => timestamp)
+            return _.filter(
+                actionsToSync,
+                (action) => {
+                    return !_.includes(syncedActions, action.timestamp)
+                }
+            )
+        }
+    )
+    .then(
+        (notSyncedActions) => {
+            return saveActivities(code, notSyncedActions)
+                .then(() => notSyncedActions)
+        }
+    )
+    .then(
+        (notSyncedActions) => {
+            return {
+                actions: notSyncedActions,
+                syncSuccess: true,
+            }
+        }
+    )
+    .catch(
+        (err) => {
+            return {
+                actions: actionsToSync,
+                syncError: true,
+            }
+        }
+    )
     return {
         type: actions.SYNC_ACTIONS,
+        payload: payload,
     };
 }
 

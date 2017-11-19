@@ -132,7 +132,7 @@ export default (props) => {
                                         borderColor: colors.white,
                                         justifyContent: 'center'
                                     }}
-                                    onPress={ navigate.bind(this, 'Sync') }
+                                    onPress={ props.fetchActionsAndNavigateToSync.bind(this, props.event) }
                                     >
                                         <View style={ {flexDirection: 'row'} }>
                                             <Icon style={ {color: colors.white, textAlignVertical: 'center'} } name='swap'/>

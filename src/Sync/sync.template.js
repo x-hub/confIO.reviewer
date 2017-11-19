@@ -18,45 +18,16 @@ import Animation from 'lottie-react-native';
 import { AutoPlayAnimation } from 'shared';
 import PullToRefresh from 'react-native-pull-refresh';
 import style from './sync.style';
-
-const animations = {
-    coffee_start: require('./animations/coffee_start.json'),
-    coffee_pull: require('./animations/coffee_pull.json'),
-    coffee_repeat: require('./animations/coffee_repeat.json'),
-    coffee_end: require('./animations/coffee_end.json'),
-    empty_box: require('./animations/empty_box.json'),
-};
-
-const actionTypes = {
-    VOTE: 'VOTE',
-};
+import animations from 'shared/animations';
 
 export default (props) => {
-    const { actions, isRefreshing, syncActions, removeAction } = props;
+    const { event } = props.navigation.state.params;
+    const { actionsDirty, syncSuccess, isRefreshing, syncActions, removeAction } = props;
+    const actionsFromProps = props.actions;
+    const actionsFromParams = props.navigation.state.params.actions;
+    const actions = actionsDirty? actionsFromProps : actionsFromParams;
     const { goBack, navigate } = props.navigation;
-    const ActionsList = () => (
-        <PullToRefresh
-        isRefreshing={ isRefreshing }
-        onRefresh={ syncActions }
-        animationBackgroundColor={ style.animationBackgroundColor }
-        pullHeight={ 180 }
-        contentView={ renderContent() }
-        onPullAnimationSrc={ animations.coffee_pull }
-        onStartRefreshAnimationSrc={ animations.coffee_start }
-        onRefreshAnimationSrc={ animations.coffee_repeat }
-        onEndRefreshAnimationSrc={ animations.coffee_end }
-        />
-    );
-    const EmptyActionsList = () => (
-        <View>
-            <AutoPlayAnimation
-            style={ style.emptyActionAnimation }
-            source={ animations.empty_box }
-            />
-            <Text style={ style.emptyActionsListText }>You're Lazy, No actions to Sync</Text>
-        </View>
-    );
-    const SyncBody = actions.lenght? ActionsList : EmptyActionsList;
+    const SyncBody = syncSuccess? SyncSuccess : !!actions.length? ActionsList : EmptyActionsList;
     return (
         <Container>
             <Header style={ style.header }>
@@ -73,19 +44,60 @@ export default (props) => {
         </Container>
     );
 
+    function ActionsList() {
+        return (
+            <PullToRefresh
+            isRefreshing={ isRefreshing }
+            onRefresh={ syncActions.bind(this, event, actions) }
+            animationBackgroundColor={ style.animationBackgroundColor }
+            pullHeight={ 180 }
+            contentView={ renderContent() }
+            onPullAnimationSrc={ animations.coffee_pull }
+            onStartRefreshAnimationSrc={ animations.coffee_start }
+            onRefreshAnimationSrc={ animations.coffee_repeat }
+            onEndRefreshAnimationSrc={ animations.coffee_end }
+            />
+        )
+    }
+
+    function EmptyActionsList() {
+        return (
+            <View>
+                <AutoPlayAnimation
+                style={ style.emptyActionAnimation }
+                source={ animations.empty_box }
+                />
+                <Text style={ style.emptyActionsListText }>You're Lazy, No actions to Sync</Text>
+            </View>
+        )
+    }
+
+    function SyncSuccess() {
+        return (
+            <View>
+                <AutoPlayAnimation
+                style={ style.doneAnimation }
+                source={ animations.done }
+                />
+                <Text style={ style.syncSuccessText }>Sync Success!</Text>
+            </View>
+        )
+    }
+
     function renderContent() {
         return (
             <View>
                 <FlatList
                     data={ actions }
                     renderItem={ renderAction }
-                    keyExtractor={ ({ id }) => id }
+                    keyExtractor={ ({ timestamp }) => timestamp }
                 />
             </View>
         );
     }
 
-    function renderAction({ item: { type, target, payload, timestamp }}) {
+    function renderAction({ item }) {
+        const { target, score, timestamp } = item
         return (
             <View key={ target } style={ style.actionContainer }>
                 <Left style={ style.actionTextContainer }>
@@ -93,26 +105,22 @@ export default (props) => {
                 </Left>
                 <Right style={ style.actionRemoveContainer }>
                     <Button danger
-                    onPress={ removeAction }
+                    onPress={ removeAction.bind(this, event, item) }
                     >
                         <Icon name='trash'/>
                     </Button>
                 </Right>
             </View>
         );
+
         function humanReadable() {
-            switch(type) {
-                case actionTypes.VOTE:
-                    return (
-                        <Text style={ style.actionText }>
-                            Voted for <Text style={ style.actionVoteTarget  }>{ target }</Text>
-                            <Text> with </Text>
-                            <Text style={ style.actionVoteResult }>{ payload }</Text>
-                        </Text>
-                    );
-                default:
-                    return <Text style={ style.actionText }>Unkown Event</Text>
-            }
+            return (
+                <Text style={ style.actionText }>
+                    Voted for <Text style={ style.actionVoteTarget  }>{ target }</Text>
+                    <Text> with </Text>
+                    <Text style={ style.actionVoteResult }>{ score }</Text>
+                </Text>
+            );
         }
     }
 

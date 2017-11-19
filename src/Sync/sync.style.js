@@ -49,7 +49,18 @@ export default {
         color: colors.black,
         textAlign: 'center',
     },
+    syncSuccessText: {
+        marginTop: 34,
+        fontSize: 21,
+        color: colors.primary,
+        textAlign: 'center',
+    },
     emptyActionAnimation: {
+        alignSelf: 'center',
+        height: 200,
+        width: 200,
+    },
+    doneAnimation: {
         alignSelf: 'center',
         height: 200,
         width: 200,
