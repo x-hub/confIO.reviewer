@@ -24,6 +24,8 @@ export default (state = INITIAL_STATE, { type, payload }) => {
             ...payload,
         }
         default:
-        return state
+        return {
+            ...state
+        }
     }
 }

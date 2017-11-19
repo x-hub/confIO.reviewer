@@ -67,7 +67,6 @@ class NavigatorWithState extends Component {
 	}
 
     render() {
-	    console.log("nav",this.props)
 		const { dispatch, nav } = this.props;
         return (
             <Navigator

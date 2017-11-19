@@ -4,4 +4,7 @@ export default {
     coffee_repeat: require('./coffee_repeat.json'),
     coffee_end: require('./coffee_end.json'),
     empty_box: require('./empty_box.json'),
+    done:require('./done.json'),
+    error:require('./error.json'),
+    loading:require('./loading.json')
 }

@@ -8,7 +8,6 @@ function getStateForRoute(route) {
 const INITIAL_STATE = getStateForRoute('Login');
 
 export default (state = INITIAL_STATE, action) => {
-
     let nextState = null;
     nextState = Navigator.router.getStateForAction(action, state);
     if(nextState.routes[nextState.index].routeName == "Feed" && state.routes[state.index].routeName == "Home" )

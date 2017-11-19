@@ -1,30 +1,43 @@
 import React, {Component} from "react"
-import {Text, View,} from "react-native";
 import {Container, Header, Content, Spinner} from 'native-base';
 import _ from "lodash"
 import {Observable} from "rxjs"
 import nativeStorage from "app/App/Services/nativeStorage"
+import NetInfo from "app/App/Services/NetworkInfo"
 import {colors} from "shared/theme"
 import Http from "app/App/Services/Http"
-import {AutoPlayAnimation} from "shared"
 import {preFetchImg} from "./index"
+import loading from "shared/components/loading"
+import error from "shared/components/error"
 
 export default class Template extends Component {
     constructor(props) {
         super(props);
-        this.state = {data: []}
     }
-
-    componentWillMount() {
-        const {authToken, authEndpoint, eventDetailsEndpoint} = this.props.navigation.state.params;
-        let eventDetail = Http.getBody(eventDetailsEndpoint);
-        let events = nativeStorage.get('events');
-        let auth = Http.post(authEndpoint, {
+    NetworkStatusHandler(payload){
+        let condition = payload.type != "none"
+        this.props.changeStatus(condition)
+        if(condition) this.feedData()
+    }
+    getEventDetail(eventDetailsEndpoint){
+        return Http.getBody(eventDetailsEndpoint)
+    }
+    getAllStoredEvents(){
+        return nativeStorage.get('events');
+    }
+    Authenticate(authEndpoint,authToken){
+        return Http.post(authEndpoint, {
             headers: {'content-type': 'application/json'},
             body: JSON.stringify({token: authToken}),
             credentials: 'include'
         });
-        Observable.forkJoin([eventDetail, events, auth])
+    }
+    AuthAndGetEventDetail(){
+        const {authToken, authEndpoint, eventDetailsEndpoint} = this.props.navigation.state.params;
+        let eventDetail = this.getEventDetail(eventDetailsEndpoint);
+        let events = this.getAllStoredEvents()
+        let auth = this.Authenticate(authEndpoint,authToken)
+        return   Observable.forkJoin([eventDetail, events, auth])
             .switchMap(([event, eventsString]) => {
                 const events = eventsString ? eventsString : [];
                 if (!events.includes(event.code)) {
@@ -38,11 +51,30 @@ export default class Template extends Component {
                             })
 
                     });
-
                 } else {
                     return Observable.throw(event)
                 }
-            }).switchMap((event) => {
+            })
+    }
+    initTalkAndActivity(event,keys,talks){
+        nativeStorage.save(`${event.code}-talks`,keys)
+        nativeStorage.save(`${event.code}-talks-reviewed`,[])
+        nativeStorage.save(`${event.code}-talks-later`,[])
+        nativeStorage.save(`${event.code}-activity`,[])
+        let Keys = keys.map((key)=>`${event.code}-talk-${key}`)
+        nativeStorage.save(Keys,talks)
+    }
+    cacheSpeakersImages(speakers){
+        let imgs= speakers.map((speaker)=>preFetchImg(speaker.avatarURL))
+        return Observable.forkJoin(imgs)
+    }
+    saveSpeakers(event,speakers){
+        let keys = speakers.map((speaker) => `${event.code}-speaker-${speaker.uuid}`)
+        let uuids = speakers.map((speaker)=>speaker.uuid)
+        return Observable.forkJoin([nativeStorage.save(keys,speakers),nativeStorage.save(`${event.code}-speakers`,uuids)])
+    }
+    feedData(){
+        this.AuthAndGetEventDetail().switchMap((event) => {
             console.log(JSON.stringify(event))
             let BaseUrl = event.baseUrl.concat("api/conferences/", event.code);
             let ScheduleUrl = BaseUrl.concat("/schedules/")
@@ -53,50 +85,61 @@ export default class Template extends Component {
             }).switchMap((resp) => {
                 let talks = _(resp).flatMap().filter((e) => e.talk != null).map((e)=>e.talk).value();
                 let keys = talks.map((talk) => talk.id)
-             //   this.props.initTalks(event, talks);
-                nativeStorage.save(`${event.code}-talks`,keys)
-                nativeStorage.save(`${event.code}-talks-reviewed`,[])
-                nativeStorage.save(`${event.code}-talks-later`,[])
-                nativeStorage.save(`${event.code}-activity`,[])
-                keys = keys.map((key)=>`${event.code}-talk-${key}`)
-                nativeStorage.save(keys,talks)
+                this.initTalkAndActivity(event,keys,talks)
                 return Http.getBody(SpeakersUrl)
             }).switchMap((speakers) => {
                 let AllSpeakersRequest = speakers.map((speaker) => Http.getBody(speaker.links[0].href))
                 return Observable.forkJoin(AllSpeakersRequest)
             }).switchMap((fullSpeakersDetail) => {
-                let imgs= fullSpeakersDetail.map((speaker)=>preFetchImg(speaker.avatarURL))
-                return Observable.forkJoin(imgs).switchMap(()=>{
-                    let keys = fullSpeakersDetail.map((speaker) => `${event.code}-speaker-${speaker.uuid}`)
-                    nativeStorage.save(keys,fullSpeakersDetail);
-                    let uuids = fullSpeakersDetail.map((speaker)=>speaker.uuid)
-                    nativeStorage.save(`${event.code}-speakers`,uuids);
-                    return Observable.forkJoin([
-                        nativeStorage.save(keys, fullSpeakersDetail),
-                        nativeStorage.save(`${event.code}-speakers`, fullSpeakersDetail.map((s) => s.uuid))
-                    ]).switchMap(()=>{
+                return  this.cacheSpeakersImages(fullSpeakersDetail).switchMap(()=>{
+                    return this.saveSpeakers(event,fullSpeakersDetail).switchMap(()=>{
                         return Observable.of(event);
                     })
                 },(e)=>{
-                   return Observable.of(event)
+                    return Observable.of(event)
                 })
 
             })
         }).subscribe(({value}) => {
-            this.props.GOTOHome(value)
+            this.goToHome(value)
         }, (event) => {
             if(JSON.stringify(event) == JSON.stringify({})) return;
-            console.log("error",event)
+            this.goToHome(event)
+        })
+    }
+    goToHome(event){
+        this.props.toggleAnimation(true)
+        setTimeout(()=>{
             this.props.GOTOHome(event)
+        },1500)
+    }
+    componentWillUnmount(){
+        NetInfo.UnsubscribeToChange();
+        this.props.toggleAnimation(false)
+    }
+    componentWillMount() {
+        NetInfo.SubscribeToChange(this.NetworkStatusHandler.bind(this))
+        NetInfo.Info().switchMap((e)=>{
+            if(e.type == "none")
+                return Observable.throw(false);
+            else  return Observable.of(true)
+        }).subscribe((e)=>{
+            if(e){
+                this.props.changeStatus(e)
+                this.feedData();
+            }
+        },(err)=>{
+            this.props.changeStatus(err)
         })
 
-
     }
-
     render() {
-        return (<Container style={{backgroundColor:colors.primary,justifyContent: "center", alignItems: "center"}}>
-            <Spinner style={{height:200,width:200}} color={colors.white} />
+        const ContentContainer = this.props.online ? loading : error
+        return (<Container style={{backgroundColor:colors.primary}}>
+            <ContentContainer {...this.props} />
         </Container>);
     }
 }
+
+
 

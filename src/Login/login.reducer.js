@@ -9,6 +9,8 @@ export default (state = {event:null}, action) => {
                 event: action.payload,
             }
         default:
-            return state;
+            return {
+                ...state
+            };
     }
 }
