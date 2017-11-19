@@ -17,11 +17,16 @@ export default (state = INITIAL_STATE, { type, payload }) => {
             actions: payload.actions || [],
         }
         case actions.SYNC_ACTIONS:
-        console.log('payload', payload)
         return {
             ...state,
             actionsDirty: true,
             ...payload,
+        }
+        case actions.REMOVE_RESPONSE_ANIMATION:
+        return {
+            ...state,
+            syncSuccess: false,
+            syncError: false,
         }
         default:
         return {

@@ -8,11 +8,13 @@ import _ from 'lodash'
 export const actions = {
     REMOVE_ACTION: 'REMOVE_ACTION',
     SYNC_ACTIONS: 'SYNC_ACTIONS',
+    REMOVE_RESPONSE_ANIMATION:'REMOVE_RESPONSE_ANIMATION',
 };
 
 const actionCreators = {
     removeAction,
     syncActions,
+    removeResponseAnimation,
 };
 
 function removeAction(event, action) {
@@ -23,7 +25,26 @@ function removeAction(event, action) {
     }
 }
 
-function syncActions({ code, baseUrl }, actionsToSync) {
+function removeResponseAnimation() {
+    const payload = new Promise(
+        (resolve, reject) => {
+            setTimeout(
+                () => {
+                    resolve({
+                        syncSuccess: false,
+                    })
+                }
+                , 3500
+            )
+        }
+    )
+    return {
+        type: actions.REMOVE_RESPONSE_ANIMATION,
+        payload: payload,
+    }
+}
+
+function syncActions({ code, baseUrl }, actionsToSync, callback) {
     const payload = Promise.all(
         _.map(
             actionsToSync
@@ -47,15 +68,14 @@ function syncActions({ code, baseUrl }, actionsToSync) {
     .then(
         (notSyncedActions) => {
             return saveActivities(code, notSyncedActions)
-                .then(() => notSyncedActions)
-        }
-    )
-    .then(
-        (notSyncedActions) => {
-            return {
-                actions: notSyncedActions,
-                syncSuccess: true,
-            }
+                .then(
+                    () => {
+                        return {
+                            actions: notSyncedActions,
+                            syncSuccess: true,
+                        }
+                    }
+                )
         }
     )
     .catch(
@@ -66,6 +86,7 @@ function syncActions({ code, baseUrl }, actionsToSync) {
             }
         }
     )
+    payload.then(callback)
     return {
         type: actions.SYNC_ACTIONS,
         payload: payload,

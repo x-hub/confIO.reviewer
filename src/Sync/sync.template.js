@@ -22,7 +22,7 @@ import animations from 'shared/animations';
 
 export default (props) => {
     const { event } = props.navigation.state.params;
-    const { actionsDirty, syncSuccess, isRefreshing, syncActions, removeAction } = props;
+    const { actionsDirty, syncSuccess, isRefreshing, syncActions, removeAction, removeResponseAnimation } = props;
     const actionsFromProps = props.actions;
     const actionsFromParams = props.navigation.state.params.actions;
     const actions = actionsDirty? actionsFromProps : actionsFromParams;
@@ -48,7 +48,7 @@ export default (props) => {
         return (
             <PullToRefresh
             isRefreshing={ isRefreshing }
-            onRefresh={ syncActions.bind(this, event, actions) }
+            onRefresh={ syncActions.bind(this, event, actions, removeResponseAnimation) }
             animationBackgroundColor={ style.animationBackgroundColor }
             pullHeight={ 180 }
             contentView={ renderContent() }

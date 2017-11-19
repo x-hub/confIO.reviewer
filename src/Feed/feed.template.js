@@ -75,7 +75,6 @@ export default class Template extends Component {
     }
     feedData(){
         this.AuthAndGetEventDetail().switchMap((event) => {
-            console.log(JSON.stringify(event))
             let BaseUrl = event.baseUrl.concat("api/conferences/", event.code);
             let ScheduleUrl = BaseUrl.concat("/schedules/")
             let SpeakersUrl = BaseUrl.concat("/speakers/")
@@ -140,6 +139,3 @@ export default class Template extends Component {
         </Container>);
     }
 }
-
-
-

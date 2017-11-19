@@ -19,7 +19,6 @@ export default class Template extends Component {
 
     constructor(props) {
         super(props)
-        console.log(props)
         const params = this.props.navigation.state.params
         const {navigate, goBack} = this.props.navigation;
         this.navigate = navigate;
@@ -52,7 +51,7 @@ export default class Template extends Component {
         return ( <Container>
             <Header style={styles.header}>
 				<Left>
-                    <Button onPress={ () => goBack() } transparent>
+                    <Button onPress={ () => this.goBack() } transparent>
 						<Icon style={ styles.goBackIcon } name='arrow-back' />
 					</Button>
 				</Left>
@@ -179,5 +178,3 @@ export default class Template extends Component {
         </Container>)
     }
 }
-
-

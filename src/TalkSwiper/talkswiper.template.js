@@ -34,7 +34,7 @@ export default class Template extends React.Component {
             <Container>
                 <Header style={ styles.header }>
                     <Left>
-                        <Button onPress={ () => goBack() } transparent>
+                        <Button onPress={ () => this.goBack() } transparent>
                             <Icon style={ styles.goBackIcon } name='arrow-back' />
                         </Button>
                     </Left>

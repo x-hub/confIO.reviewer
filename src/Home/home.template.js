@@ -26,7 +26,6 @@ import {TouchableCTA} from "./TouchableCTA/index"
 export default (props) => {
     const {navigate, goBack} = props.navigation;
     nativeStorage.get(`${props.event.code}-activity`).subscribe((e)=>{
-        console.log("data",e)
     })
     return (
         <View style={styles.container}>
@@ -112,4 +111,3 @@ export default (props) => {
 
     );
 }
-
