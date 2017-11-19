@@ -61,22 +61,6 @@ function TouchableCTA(props) {
 
 export default (props) => {
     const { navigate, goBack } = props.navigation;
-<<<<<<< HEAD
-=======
-    const {
-        user,
-        event,
-        talks,
-        reviewed,
-        later,
-    } = props.navigation.state.params;
-    const {
-        toNotReviewedTalks,
-        toReviewedLaterTalks,
-        toReviewedTalks,
-        fetchActionsAndNavigateToSync,
-    } = props;
->>>>>>> implementing functionality for Sync Scene
     return (
         <View style={styles.container}>
             <Image source={background} style={styles.background} resizeMode="cover">
@@ -148,7 +132,7 @@ export default (props) => {
                                         borderColor: colors.white,
                                         justifyContent: 'center'
                                     }}
-                                    onPress={ fetchActionsAndNavigateToSync.bind(this, event) }
+                                    onPress={ props.fetchActionsAndNavigateToSync.bind(this, props.event) }
                                     >
                                         <View style={ {flexDirection: 'row'} }>
                                             <Icon style={ {color: colors.white, textAlignVertical: 'center'} } name='swap'/>
