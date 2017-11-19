@@ -95,7 +95,9 @@ export default (props) => {
 
                             <TouchableCTA
                             name='To Review'
+
                             onPress={ props.toNotReviewedTalks }
+
 
                             backgroundColor='#78C4E8'
                             event={ props.event }
@@ -104,7 +106,9 @@ export default (props) => {
 
                             <TouchableCTA
                             name='Reviewed'
+
                             onPress={ props.toReviewedTalks }
+
                             backgroundColor='#e8a652'
                             event={ props.event }
                             list={ props.reviewed }
@@ -112,7 +116,9 @@ export default (props) => {
 
                             <TouchableCTA
                             name='To Review Later'
+
                             onPress={ props.toReviewedLaterTalks }
+
                             backgroundColor='#E36B86'
                             event={ props.event }
                             list={ props.later }
