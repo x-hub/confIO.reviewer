@@ -61,25 +61,13 @@ function TouchableCTA(props) {
 
 export default (props) => {
     const { navigate, goBack } = props.navigation;
-    const {
-        user,
-        event,
-        talks,
-        reviewed,
-        later,
-    } = props.navigation.state.params;
-    const {
-        toNotReviewedTalks,
-        toReviewedLaterTalks,
-        toReviewedTalks,
-    } = props;
     return (
         <View style={styles.container}>
             <Image source={background} style={styles.background} resizeMode="cover">
                 <Container>
                     <Header style={{opacity: 0}} noShadow={true} backgroundColor="rgba(0,0,0,0.01)">
                         <Body>
-                        <Text style={styles.labelM}>{event.name}</Text>
+                        <Text style={styles.labelM}>{props.event.name}</Text>
                         </Body>
                         <Right>
                             <Icon onPress={()=>goBack()} style={{color: colors.white}} name="md-log-out"/>
@@ -92,14 +80,14 @@ export default (props) => {
                         }}>
                             <View style={{flexDirection: "row", ...styles.center}}>
                                 <Thumbnail style={styles.avatar}
-                                           source={ {uri: user.pictureurl} }/>
+                                           source={ {uri: props.user.pictureurl} }/>
                                 <View style={{marginLeft: 16, alignItems: "center"}}>
                                     <Text style={{...styles.labelL, fontSize: 18}}>
-                                        {user.firstName}
-                                        {user.lastName}
+                                        {props.user.firstName}
+                                        {props.user.lastName}
                                     </Text>
                                     <Text style={{marginTop: 5, color: colors.gris}}>
-                                        @{ user.company }
+                                        @{ props.user.company }
                                     </Text>
                                 </View>
 
@@ -107,28 +95,34 @@ export default (props) => {
 
                             <TouchableCTA
                             name='To Review'
-                            onPress={ toNotReviewedTalks }
+
+                            onPress={ props.toNotReviewedTalks }
+
+
                             backgroundColor='#78C4E8'
-                            event={ event }
-                            list={ talks }
+                            event={ props.event }
+                            list={ props.talks }
                             />
 
                             <TouchableCTA
                             name='Reviewed'
-                            onPress={ toReviewedTalks }
+
+                            onPress={ props.toReviewedTalks }
+
                             backgroundColor='#e8a652'
-                            event={ event }
-                            list={ reviewed }
+                            event={ props.event }
+                            list={ props.reviewed }
                             />
 
                             <TouchableCTA
                             name='To Review Later'
-                            onPress={ toReviewedLaterTalks }
-                            backgroundColor='#E36B86'
-                            event={ event }
-                            list={ later }
-                            />
 
+                            onPress={ props.toReviewedLaterTalks }
+
+                            backgroundColor='#E36B86'
+                            event={ props.event }
+                            list={ props.later }
+                            />
                             <View style={{ ...styles.card }}>
                                 <View style={{flex: 1, flexDirection: "row"}}>
                                     <Button iconLeft transparent

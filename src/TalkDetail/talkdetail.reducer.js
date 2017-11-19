@@ -10,13 +10,20 @@ export default (state = {
     IsReady: false,
     showSpeakerDetail: false,
     type:""
-}, {type,payload}) => {
+}, {type,payload,routeName,params}) => {
     switch (type) {
-        case 'INIT_TalkDetail':
+        case navActions.Navigate :
+            if(routeName === "Detail"){
+               return {
+                   ...state,
+                   ...payload,
+                   ...params,
+                   IsReady: true,
+
+               }
+            }
             return {
-                ...state,
-                ...payload,
-                IsReady: true,
+                ...state
             }
         case actions.SELECT_EVENT :
             return{

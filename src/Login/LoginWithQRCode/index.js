@@ -28,7 +28,8 @@ function unescapeHtml(safe) {
 function handleQRCode(data) {
     let possibleQRCode = {};
     try {
-        possibleQRCode = JSON.parse(unescapeHtml(data))
+        //possibleQRCode = JSON.parse(unescapeHtml(data))
+        possibleQRCode = JSON.parse(data)
     } catch(e) {}
     const QRCodeData = possibleQRCode;
     const { authToken, authEndpoint, eventDetailsEndpoint }  = QRCodeData;

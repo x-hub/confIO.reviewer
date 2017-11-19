@@ -26,7 +26,8 @@ export default class Template extends React.Component {
         const {navigate, goBack} = this.props.navigation;
         this.navigate = navigate;
         this.goBack = goBack;
-        this.props.init({ talks, event, type })
+        //this.props.init({ talks, event, type })
+        console.log(this.props)
     }
 
     render() {
@@ -50,57 +51,37 @@ export default class Template extends React.Component {
                 </Header>
 
                     <View style={{margin: 10}}>
-                        <Swiper {...this.props} />
+                        <DeckSwiper
+                            dataSource={this.props.talks}
+                            onSwipeRight={(e) => {
+                                console.debug(e)
+                                this.props.showDetail(this.props.event,e,this.props.type)
+                            }}
+                            renderItem={item =>
+                                <Card style={{elevation: 3}}>
+                                    <CardItem>
+                                        <Text style={styles.title}>{item.title}</Text>
+                                        <Right style={styles.rateLater}>
+                                            {this.props.type == '' ?
+                                                <Icon onPress={this.props.RateLater.bind(this,this.props.event,item)} name='md-time'/>
+                                                : <View />
+                                            }
+                                        </Right>
+                                    </CardItem>
+                                    <CardItem cardBody style={styles.body}>
+                                        <Image style={styles.trackImg} source={trackImgs(item.trackId)}/>
+                                        <Text style={styles.trackLabel}>{item.track}</Text>
+                                    </CardItem>
+                                    <CardItem>
+                                        <Text style={styles.talkLabel}>{item.talkType}</Text>
+                                    </CardItem>
+
+                                </Card>
+                            }
+                        />
                     </View>
 
             </Container> )
     }
 }
 
-function Swiper(props) {
-    if(props.talks && props.talks.length) {
-        return renderSwiper(props)
-    } else {
-        return renderSwiperPlaceholder(props)
-    }
-}
-
-function renderSwiper(props) {
-    return (
-            <DeckSwiper
-                dataSource={props.talks}
-                onSwipeRight={(e) => {
-                    props.showDetail(props.event,e,props.type)
-                }}
-                renderItem={item =>
-                    <Card style={{elevation: 3}}>
-                        <CardItem>
-                            <Text style={styles.title}>{item.title}</Text>
-                            <Right style={styles.rateLater}>
-                                {props.type == '' ?
-                                    <Icon onPress={props.RateLater.bind(this,props.event,item)} name='md-time'/>
-                                    : <View />
-                                }
-                            </Right>
-                        </CardItem>
-                        <CardItem cardBody style={styles.body}>
-                            <Image style={styles.trackImg} source={trackImgs(item.trackId)}/>
-                            <Text style={styles.trackLabel}>{item.track}</Text>
-                        </CardItem>
-                        <CardItem>
-                            <Text style={styles.talkLabel}>{item.talkType}</Text>
-                        </CardItem>
-
-                    </Card>
-                }
-            />
-    )
-}
-
-function renderSwiperPlaceholder(props) {
-    return (
-            <View style={{alignSelf: 'center'}}>
-                <Text>Empty</Text>
-            </View>
-    )
-}

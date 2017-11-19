@@ -19,12 +19,13 @@ export default class Template extends Component {
 
     constructor(props) {
         super(props)
+        console.log(props)
         const params = this.props.navigation.state.params
         const {navigate, goBack} = this.props.navigation;
         this.navigate = navigate;
         this.goBack = goBack;
         this.score=0;
-        this.props.init(params)
+     //   this.props.init(params)
     }
     updateScore(value){
         this.score = value;
@@ -67,8 +68,8 @@ export default class Template extends Component {
                 <Right>
                     <Button transparent onPress={() => {
                         this.goBack()
-                        let {event,talk,type} = this.props;
-                        this.props.OnRate(event,talk,type,this.score);
+                        let {event,talk,type,updateHome} = this.props;
+                        this.props.OnRate(event,talk,type,this.score,updateHome.bind(this));
                         this.props.toggleContentLoader(false)
                     }}>
                         <Icon style={{color: "white"}} name="md-checkmark-circle-outline"/>

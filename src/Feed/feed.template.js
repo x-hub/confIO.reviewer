@@ -7,6 +7,7 @@ import nativeStorage from "app/App/Services/nativeStorage"
 import {colors} from "shared/theme"
 import Http from "app/App/Services/Http"
 import {AutoPlayAnimation} from "shared"
+import {preFetchImg} from "./index"
 
 export default class Template extends Component {
     constructor(props) {
@@ -23,7 +24,6 @@ export default class Template extends Component {
             body: JSON.stringify({token: authToken}),
             credentials: 'include'
         });
-
         Observable.forkJoin([eventDetail, events, auth])
             .switchMap(([event, eventsString]) => {
                 const events = eventsString ? eventsString : [];
@@ -43,6 +43,7 @@ export default class Template extends Component {
                     return Observable.throw(event)
                 }
             }).switchMap((event) => {
+            console.log(JSON.stringify(event))
             let BaseUrl = event.baseUrl.concat("api/conferences/", event.code);
             let ScheduleUrl = BaseUrl.concat("/schedules/")
             let SpeakersUrl = BaseUrl.concat("/speakers/")
@@ -64,23 +65,28 @@ export default class Template extends Component {
                 let AllSpeakersRequest = speakers.map((speaker) => Http.getBody(speaker.links[0].href))
                 return Observable.forkJoin(AllSpeakersRequest)
             }).switchMap((fullSpeakersDetail) => {
-                let keys = fullSpeakersDetail.map((speaker) => `${event.code}-speaker-${speaker.uuid}`)
-                nativeStorage.save(keys,fullSpeakersDetail);
-                let uuids = fullSpeakersDetail.map((speaker)=>speaker.uuid)
-                nativeStorage.save(`${event.code}-speakers`,uuids)
-                 //  this.props.initSpeakers(event,[] ,_.zipObject(uuids,fullSpeakersDetail));
-                return Observable.forkJoin([
-                    nativeStorage.save(keys, fullSpeakersDetail),
-                    nativeStorage.save(`${event.code}-speakers`, fullSpeakersDetail.map((s) => s.uuid))
-                ]).switchMap(()=>{
-                    return Observable.of(event);
+                let imgs= fullSpeakersDetail.map((speaker)=>preFetchImg(speaker.avatarURL))
+                return Observable.forkJoin(imgs).switchMap(()=>{
+                    let keys = fullSpeakersDetail.map((speaker) => `${event.code}-speaker-${speaker.uuid}`)
+                    nativeStorage.save(keys,fullSpeakersDetail);
+                    let uuids = fullSpeakersDetail.map((speaker)=>speaker.uuid)
+                    nativeStorage.save(`${event.code}-speakers`,uuids);
+                    return Observable.forkJoin([
+                        nativeStorage.save(keys, fullSpeakersDetail),
+                        nativeStorage.save(`${event.code}-speakers`, fullSpeakersDetail.map((s) => s.uuid))
+                    ]).switchMap(()=>{
+                        return Observable.of(event);
+                    })
+                },(e)=>{
+                   return Observable.of(event)
                 })
-            })
 
-        }).subscribe((e) => {
-            this.props.GOTOHome(e)
+            })
+        }).subscribe(({value}) => {
+            this.props.GOTOHome(value)
         }, (event) => {
             if(JSON.stringify(event) == JSON.stringify({})) return;
+            console.log("error",event)
             this.props.GOTOHome(event)
         })
 

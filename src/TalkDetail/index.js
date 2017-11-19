@@ -9,7 +9,7 @@ import _ from "lodash"
 import nativeStorage from "app/App/Services/nativeStorage"
 import {Observable} from "rxjs"
 
-function OnRate(event, talk, type, score) {
+function OnRate(event, talk, type, score,callback) {
     let keyOthers = type == talkStatus.NotReviewed ?
         `${event.code}-talks` : `${event.code}-talks-${talkStatus.Later}`
     let keyReviewed = `${event.code}-talks-${talkStatus.Reviewed}`
@@ -50,22 +50,22 @@ function OnRate(event, talk, type, score) {
             if (type == talkStatus.NotReviewed) payload.talks = others
             else payload.later = others
         }
+        callback && callback(payload)
         return Observable.of(payload)
     }).toPromise()
     return navActionCreators.navigateToSwiper(payload)
-}
-
-function init(params) {
-    return {
-        type: 'INIT_TalkDetail',
-        payload: params,
-    }
 }
 
 function getSpeaker(position) {
     return {
         type: ACTIONS.SELECT_SPEAKER,
         payload: position
+    }
+}
+function updateHome(payload) {
+    return {
+        type: ACTIONS.UPDATE_HOME,
+        payload
     }
 }
 
@@ -88,7 +88,7 @@ const actionCreators = {
     getSpeaker,
     toggleSpeakerDetail,
     toggleContentLoader,
-    init,
+    updateHome
 };
 
 function mapStateToProps(state) {
