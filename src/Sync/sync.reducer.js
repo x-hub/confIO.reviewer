@@ -28,6 +28,11 @@ export default (state = INITIAL_STATE, { type, payload }) => {
             syncSuccess: false,
             syncError: false,
         }
+        case actions.RESET:
+        return {
+            ...state,
+            ...payload,
+        }
         default:
         return {
             ...state

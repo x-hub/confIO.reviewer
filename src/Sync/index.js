@@ -9,13 +9,24 @@ export const actions = {
     REMOVE_ACTION: 'REMOVE_ACTION',
     SYNC_ACTIONS: 'SYNC_ACTIONS',
     REMOVE_RESPONSE_ANIMATION:'REMOVE_RESPONSE_ANIMATION',
+    RESET: 'RESET',
 };
 
 const actionCreators = {
     removeAction,
     syncActions,
     removeResponseAnimation,
+    resetSync,
 };
+
+function resetSync() {
+    return {
+        type: actions.RESET,
+        payload: {
+            actionsDirty: false,
+        },
+    }
+}
 
 function removeAction(event, action) {
     const payload = removeActivity(event.code, action)

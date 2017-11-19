@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Component } from 'react';
 import {
     Text,
     View,
@@ -20,7 +20,17 @@ import PullToRefresh from 'react-native-pull-refresh';
 import style from './sync.style';
 import animations from 'shared/animations';
 
-export default (props) => {
+export default class Sync extends Component {
+    componentWillUnmount() {
+        this.props.resetSync()
+    }
+
+    render() {
+        return renderSync(this.props)
+    }
+}
+
+function renderSync(props) {
     const { event } = props.navigation.state.params;
     const { actionsDirty, syncSuccess, isRefreshing, syncActions, removeAction, removeResponseAnimation } = props;
     const actionsFromProps = props.actions;
