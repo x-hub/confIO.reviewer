@@ -53,7 +53,7 @@ function OnRate(event, talk, type, score,callback) {
         callback && callback(payload)
         return Observable.of(payload)
     }).toPromise()
-    return navActionCreators.navigateToSwiper(payload)
+    return navActionCreators.navigateBack(payload)
 }
 
 function getSpeaker(position) {

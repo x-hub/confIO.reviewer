@@ -34,6 +34,8 @@ export default (state = INITIAL_STATE, action) => {
                 events: action.payload 
             }
         default:
-            return state;
+            return {
+                ...state
+            };
     }
 }

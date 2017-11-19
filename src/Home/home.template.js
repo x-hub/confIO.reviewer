@@ -12,55 +12,22 @@ import {
     Icon,
     Left,
     Right,
-    Thumbnail,
+    Thumbnail
 } from "native-base"
-import {
-    TouchableOpacity
-} from 'react-native';
+import nativeStorage from "app/App/Services/nativeStorage"
 import styles from "./home.style"
 import {colors} from "shared/theme"
+
 const {width, height} = Dimensions.get("window");
 const background = require("assets/Homebg.png");
+import {TouchableCTA} from "./TouchableCTA/index"
 
-function TouchableCTA(props) {
-    const { backgroundColor, list, event, onPress, name } = props;
-    const CTAContainer = list.length? EnabledCTA : DisabledCTA;
-    return (
-        <CTAContainer>
-            <View style={{...styles.center, flex: 1, flexDirection: "row"}}>
-                <Text style={{...styles.labelL, fontSize: 33, color: colors.black}}>{list.length}</Text>
-                <Text style={{fontFamily: "Roboto-Light", fontSize: 22, marginLeft: 10}}>{ name }</Text>
-            </View>
-            <View style={{marginHorizontal: 10, justifyContent: 'center'}}>
-                {list.length ?  <View style={{alignSelf: 'stretch'}}>
-                    <Icon style={{color: colors.black}} name="md-arrow-dropright"/>
-                </View> :<View/>}
-            </View>
-        </CTAContainer>
-    );
-
-    function EnabledCTA(props) {
-        return (
-            <TouchableOpacity
-            onPress={()=>{onPress(event, list)}}
-            style={{ ...styles.card, backgroundColor }}
-            >
-                { props.children }
-            </TouchableOpacity>
-        );
-    }
-
-    function DisabledCTA(props) {
-        return (
-            <View style={{ ...styles.card, backgroundColor }}>
-                { props.children }
-            </View>
-        );
-    }
-}
 
 export default (props) => {
-    const { navigate, goBack } = props.navigation;
+    const {navigate, goBack} = props.navigation;
+    nativeStorage.get(`${props.event.code}-activity`).subscribe((e)=>{
+        console.log("data",e)
+    })
     return (
         <View style={styles.container}>
             <Image source={background} style={styles.background} resizeMode="cover">
@@ -70,7 +37,7 @@ export default (props) => {
                         <Text style={styles.labelM}>{props.event.name}</Text>
                         </Body>
                         <Right>
-                            <Icon onPress={()=>goBack()} style={{color: colors.white}} name="md-log-out"/>
+                            <Icon onPress={() => goBack()} style={{color: colors.white}} name="md-log-out"/>
                         </Right>
                     </Header>
                     <Content style={{flex: 1}}>
@@ -80,50 +47,39 @@ export default (props) => {
                         }}>
                             <View style={{flexDirection: "row", ...styles.center}}>
                                 <Thumbnail style={styles.avatar}
-                                           source={ {uri: props.user.pictureurl} }/>
+                                           source={{uri: props.user.pictureurl}}/>
                                 <View style={{marginLeft: 16, alignItems: "center"}}>
                                     <Text style={{...styles.labelL, fontSize: 18}}>
                                         {props.user.firstName}
                                         {props.user.lastName}
                                     </Text>
                                     <Text style={{marginTop: 5, color: colors.gris}}>
-                                        @{ props.user.company }
+                                        @{props.user.company}
                                     </Text>
                                 </View>
-
                             </View>
-
                             <TouchableCTA
-                            name='To Review'
-
-                            onPress={ props.toNotReviewedTalks }
-
-
-                            backgroundColor='#78C4E8'
-                            event={ props.event }
-                            list={ props.talks }
+                                name='To Review'
+                                onPress={props.toNotReviewedTalks}
+                                backgroundColor='#78C4E8'
+                                event={props.event}
+                                list={props.talks}
                             />
-
                             <TouchableCTA
-                            name='Reviewed'
-
-                            onPress={ props.toReviewedTalks }
-
-                            backgroundColor='#e8a652'
-                            event={ props.event }
-                            list={ props.reviewed }
+                                name='Reviewed'
+                                onPress={props.toReviewedTalks}
+                                backgroundColor='#e8a652'
+                                event={props.event}
+                                list={props.reviewed}
                             />
-
                             <TouchableCTA
-                            name='To Review Later'
-
-                            onPress={ props.toReviewedLaterTalks }
-
-                            backgroundColor='#E36B86'
-                            event={ props.event }
-                            list={ props.later }
+                                name='To Review Later'
+                                onPress={props.toReviewedLaterTalks}
+                                backgroundColor='#E36B86'
+                                event={props.event}
+                                list={props.later}
                             />
-                            <View style={{ ...styles.card }}>
+                            <View style={{...styles.card}}>
                                 <View style={{flex: 1, flexDirection: "row"}}>
                                     <Button iconLeft transparent
                                     style={{
@@ -132,16 +88,21 @@ export default (props) => {
                                         borderColor: colors.white,
                                         justifyContent: 'center'
                                     }}
-                                    onPress={ navigate.bind(this, 'Sync') }
+                                    onPress={ props.fetchActionsAndNavigateToSync.bind(this, props.event) }
+
                                     >
-                                        <View style={ {flexDirection: 'row'} }>
-                                            <Icon style={ {color: colors.white, textAlignVertical: 'center'} } name='swap'/>
-                                            <Text style={ {color: colors.white, marginLeft: 5, textAlignVertical: 'center'} }>Sync With conf.io</Text>
+                                        <View style={{flexDirection: 'row'}}>
+                                            <Icon style={{color: colors.white, textAlignVertical: 'center'}}
+                                                  name='swap'/>
+                                            <Text style={{
+                                                color: colors.white,
+                                                marginLeft: 5,
+                                                textAlignVertical: 'center'
+                                            }}>Sync With conf.io</Text>
                                         </View>
                                     </Button>
                                 </View>
                             </View>
-
                             <View style={{...styles.card, marginTop: 10}}>
                             </View>
                         </View>

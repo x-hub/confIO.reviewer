@@ -26,8 +26,6 @@ export default class Template extends React.Component {
         const {navigate, goBack} = this.props.navigation;
         this.navigate = navigate;
         this.goBack = goBack;
-        //this.props.init({ talks, event, type })
-        console.log(this.props)
     }
 
     render() {

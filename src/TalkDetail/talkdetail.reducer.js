@@ -19,7 +19,6 @@ export default (state = {
                    ...payload,
                    ...params,
                    IsReady: true,
-
                }
             }
             return {

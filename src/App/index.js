@@ -13,6 +13,7 @@ import store from './app.store';
 import Navigator from 'app/Navigator';
 import getTheme from 'nb-theme/components';
 import materialTheme from 'nb-theme/variables/material';
+import animations from 'shared/animations';
 
 const theme = getTheme(materialTheme);
 

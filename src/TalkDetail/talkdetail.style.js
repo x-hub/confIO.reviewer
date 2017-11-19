@@ -39,8 +39,8 @@ export default {
     content: {flex: 1, backgroundColor: colors.gris, padding: 2},
     contentTypes: {marginTop: 10, width: "89%", flexDirection: "row"},
     contentTypesItem: {
-        justifyContent: "center", padding: 10,
-        flex: 1, alignItems: "center"
+        justifyContent: "center",
+        padding: 10, flex: 1, alignItems: "center"
     },
     contentTypesItemLabel: {color: "white", fontFamily: "Roboto-Light"},
     contentBody: {flex: 1, width: "90%", zIndex: 0},

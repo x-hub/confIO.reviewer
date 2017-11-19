@@ -2,6 +2,7 @@ import _ from 'lodash'
 
 const actions = {
     Navigate: 'Navigation/NAVIGATE',
+    Back:'Navigation/BACK'
 }
 
 export default actions
@@ -12,16 +13,17 @@ export const creators = {
     navigateToQRScanner,
     navigateToSwiper,
     navigateToTalkDetails,
+    navigateToSync,
+    navigateBack
 }
 
-function navigateWithPayload(routeName, payload) {
+function navigateWithPayload(routeName, payload,type = actions.Navigate) {
     let action = {
-        type: actions.Navigate,
+        type,
     }
     if(payload && _.isFunction(payload.then)) {
         action.payload = payload.then(
             (p) => {
-                console.log("swiper payload", p)
                 return  {
                     routeName,
                     params: p
@@ -35,6 +37,13 @@ function navigateWithPayload(routeName, payload) {
         }
     }
     return action
+}
+function navigateBack(payload) {
+    return navigateWithPayload(undefined,payload,actions.Back)
+}
+
+function navigateToSync(payload) {
+    return navigateWithPayload('Sync', payload)
 }
 
 function navigateToFeed(payload) {

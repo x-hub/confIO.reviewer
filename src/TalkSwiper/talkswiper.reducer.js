@@ -14,7 +14,7 @@ export default (state = {
                 if(params && params.hasOwnProperty('talk')) {
                     let talks = state.talks.filter((item) => item.id != params.talk.id)
                     talks = _.shuffle(talks);
-                    delete payload['talk']
+                    delete params['talk']
                     return {
                         ...state,
                         talks

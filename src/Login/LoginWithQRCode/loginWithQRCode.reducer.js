@@ -12,6 +12,8 @@ export default (state = INITIAL_STATE, action) => {
                reactivateQRScanner: true,
             }
         default:
-            return state
+            return {
+                ...state
+            }
     }
 }

@@ -1,11 +1,12 @@
 import React from "react"
-import {Image, Text, View} from "react-native"
+import {Image, Text, View,ScrollView} from "react-native"
 import style from "./speakerdetail.style"
 
 export default (props) => {
+    const {height} = props;
     return (
         <View style={style.slideUp}>
-            <View style={style.slideUpHeader}>
+            <View style={{...style.slideUpHeader,height:height*0.2}}>
             </View>
             <View style={style.slideUpUser}>
                 <Image style={style.slideUpUserImg}
@@ -20,13 +21,12 @@ export default (props) => {
                     </Text>
                 </View>
             </View>
-            <View style={style.slideUpBody}>
-
+            <ScrollView style={{...style.slideUpBody,height:height*0.8}}>
                 <Text
-                    style={{fontWeight: "400", color: "black", marginTop: 10, fontFamily: "Roboto-Light"}}>
+                    style={style.slideUpBio}>
                     {props.speaker.bio}
                 </Text>
-            </View>
+            </ScrollView>
         </View>
     )
 }

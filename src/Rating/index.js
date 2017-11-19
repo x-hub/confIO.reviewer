@@ -36,17 +36,16 @@ export default class Rating extends React.Component {
                 this._pan.flattenOffset();
 
                 let offset = Math.max(0, this._pan._value + 0);
-                if (offset < 0) return this._pan.setValue(0);
-                if (offset > END) return this._pan.setValue(END);
+                if (offset < 0) return this.updatePan(0);
+                if (offset > END) return this.updatePan(END);
                 const modulo = offset % DISTANCE;
                 offset = (modulo >= DISTANCE / 2) ? ((offset - modulo) + DISTANCE) : (offset - modulo);
                 this.updatePan(offset);
             }
         });
     }
-
     updatePan(toValue) {
-        this.props.rate && this.props.rate(toValue / DISTANCE)
+        this.props.rate && this.props.rate((toValue / DISTANCE)*2)
         Animated.spring(this._pan, {toValue, friction: 7}).start();
     }
 

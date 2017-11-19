@@ -25,7 +25,6 @@ export default class Template extends Component {
         this.navigate = navigate;
         this.goBack = goBack;
         this.score=0;
-     //   this.props.init(params)
     }
     updateScore(value){
         this.score = value;
@@ -55,19 +54,17 @@ export default class Template extends Component {
                 <Left>
                     <Button onPress={() => {
                         this.goBack()
-                     //   setTimeout(() => this.props.toggleContentLoader(false), 200)
                     }} transparent>
                         <Icon name='arrow-back'/>
                     </Button>
                 </Left>
                 <Body style={{alignItems: "flex-start"}}>
                 <Text style={styles.Label}>
-                    Talk Detail {this.props.type}
+                    Talk Detail
                 </Text>
                 </Body>
                 <Right>
                     <Button transparent onPress={() => {
-                        this.goBack()
                         let {event,talk,type,updateHome} = this.props;
                         this.props.OnRate(event,talk,type,this.score,updateHome.bind(this));
                         this.props.toggleContentLoader(false)
@@ -175,12 +172,13 @@ export default class Template extends Component {
                 </View>
             </Content>
             <SlidingUpPanel
+                allowDragging={false}
                 draggableRange={draggableRange}
                 ref={c => this.props._panel = c}
                 visible={this.props.showSpeakerDetail}
                 height={height / 1.75}
                 onRequestClose={this.props.toggleSpeakerDetail.bind(this, false)}>
-                <SepakerDetail speaker={this.props.selectedSpeaker}/>
+                <SepakerDetail height={height/1.75} speaker={this.props.selectedSpeaker}/>
             </SlidingUpPanel>
         </Container>)
     }
