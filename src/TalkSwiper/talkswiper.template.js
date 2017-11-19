@@ -34,20 +34,13 @@ export default class Template extends React.Component {
 
         return (
             <Container>
-                <Header backgroundColor={colors.primary}>
+                <Header style={ styles.header }>
                     <Left>
-                        <Button onPress={() => {
-                            this.goBack()
-                        }} transparent>
-                            <Icon name='arrow-back'/>
+                        <Button onPress={ () => goBack() } transparent>
+                            <Icon style={ styles.goBackIcon } name='arrow-back' />
                         </Button>
                     </Left>
-                    <Body style={{alignItems: 'flex-start'}}>
-                    <Text style={styles.headerTitle}>
-                        Talks List
-                    </Text>
-                    </Body>
-
+                    <Text style={ styles.sceneTitle }>Talks Deck</Text>
                 </Header>
 
                     <View style={{margin: 10}}>

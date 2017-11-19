@@ -1,7 +1,18 @@
 import {colors} from "shared/theme"
 
 export default {
-    headerTitle: {fontFamily: "Roboto-Medium", color: "white", fontSize: 20},
+	header: {
+		justifyContent: 'flex-start',
+	},
+    sceneTitle: {
+        textAlign: 'center',
+        textAlignVertical: 'center',
+        fontSize: 18,
+        color: colors.black,
+    },
+    goBackIcon: {
+        color: colors.black,
+    },
     title: {flex: 1, fontFamily: "Roboto-Light"},
     rateLater: {flex: 0, marginLeft: 6},
     body: {

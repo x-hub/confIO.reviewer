@@ -1,7 +1,21 @@
 import {colors} from "shared/theme"
 
 export default {
-    Header: {backgroundColor: colors.primary, justifyContent: "center", alignItems: "center"},
+	header: {
+		justifyContent: 'flex-start',
+	},
+    sceneTitle: {
+        textAlign: 'center',
+        textAlignVertical: 'center',
+        fontSize: 18,
+        color: colors.black,
+    },
+    goBackIcon: {
+        color: colors.black,
+    },
+    reviewLaterIcon: {
+        color: colors.black,
+    },
     container: {
         flex: 1,
         position: "relative",
@@ -9,7 +23,6 @@ export default {
         alignItems: "center"
 
     },
-    Label: {fontFamily: "Roboto-Medium", color: "white", fontSize: 20},
     speakers: {
         marginTop: 10,
         marginLeft: 10,
