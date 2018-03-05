@@ -19,7 +19,6 @@ import styles from "./home.style"
 import {colors} from "shared/theme"
 
 const {width, height} = Dimensions.get("window");
-const background = require("assets/Homebg.png");
 import {TouchableCTA} from "./TouchableCTA/index"
 
 
@@ -29,7 +28,7 @@ export default (props) => {
     })
     return (
         <View style={styles.container}>
-            <Image source={background} style={styles.background} resizeMode="cover">
+            <Image source={require('assets/Homebg.png')} style={styles.background} resizeMode="cover">
                 <Container>
                     <Header style={{opacity: 0}} noShadow={true} backgroundColor="rgba(0,0,0,0.01)">
                         <Body>
