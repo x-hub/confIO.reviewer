@@ -1,11 +1,14 @@
 {
-  "presets": ["react-native"],
+  "presets": ["babel-preset-react-native"],
   "plugins": [
-    ["module-alias", [
-      { "src": "./src", "expose": "app" },
-      { "src": "./assets", "expose": "assets" },
-      { "src": "./shared", "expose": "shared" },
-      { "src": "./native-base-theme", "expose": "nb-theme" }
-    ]]
+    ["module-resolver", {
+        "root": ["./src"],
+        "alias": {
+            "app": "./src",
+            "assets": "./assets",
+            "shared": "./shared",
+            "nb-theme": "./native-base-theme",
+        }
+    }]
   ]
 }
