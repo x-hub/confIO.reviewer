@@ -61,15 +61,16 @@ export default {
         resizeMode: 'contain',
     },
     selectEventBtn: {
+        padding: 15,
         backgroundColor: colors.primary,
         alignSelf: 'center',
     },
     selectEvent: {
         fontSize: 18,
-        padding: 15,
         color: colors.black,
     },
     icon: {
+        fontSize: 18,
         color: colors.black,
     },
     backgroundImage: {
