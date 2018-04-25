@@ -13,11 +13,21 @@ import error from "shared/components/error"
 export default class Template extends Component {
     constructor(props) {
         super(props);
+        this.state = {
+            feeding: false
+        };
     }
     NetworkStatusHandler(payload){
         let condition = payload.type != "none"
         this.props.changeStatus(condition)
-        if(condition) this.feedData()
+        if(condition) {
+            if(!this.state.feeding) {
+                this.setState(
+                    state => ({ ...state, feeding: true}),
+                    () => this.feedData()
+                )
+            }
+        }
     }
     getEventDetail(eventDetailsEndpoint){
         return Http.getBody(eventDetailsEndpoint)
@@ -125,7 +135,12 @@ export default class Template extends Component {
         }).subscribe((e)=>{
             if(e){
                 this.props.changeStatus(e)
-                this.feedData();
+                if(!this.state.feeding) {
+                    this.setState(
+                        state => ({ ...state, feeding: true}),
+                        () => this.feedData()
+                    )
+                }
             }
         },(err)=>{
             this.props.changeStatus(err)
