@@ -7,8 +7,8 @@ export default {
     container: {
         flex: 1,
     },
-
     background: {
+        position: 'absolute',
         width,
         height,
     },

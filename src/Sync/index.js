@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import template from './sync.template';
-import { removeActivity, saveActivities } from 'app/App/Services/EventService'
+import { removeActivity, saveActivities, setTalksListValue, TALK_LIST_TYPE } from 'app/App/Services/EventService'
 import _ from 'lodash'
 
 export const actions = {
@@ -56,47 +56,32 @@ function removeResponseAnimation() {
 }
 
 function syncActions({ code, baseUrl }, actionsToSync, callback) {
-    const payload = Promise.all(
-        _.map(
-            actionsToSync
-            , function({ target, score, timestamp }) {
-                return fetch(baseUrl.concat(`cfpadmin/proposal/${target}/vote?vote=${score}&_=${timestamp}`))
-                .then((response) => _.merge(response, { timestamp }))
-            }
-        )
+    const votes = _.map(actionsToSync, ({ target, score }) => ({ proposal: target, vote: score}))
+    const payload = fetch(
+        baseUrl.concat('cfpadmin/proposals/sync'),
+        { method: 'POST', body: JSON.stringify({ votes: votes }), headers: new Headers({ 'Content-Type': 'application/json' }) }
+    )
+    .then(r => r.json())
+    .then(
+        ({ talks, reviewedTalks }) => Promise.all([
+                saveActivities(code, []),
+                setTalksListValue(code, TALK_LIST_TYPE.TALKS, talks),
+                setTalksListValue(code, TALK_LIST_TYPE.REVIEWED_TALKS, reviewedTalks),
+        ])
     )
     .then(
-        (responses) => {
-            const syncedActions = _.map(responses, ({ timestamp }) => timestamp)
-            return _.filter(
-                actionsToSync,
-                (action) => {
-                    return !_.includes(syncedActions, action.timestamp)
-                }
-            )
-        }
-    )
-    .then(
-        (notSyncedActions) => {
-            return saveActivities(code, notSyncedActions)
-                .then(
-                    () => {
-                        return {
-                            actions: notSyncedActions,
-                            syncSuccess: true,
-                        }
-                    }
-                )
-        }
+        () => ({
+            actions: [],
+            syncError: true,
+        })
     )
     .catch(
-        (err) => {
-            return {
-                actions: actionsToSync,
-                syncError: true,
-            }
-        }
+        err => ({
+            actions: actionsToSync,
+            syncError: true,
+        })
     )
+
     payload.then(callback)
     return {
         type: actions.SYNC_ACTIONS,

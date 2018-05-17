@@ -13,6 +13,19 @@ export function fetchTalks(event) {
         .toPromise()
 }
 
+export function getTalksList(eventCode, type) {
+    return nativeStorage.get(`${eventCode}-${type}`)
+}
+
+export function setTalksListValue(eventCode, type, value) {
+    return nativeStorage.save(`${eventCode}-${type}`, value).toPromise()
+}
+
+export const TALK_LIST_TYPE = {
+    TALKS: 'talks',
+    REVIEWED_TALKS: 'talks-reviewed',
+    TBR_LATER: 'talks-later',
+}
 
 export function fetchActivities(eventCode) {
     return nativeStorage.get(`${eventCode}-activity`)

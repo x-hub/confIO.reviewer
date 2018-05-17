@@ -57,6 +57,7 @@ haste-map-react-native-packager-1-*
 react-native-packager-cache-*
 
 package-lock.json
+yarn.lock
 
 ios/confIOReviewer.xcworkspace/
 ios/Podfile.lock

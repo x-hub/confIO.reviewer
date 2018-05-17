@@ -20,7 +20,6 @@ export default {
         flex: 1,
         flexDirection: 'row',
         backgroundColor: colors.white,
-        paddingTop: 21,
         paddingBottom: 21,
         paddingRight: 8,
         paddingLeft: 8,
