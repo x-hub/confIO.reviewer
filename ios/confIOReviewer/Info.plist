@@ -45,7 +45,7 @@
 	<key>NSCameraUsageDescription</key>
 	<string>We will need your camera to scan QR codes</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
-	<string/>
+	<string></string>
 	<key>UIAppFonts</key>
 	<array>
 		<string>Roboto-Regular.ttf</string>
@@ -65,7 +65,7 @@
 		<string>Zocial.ttf</string>
 		<string>Feather.ttf</string>
 		<string>MaterialCommunityIcons.ttf</string>
-		<string>RobotoLight.ttf</string>
+		<string>Roboto-Light.ttf</string>
 		<string>vincHand.ttf</string>
 	</array>
 	<key>UILaunchStoryboardName</key>

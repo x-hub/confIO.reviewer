@@ -36,7 +36,6 @@
 		2D02E4C81E0B4AEC006451C7 /* libRCTWebSocket-tvOS.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3DAD3E991DF850E9000B6D8A /* libRCTWebSocket-tvOS.a */; };
 		2D02E4C91E0B4AEC006451C7 /* libReact.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3DAD3EA31DF850E9000B6D8A /* libReact.a */; };
 		2DCD954D1E0B4F2C00145EB5 /* confIOReviewerTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 00E356F21AD99517003FC87E /* confIOReviewerTests.m */; };
-		2E161C3BCAF24F1C90B99369 /* RobotoLight.ttf in Resources */ = {isa = PBXBuildFile; fileRef = C9C2C2234AE74323A370F0CC /* RobotoLight.ttf */; };
 		3186F5D08DD741D6937D9059 /* Roboto-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 247089A08FBD482595E5BDF5 /* Roboto-Bold.ttf */; };
 		31FB59C741594B9F8D1BBAE1 /* EvilIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 3A7BA522B2684FF58916D2BF /* EvilIcons.ttf */; };
 		3496715BC14445ED9031F62E /* Entypo.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 570BC8D4DEFA42A3892927A4 /* Entypo.ttf */; };
@@ -52,6 +51,7 @@
 		5E9157361DD0AC6A00FF2AA8 /* libRCTAnimation.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5E9157331DD0AC6500FF2AA8 /* libRCTAnimation.a */; };
 		5F16F163A5B44637AD0409FE /* Foundation.ttf in Resources */ = {isa = PBXBuildFile; fileRef = EA13BB95EA614ADDAF3616E6 /* Foundation.ttf */; };
 		6194B7F19D40460D94ECD788 /* Octicons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 535A57462094480A9BC8C470 /* Octicons.ttf */; };
+		672BDE9E20ADABC000725EDA /* Roboto-Light.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 3D4BEA3198054BE6B136E834 /* Roboto-Light.ttf */; };
 		6730760220AC575A0013CB69 /* Lottie.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6747A10B208F7B40007CCBFA /* Lottie.framework */; };
 		6730760320AC575A0013CB69 /* Lottie.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 6747A10B208F7B40007CCBFA /* Lottie.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		67E5797920AB5265007365BF /* Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB61A68108700A75B9A /* Info.plist */; };
@@ -1416,6 +1416,7 @@
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
 				13B07FBD1A68108700A75B9A /* LaunchScreen.xib in Resources */,
 				F61C213D05464A17A71144AC /* Roboto-Black.ttf in Resources */,
+				672BDE9E20ADABC000725EDA /* Roboto-Light.ttf in Resources */,
 				A85FC402C4A949199A4E8A84 /* Roboto-BlackItalic.ttf in Resources */,
 				3186F5D08DD741D6937D9059 /* Roboto-Bold.ttf in Resources */,
 				B70591B6BD3D4276B553CDDB /* Roboto-BoldItalic.ttf in Resources */,
@@ -1424,6 +1425,8 @@
 				516DEBA426C94CF4AF030AC8 /* Roboto-MediumItalic.ttf in Resources */,
 				7BF42D5AA15A4A97A9140EB5 /* Roboto-Regular.ttf in Resources */,
 				76D92E405E5344788553F3C3 /* Roboto-Thin.ttf in Resources */,
+				F83600984D1A46CC996C0E0E /* Roboto_medium.ttf in Resources */,
+				722496CC686346189D7DBD77 /* Roboto.ttf in Resources */,
 				3496715BC14445ED9031F62E /* Entypo.ttf in Resources */,
 				ECD09C232F5D47CF9DE95988 /* EvilIcons.ttf in Resources */,
 				DD8A30318B9C499CBD1A6993 /* FontAwesome.ttf in Resources */,
@@ -1431,8 +1434,6 @@
 				75C4C7DE27004F85956D1663 /* Ionicons.ttf in Resources */,
 				02C0DCE9143A4C3CBC23F08E /* MaterialIcons.ttf in Resources */,
 				19722893E94248DCA423180D /* Octicons.ttf in Resources */,
-				F83600984D1A46CC996C0E0E /* Roboto_medium.ttf in Resources */,
-				722496CC686346189D7DBD77 /* Roboto.ttf in Resources */,
 				900930C8C55B4867B2811D61 /* rubicon-icon-font.ttf in Resources */,
 				52E23153C9C24FCCB74F53B7 /* SimpleLineIcons.ttf in Resources */,
 				7E6EC0BAF6664931AC2DF82A /* Zocial.ttf in Resources */,
@@ -1448,7 +1449,6 @@
 				6194B7F19D40460D94ECD788 /* Octicons.ttf in Resources */,
 				349EF4DE9CC345A5BE40541B /* SimpleLineIcons.ttf in Resources */,
 				4967C1D0142D4311BF2B5457 /* Zocial.ttf in Resources */,
-				2E161C3BCAF24F1C90B99369 /* RobotoLight.ttf in Resources */,
 				DC75FB622E574CCC8BB7717F /* vincHand.ttf in Resources */,
 				CB84677879BD4394AD130A23 /* OFL.txt in Resources */,
 			);
