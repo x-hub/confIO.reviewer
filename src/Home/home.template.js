@@ -24,8 +24,10 @@ const devoxxian = require('assets/devoxxian.png')
 
 export default props => {
   const { navigate, goBack } = props.navigation
-  const pictureurl = _.get(props, "users.pictureurl")
-  nativeStorage.get(`${props.event.code}-activity`).subscribe(e => {})
+  const pictureurl = _.get(props, "user.pictureurl")
+  const firstName = _.get(props, "user.firstName")
+  const lastName = _.get(props, "user.lastName")
+  const company = _.get(props, "user.company")
   return (
     <View style={styles.container}>
       <Image
@@ -65,11 +67,11 @@ export default props => {
               />
               <View style={{ marginLeft: 16, alignItems: "center" }}>
                 <Text style={{ ...styles.labelL, fontSize: 18 }}>
-                  {props.user.firstName}
-                  {props.user.lastName}
+                  {firstName}
+                  {lastName}
                 </Text>
                 <Text style={{ marginTop: 5, color: colors.gris }}>
-                  @{props.user.company}
+                  @{company}
                 </Text>
               </View>
             </View>
@@ -111,19 +113,17 @@ export default props => {
                     props.event
                   )}
                 >
-                  <View style={{ flexDirection: "row" }}>
+                  <View style={{ flexDirection: "row", alignItems: 'center' }}>
                     <Icon
                       style={{
                         color: colors.white,
-                        textAlignVertical: "center",
                       }}
                       name="swap"
                     />
                     <Text
                       style={{
                         color: colors.white,
-                        marginLeft: 5,
-                        textAlignVertical: "center",
+                        marginLeft: 7,
                       }}
                     >
                       Sync With conf.io

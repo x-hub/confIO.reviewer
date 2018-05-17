@@ -17,7 +17,8 @@ import {
 import styles from "app/Home/home.style"
 import {colors} from "shared/theme"
 export function TouchableCTA(props) {
-    const { backgroundColor, list, event, onPress, name } = props;
+    const { backgroundColor, event, onPress, name } = props;
+    const list = props.list || []
     const CTAContainer = list.length? EnabledCTA : DisabledCTA;
     return (
         <CTAContainer>

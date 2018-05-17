@@ -5,10 +5,10 @@ import { colors } from 'shared/theme';
 export default {
 	header: {
 		justifyContent: 'flex-start',
+        alignItems: 'center',
 	},
     sceneTitle: {
         textAlign: 'center',
-        textAlignVertical: 'center',
         fontSize: 18,
         color: colors.black,
     },
