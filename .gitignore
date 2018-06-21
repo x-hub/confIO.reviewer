@@ -62,3 +62,13 @@ yarn.lock
 ios/confIOReviewer.xcworkspace/
 ios/Podfile.lock
 ios/Pods
+
+
+#IDEs
+.vscode/
+android/.project
+android/.settings/
+android/app/.classpath
+android/app/.project
+android/app/.settings/
+

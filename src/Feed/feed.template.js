@@ -2,6 +2,7 @@ import React, {Component} from "react"
 import {Container, Header, Content, Spinner} from 'native-base';
 import _ from "lodash"
 import {Observable} from "rxjs"
+import * as EventService from "app/App/Services/EventService"
 import nativeStorage from "app/App/Services/nativeStorage"
 import NetInfo from "app/App/Services/NetworkInfo"
 import {colors} from "shared/theme"
@@ -74,6 +75,13 @@ export default class Template extends Component {
         let Keys = keys.map((key)=>`${event.code}-talk-${key}`)
         nativeStorage.save(Keys,talks)
     }
+    initCache(event, talks, reviewedTalks, notReviewedTalks) {
+        nativeStorage.save(`${event.code}-talks`, notReviewedTalks)
+        nativeStorage.save(`${event.code}-talks-reviewed`, reviewedTalks)
+        nativeStorage.save(`${event.code}-talks-later`, [])
+        const keys = talks.map(talk => `${event.code}-talk-${talk.id}`)
+        nativeStorage.save(keys, talks)
+    }
     cacheSpeakersImages(speakers){
         let imgs= speakers.map((speaker)=>preFetchImg(speaker.avatarURL))
         return Observable.forkJoin(imgs)
@@ -86,15 +94,9 @@ export default class Template extends Component {
     feedData(){
         this.AuthAndGetEventDetail().switchMap((event) => {
             let BaseUrl = event.baseUrl.concat("api/conferences/", event.code);
-            let ScheduleUrl = BaseUrl.concat("/schedules/")
             let SpeakersUrl = BaseUrl.concat("/speakers/")
-            return Http.getBody(ScheduleUrl).map((e) => e.links).switchMap((Links) => {
-                let AllTalksRequest = Links.map((link) => Http.getBody(link.href).map((e) => e.slots));
-                return Observable.forkJoin(AllTalksRequest)
-            }).switchMap((resp) => {
-                let talks = _(resp).flatMap().filter((e) => e.talk != null).map((e)=>e.talk).value();
-                let keys = talks.map((talk) => talk.id)
-                this.initTalkAndActivity(event,keys,talks)
+            return EventService.firstSync(event).switchMap(({ notReviewedTalksUUIDs, reviewedTalksUUIDs, talks }) => {
+                this.initCache(event, talks, reviewedTalksUUIDs, notReviewedTalksUUIDs)
                 return Http.getBody(SpeakersUrl)
             }).switchMap((speakers) => {
                 let AllSpeakersRequest = speakers.map((speaker) => Http.getBody(speaker.links[0].href))

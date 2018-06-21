@@ -1,6 +1,7 @@
 import nativeStorage from "app/App/Services/nativeStorage"
 import { Observable } from 'rxjs';
 import _ from 'lodash';
+import Http from './Http'
 
 export function fetchTalks(event) {
     let talks = nativeStorage.get(`${event.code}-talks`)
@@ -11,6 +12,11 @@ export function fetchTalks(event) {
     return Observable.forkJoin([talks,talksReviewed,talksLater,user])
         .switchMap(([talks,reviewed,later,user])=>Observable.of({event,talks,reviewed,later,user}))
         .toPromise()
+}
+
+export function firstSync({ baseUrl }) {
+    const url = baseUrl.concat('cfpadmin/proposals/sync')
+    return Http.getBody(url)
 }
 
 export function getTalksList(eventCode, type) {
