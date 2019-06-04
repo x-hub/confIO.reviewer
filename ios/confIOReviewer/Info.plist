@@ -45,7 +45,7 @@
 	<key>NSCameraUsageDescription</key>
 	<string>We will need your camera to scan QR codes</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
-	<string></string>
+	<string/>
 	<key>UIAppFonts</key>
 	<array>
 		<string>Roboto-Regular.ttf</string>

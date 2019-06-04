@@ -2,11 +2,11 @@ import {ACTIONS} from "app/App/actionsType"
 import {actions} from "app/Login/LoginWithSavedSession/index"
 import navActions from 'app/Navigator/navigator.actions';
 import _ from "lodash"
-import {talkStatus} from "app/Home/index"
+import {TALK_STATUS} from "app/Home/index"
 export default (state = {
     event:{},
     talks:[],
-    type:talkStatus.NotReviewed
+    type:TALK_STATUS.NOT_REVIEWED
 }, {type,payload,routeName,params}) => {
     switch (type) {
         case navActions.Navigate :

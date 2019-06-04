@@ -61,7 +61,7 @@ export default class Template extends Component {
                 <Right>
                     <Button transparent onPress={() => {
                         let {event,talk,type,updateHome} = this.props;
-                        this.props.OnRate(event,talk,type,this.score,updateHome.bind(this));
+                        this.props.onRate(event,talk,type,this.score,updateHome.bind(this));
                         this.props.toggleContentLoader(false)
                     }}>
                         <Icon style={ styles.reviewLaterIcon } name="md-checkmark-circle-outline"/>
@@ -81,7 +81,7 @@ export default class Template extends Component {
                                 lineNumber={4}
                                 lineSpacing={5}
                                 lastLineWidth="30%"
-                                onReady={this.props.IsReady}
+                                onReady={this.props.isReady}
                             >
                                 <View style={{flexDirection: "row", justifyContent: "center", alignItems: "center"}}>
                                     {NestedSpeakersImgs(styles, this.props)}
@@ -95,7 +95,7 @@ export default class Template extends Component {
                             <Placeholder.Line
                                 color="#FFF"
                                 textSize={14}
-                                onReady={this.props.IsReady}
+                                onReady={this.props.isReady}
                             >
                                 <Text style={styles.contentTypesItemLabel}>{this.props.talk.track}</Text>
                             </Placeholder.Line>
@@ -104,7 +104,7 @@ export default class Template extends Component {
                             <Placeholder.Line
                                 color="#EEE"
                                 textSize={14}
-                                onReady={this.props.IsReady}
+                                onReady={this.props.isReady}
                             >
                                 <Text style={{
                                     ...styles.contentTypesItemLabel,
@@ -123,7 +123,7 @@ export default class Template extends Component {
                                         color="#EEE"
                                         width="77%"
                                         textSize={14}
-                                        onReady={this.props.IsReady}
+                                        onReady={this.props.isReady}
                                     >
                                         <Text style={{fontFamily: "Roboto-Medium"}}>
                                             {this.props.talk.title}
@@ -139,7 +139,7 @@ export default class Template extends Component {
                                     lineSpacing={5}
                                     color="#EEE"
 
-                                    onReady={this.props.IsReady}
+                                    onReady={this.props.isReady}
                                 >
                                     <CardItem style={{marginLeft: 0, alignItems: "center"}}>
                                         <Body>

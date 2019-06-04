@@ -25,14 +25,14 @@ export default class App extends Component {
                 PermissionsAndroid.PERMISSIONS.CAMERA,
                 {
                     'title': 'ConfIoReviewer App Camera Permission',
-                    'message': 'ConfIoReviewer App needs access to your camera ' +
-                    'so you can take awesome pictures.'
+                    'message': `ConfIoReviewer App needs access to your camera 
+                    so  the app can scan the QRCode for authentication purpose.`
                 }
             )
             if (granted === PermissionsAndroid.RESULTS.GRANTED) {
-                console.log("You can use the camera")
+               // console.log("You can use the camera")
             } else {
-                console.log("Camera permission denied")
+               // console.log("Camera permission denied")
             }
         } catch (err) {
             //

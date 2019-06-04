@@ -1,28 +1,29 @@
 import React from "react"
 import {NetInfo} from "react-native"
-import {Observable} from "rxjs"
+import {from} from "rxjs";
+
 
 class RxNetInfo {
 
-    Info() {
+    status() {
         return this.toObservable(NetInfo.getConnectionInfo())
     }
 
-    SubscribeToChange(handler) {
+    subscribeToChange(handler) {
         this.handler = handler
         NetInfo.addEventListener('connectionChange', handler)
     }
 
-    UnsubscribeToChange() {
+    unsubscribeToChange() {
         if (this.handler){
-            NetInfo.addEventListener('connectionChange', this.handler);
-            delete this["handler"]
+            NetInfo.removeEventListener('connectionChange', this.handler);
+            this.handler = null
         }
 
     }
 
     toObservable(promise) {
-        return Observable.fromPromise(promise);
+        return from(promise);
     }
 }
 

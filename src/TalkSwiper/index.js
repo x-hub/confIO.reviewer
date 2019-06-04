@@ -6,11 +6,12 @@ import { creators as navActionCreators } from 'app/Navigator/navigator.actions';
 import template from "./talkswiper.template"
 import _ from "lodash"
 import nativeStorage from "app/App/Services/nativeStorage"
-import {Observable} from "rxjs"
+import { switchMap } from 'rxjs/operators';
+import {of,forkJoin} from "rxjs";
 
 
 export const actionCreators = {
-    RateLater,
+    rateLater,
     showDetail,
     init,
 };
@@ -23,49 +24,45 @@ function init(obj) {
 }
 
 function updateStorage(event, talk) {
-    return Observable.forkJoin([
+    return forkJoin([
         nativeStorage.get(`${event.code}-talks`),
         nativeStorage.get(`${event.code}-talks-later`)
-    ]).switchMap(([Talks, Later]) => {
-        let talks =_.filter(Talks,(item)=>{
-            return item != talk.id;
-        })
-        let later = Later.slice()
-        later.push(talk.id)
-        later = _.sortedUniq(later);
-        return Observable.forkJoin([
+    ]).pipe(switchMap(([talks, later]) => {
+        talks =_.filter(talks,(item)=> item != talk.id)
+        later = _(later).concat(talk.id).sortedUniq().value()
+        return forkJoin([
             nativeStorage.save(`${event.code}-talks`, talks),
             nativeStorage.save(`${event.code}-talks-later`, later)
-        ]).switchMap(() => {
-            return Observable.of(
-                {type: ACTIONS.TALK_RATE_LATER,
+        ]).pipe(switchMap(() => of(
+            {
+                    type: ACTIONS.TALK_RATE_LATER,
                     payload: {
                         event,
                         talk,
                         talks,
-                        later: Later
+                        later: later
                     }
-                }
-               )
-        })
-    }).toPromise()
+            }
+            )
+        ))
+    })).toPromise()
 }
 
 function showDetail(event,talk,type) {
     const {speakers} = talk
-    const keys = speakers.map((speaker)=>`${event.code}-speaker-${speaker.link.uuid}`)
-    const payload = nativeStorage.getArray(keys).switchMap((e)=>{
-        return Observable.of({
-          event,
-          talk,
-          speakers:(e && e[0] == null ? [] : e),
-          type
+    const keys = speakers.map((uuid)=>`${event.code}-speaker-${uuid}`)
+    const payload = nativeStorage.getArray(keys).pipe(switchMap((e)=>{
+        return of({
+            event,
+            talk,
+            speakers:(e && e[0] == null ? [] : e),
+            type
         })
-    }).toPromise()
+    })).toPromise()
     return navActionCreators.navigateToTalkDetails(payload)
 }
 
-function RateLater(event, talk) {
+function rateLater(event, talk) {
     return updateStorage(event,talk)
 }
 

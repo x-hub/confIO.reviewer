@@ -2,8 +2,10 @@ import React, { Component } from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import template from './sync.template';
-import { removeActivity, saveActivities, setTalksListValue, TALK_LIST_TYPE } from 'app/App/Services/EventService'
+import * as EventService from 'app/App/Services/EventService'
 import _ from 'lodash'
+import nativeStorage from "../App/Services/nativeStorage";
+
 
 export const actions = {
     REMOVE_ACTION: 'REMOVE_ACTION',
@@ -29,7 +31,7 @@ function resetSync() {
 }
 
 function removeAction(event, action) {
-    const payload = removeActivity(event.code, action)
+    const payload = EventService.removeActivity(event.code, action)
     return {
         type: actions.REMOVE_ACTION,
         payload: payload,
@@ -55,13 +57,49 @@ function removeResponseAnimation() {
     }
 }
 
-function syncActions({ code, baseUrl }, actionsToSync, callback) {
+async function  syncActions({ code, baseUrl }, actionsToSync, callback) {
     const votes = _.map(actionsToSync, ({ target, score }) => ({ proposal: target, vote: score}))
-    const payload = fetch(
-        baseUrl.concat('cfpadmin/proposals/sync'),
-        { method: 'POST', body: JSON.stringify({ votes: votes }), headers: new Headers({ 'Content-Type': 'application/json' }) }
-    )
-    .then(r => r.json())
+    let payload = {}
+    try {
+        let { talks, reviewedTalks } = await fetch(
+            baseUrl.concat('cfpadmin/proposals/sync'),
+            { method: 'POST', body: JSON.stringify({ votes: votes }), headers: new Headers({ 'Content-Type': 'application/json' }) }
+        ).then(r => r.json())
+
+        let talkToReviewLater = await nativeStorage.get(`${code}-talks-later`).toPromise() || []
+        talks = _.without(talks,...talkToReviewLater)
+        await EventService.saveActivities(code,[]).toPromise();
+        await EventService.setTalksListValue(code, EventService.TALK_LIST_TYPE.TALKS, talks).toPromise();
+        await EventService.setTalksListValue(code, EventService.TALK_LIST_TYPE.REVIEWED_TALKS, reviewedTalks).toPromise();
+        await EventService.setTalksListValue(code, EventService.TALK_LIST_TYPE.TBR_LATER, talkToReviewLater).toPromise();
+
+        payload = {
+            actions: [],
+            syncError: false,
+            syncSuccess:true,
+            synchronizedTalks:{
+                talks,reviewedTalks,talkToReviewLater
+            }
+
+        }
+
+    }catch (e) {
+        console.error(e)
+        payload = {
+            actions: actionsToSync,
+            syncError: true,
+            syncSuccess:false
+        }
+    }finally {
+        callback && callback(payload)
+        return {
+            type: actions.SYNC_ACTIONS,
+            payload: payload,
+        };
+
+    }
+
+        /*
     .then(
         ({ talks, reviewedTalks }) => Promise.all([
                 saveActivities(code, []),
@@ -72,21 +110,25 @@ function syncActions({ code, baseUrl }, actionsToSync, callback) {
     .then(
         () => ({
             actions: [],
-            syncError: true,
+            syncError: false,
+            syncSuccess:true,
         })
     )
     .catch(
         err => ({
             actions: actionsToSync,
             syncError: true,
+            syncSuccess:false
         })
     )
 
-    payload.then(callback)
+
+    //payload.then(callback)
     return {
         type: actions.SYNC_ACTIONS,
         payload: payload,
     };
+    */
 }
 
 function mapStateToProps(state) {

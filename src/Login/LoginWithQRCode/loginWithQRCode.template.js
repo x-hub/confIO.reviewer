@@ -18,7 +18,7 @@ import style from './loginWithQRCode.style';
 
 export default (props) => {
 	const { goBack, navigate } = props.navigation;
-    const { reactivateQRScanner } = props;
+    const { reactivateQRScanner,onQRCodeRead } = props;
     return (
         <Container>
             <Header style={ style.header }>
@@ -39,7 +39,8 @@ export default (props) => {
                     </Text>
 
                 </View>
-                <View style={ {alignItems: 'center'} }><Text>{props.error ? 'Invalide QR Code' : ''}</Text></View>
+                <View style={ {flex:1,alignItems: 'center'} }><Text style={{color:'red'}}>{props.error ? 'Invalide QR Code' : ''}</Text></View>
+                <View style={ {flex:1,alignItems: 'center'} }><Text style={{color:'red'}}>{props.badCredentials ? 'Make sure that you scanned the right QR Code' : ''}</Text></View>
                 <View>
                     <QRCodeScanner
                     reactivate={ reactivateQRScanner }

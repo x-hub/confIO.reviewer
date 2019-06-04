@@ -4,56 +4,38 @@ import {bindActionCreators} from 'redux';
 import template from "./talkdetail.template"
 import {ACTIONS} from "app/App/actionsType"
 import { creators as navActionCreators } from 'app/Navigator/navigator.actions';
-import {talkStatus} from "app/Home/index"
+import {TALK_STATUS} from "app/Home/index"
 import _ from "lodash"
-import nativeStorage from "app/App/Services/nativeStorage"
-import {Observable} from "rxjs"
+import nativeStorage from "app/App/Services/nativeStorage";
+import {mergeMap} from "rxjs/operators"
 
-function OnRate(event, talk, type, score,callback) {
-    let keyOthers = type == talkStatus.NotReviewed ?
-        `${event.code}-talks` : `${event.code}-talks-${talkStatus.Later}`
-    let keyReviewed = `${event.code}-talks-${talkStatus.Reviewed}`
-    let reviewedtalks = nativeStorage.get(keyReviewed)
+async function onRate(event, talk, type, score,callback) {
+
+    let otherKey  = type == TALK_STATUS.NOT_REVIEWED ? `${event.code}-talks` : `${event.code}-talks-${TALK_STATUS.LATER}`
+    let reviewedKey = `${event.code}-talks-${TALK_STATUS.REVIEWED}`
     let activity = {target: talk.id, timestamp: Date.now(), score}
-    let others = nativeStorage.get(keyOthers)
-    let observable = (type == talkStatus.Reviewed
-        ? nativeStorage.get(`${event.code}-activity`).switchMap((activities) => {
-            activities.push(activity)
-            return nativeStorage.save(`${event.code}-activity`, activities).switchMap(() => {
-                return Observable.of({})
-            })
-        }) : Observable.forkJoin([reviewedtalks, others])
-            .switchMap(([reviewed, others]) => {
-                return nativeStorage.get(`${event.code}-activity`)
-                    .switchMap((activities) => {
-                        activities.push(activity)
-                        return nativeStorage.save(`${event.code}-activity`, activities)
-                    }).switchMap(() => {
-                        others = others.filter((e) => e != talk.id)
-                        reviewed.push(talk.id)
-                        return Observable.forkJoin([
-                            nativeStorage.save(keyOthers, others),
-                            nativeStorage.save(keyReviewed, reviewed)
-                        ])
-                    }).switchMap(() => {
-                        return Observable.of({
-                            others,
-                            reviewed
-                        })
-                    })
-            }))
-    const payload = observable.switchMap(({others, reviewed}) => {
-        let payload = { event }
-        if (type != talkStatus.Reviewed) {
-            payload.talk = talk
-            payload.reviewed = reviewed
-            if (type == talkStatus.NotReviewed) payload.talks = others
-            else payload.later = others
+    let reviewedTalks = await nativeStorage.get(reviewedKey).toPromise()
+    let otherTalks = await nativeStorage.get(otherKey).toPromise()
+    await  nativeStorage.get(`${event.code}-activity`).pipe(mergeMap((activities) =>
+         nativeStorage.save(`${event.code}-activity`,_(activities).concat(activity).compact().value())
+    )).toPromise()
+    let payload = {event}
+    if (type != TALK_STATUS.REVIEWED) {
+        otherTalks = otherTalks.filter((e) => e != talk.id)
+        reviewedTalks = _.concat(reviewedTalks,talk.id)
+        await nativeStorage.save(otherKey,otherTalks).toPromise()
+        await nativeStorage.save(reviewedKey,reviewedTalks).toPromise()
+        payload = {
+            ...payload,
+            talk:talk,
+            reviewed:reviewedTalks,
+            [type == TALK_STATUS.NOT_REVIEWED ? 'talks' : 'later'] : otherTalks
+
         }
-        callback && callback(payload)
-        return Observable.of(payload)
-    }).toPromise()
+    }
+    callback && callback(payload)
     return navActionCreators.navigateBack(payload)
+
 }
 
 function getSpeaker(position) {
@@ -84,7 +66,7 @@ function toggleContentLoader(boolean) {
 }
 
 const actionCreators = {
-    OnRate,
+    onRate,
     getSpeaker,
     toggleSpeakerDetail,
     toggleContentLoader,

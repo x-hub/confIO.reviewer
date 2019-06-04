@@ -7,7 +7,7 @@ export default (state = {
     talk:{},
     speakers: [],
     selectedSpeaker: {},
-    IsReady: false,
+    isReady: false,
     showSpeakerDetail: false,
     type:""
 }, {type,payload,routeName,params}) => {
@@ -18,7 +18,7 @@ export default (state = {
                    ...state,
                    ...payload,
                    ...params,
-                   IsReady: true,
+                   isReady: true,
                }
             }
             return {
@@ -43,7 +43,7 @@ export default (state = {
         case ACTIONS.SET_CONTENT_PLACEHOLDER_STATE:
             return {
                 ...state,
-                IsReady: payload
+                isReady: payload
             }
         default:
             return state;

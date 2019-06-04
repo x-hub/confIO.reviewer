@@ -54,7 +54,7 @@ export default class Template extends React.Component {
                                         <Text style={styles.title}>{item.title}</Text>
                                         <Right style={styles.rateLater}>
                                             {this.props.type == '' ?
-                                                <Icon onPress={this.props.RateLater.bind(this,this.props.event,item)} name='md-time'/>
+                                                <Icon onPress={this.props.rateLater.bind(this,this.props.event,item)} name='md-time'/>
                                                 : <View />
                                             }
                                         </Right>

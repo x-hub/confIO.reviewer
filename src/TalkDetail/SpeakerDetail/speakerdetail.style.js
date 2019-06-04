@@ -18,8 +18,7 @@ export default {
     },
     slideUpBody: {
         position: "relative", marginTop: 5,
-        paddingHorizontal: 10, zIndex: -1,
-        backgroundColor: colors.white, width: "100%"
+        paddingHorizontal: 10, zIndex: -1, width: "100%"
     },
     slideUpBio:{fontWeight: "400", color: "black", marginTop: 10, fontFamily: "Roboto-Light"}
 }

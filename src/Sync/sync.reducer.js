@@ -20,7 +20,9 @@ export default (state = INITIAL_STATE, { type, payload }) => {
         return {
             ...state,
             actionsDirty: true,
-            ...payload,
+            actions : payload.actions,
+            syncError: payload.syncError,
+            syncSuccess:payload.syncSuccess
         }
         case actions.REMOVE_RESPONSE_ANIMATION:
         return {

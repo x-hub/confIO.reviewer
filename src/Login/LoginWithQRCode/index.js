@@ -2,14 +2,14 @@ import React, { Component } from 'react';
 import template from './loginWithQRCode.template';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { AsyncStorage } from 'react-native';
 import { creators as navActionCreators } from 'app/Navigator/navigator.actions';
-import nativeStorage from "app/App/Services/nativeStorage"
-import Http from "app/App/Services/Http"
-import {Observable} from "rxjs"
+import {post} from "app/App/Services/Http"
+
 export const actions = {
     QR_CODE_READ: 'QR_CODE_READ',
     REACTIVATE_SCANNER: 'REACTIVATE_SCANNER',
+    INVALID_QRCODE_DATA : 'INVALID_QRCODE_DATA',
+    BAD_CREDENTIALS : 'BAD_CREDENTIALS'
 };
 
 const actionCreators = {
@@ -26,30 +26,48 @@ function unescapeHtml(safe) {
 }
 
 function handleQRCode(data) {
-    let possibleQRCode = {};
+    let possibleQRCode = null;
     try {
-        possibleQRCode = JSON.parse(unescapeHtml(data))
+        possibleQRCode = JSON.parse(unescapeHtml(data)) || {}
     } catch(e) {}
     const QRCodeData = possibleQRCode;
     const { authToken, authEndpoint, eventDetailsEndpoint }  = QRCodeData;
     if(!authToken || !authEndpoint || !eventDetailsEndpoint) {
-        return Promise.resolve({ error: true })
+        return { error: true }
     }
     else {
-        return Promise.resolve({ ...QRCodeData, reactivateQRScanner: false })
+        return { ...QRCodeData, reactivateQRScanner: false }
     }
 }
 
 function reactivateQRCodeScanner() {
     return {
-        type: 'REACTIVATE_SCANNER',
+        type: actions.REACTIVATE_SCANNER
     };
 }
 
-function onQRCodeRead({ data }) {
-    return navActionCreators.navigateToFeed(
-      handleQRCode(data)
-    )
+async function onQRCodeRead({ data }) {
+    let response =handleQRCode(data)
+    if(response.error == true) {
+        return {
+            type : actions.INVALID_QRCODE_DATA
+        }
+    }else {
+        try {
+            const {authToken, authEndpoint} = response;
+            const {status} = await authenticate(authEndpoint,authToken)
+            return status == 200 ? navActionCreators.navigateToFeed(response) : {type:actions.BAD_CREDENTIALS}
+        }catch (e) {
+            return  {type:actions.BAD_CREDENTIALS}
+        }
+    }
+}
+async function authenticate(authEndpoint,authToken) {
+     return post(authEndpoint, {
+            headers: {'content-type': 'application/json'},
+            body: JSON.stringify({token: authToken}),
+            credentials: 'include'
+        }).toPromise()
 }
 
 function mapStateToProps(state) {
