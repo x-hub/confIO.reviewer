@@ -99,36 +99,6 @@ async function  syncActions({ code, baseUrl }, actionsToSync, callback) {
 
     }
 
-        /*
-    .then(
-        ({ talks, reviewedTalks }) => Promise.all([
-                saveActivities(code, []),
-                setTalksListValue(code, TALK_LIST_TYPE.TALKS, talks),
-                setTalksListValue(code, TALK_LIST_TYPE.REVIEWED_TALKS, reviewedTalks),
-        ])
-    )
-    .then(
-        () => ({
-            actions: [],
-            syncError: false,
-            syncSuccess:true,
-        })
-    )
-    .catch(
-        err => ({
-            actions: actionsToSync,
-            syncError: true,
-            syncSuccess:false
-        })
-    )
-
-
-    //payload.then(callback)
-    return {
-        type: actions.SYNC_ACTIONS,
-        payload: payload,
-    };
-    */
 }
 
 function mapStateToProps(state) {

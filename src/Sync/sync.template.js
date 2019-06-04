@@ -18,15 +18,7 @@ import style from './sync.style';
 import animations from 'shared/animations';
 
 export default class Sync extends Component {
-    constructor(props){
-        super();
-        this.state = {
-            refreshing :false,
-            opacity :new Animated.Value(0),
-            color :new Animated.Value('#FFF')
-        }
-
-    }
+    
     componentWillUnmount() {
         this.props.resetSync()
     }
