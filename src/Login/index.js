@@ -7,6 +7,9 @@ import {
 } from 'react-native';
 import {fetchTalks} from 'app/App/Services/EventService';
 import { creators as navActionCreators } from 'app/Navigator/navigator.actions';
+import nativeStorage from "app/App/Services/nativeStorage"
+import {mergeMap} from "rxjs/operators";
+import {of} from "rxjs";
 
 
 export const actions = {
@@ -35,13 +38,17 @@ function navigateToQRScanner() {
 
 export function navigateToHome(event) {
     return navActionCreators.navigateToHome(
-        fetchTalks(event)
+        fetchTalks(event).toPromise()
     )
 }
 
-function fetchDefaultEvent() {
+async function fetchDefaultEvent() {
+    let defaultEventCode = await nativeStorage.get('events').pipe(mergeMap((events)=>of(_.get(events,0)))).toPromise()
+    let defaultEvent = await nativeStorage.get(`event-${defaultEventCode}`).toPromise()
+    /*
     const defaultEvent = AsyncStorage.getItem('events')
     .then((events) => {
+        console.log(events)
         const event = JSON.parse(events)[0];
         if(event) {
             return AsyncStorage.getItem(`event-${event}`);
@@ -51,6 +58,7 @@ function fetchDefaultEvent() {
     })
     .then((event) => JSON.parse(event))
     .catch((err) => null);
+    */
     return {
         type: actions.FETCH_DEFAULT_EVENT,
         payload: defaultEvent,

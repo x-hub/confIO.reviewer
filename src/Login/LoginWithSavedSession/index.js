@@ -9,7 +9,8 @@ import {actionCreators as eventDetailsDialog} from 'app/EventDetailsDialog';
 import nativeStorage from "app/App/Services/nativeStorage"
 import { fetchTalks } from 'app/App/Services/EventService';
 import { creators as navActionCreators } from 'app/Navigator/navigator.actions';
-import {Observable} from "rxjs"
+import {forkJoin, of} from "rxjs"
+import { switchMap } from 'rxjs/operators';
 
 
 export const actions = {
@@ -26,53 +27,39 @@ const actionCreators = {
     showEventDetails,
     hideEventDetails,
     deleteEvent,
-    GOTOHome,
+    goHome,
 };
 
-function GOTOHome(event) {
+function goHome(event) {
     return navActionCreators.navigateToHome(
-      fetchTalks(event)
+      fetchTalks(event).toPromise()
     )
 }
 
 function readEventsFromStorage() {
-    return nativeStorage.get('events').switchMap((events) => {
-        return Observable.forkJoin(events.map(
-            readEventDetails
-        ))
-    });
-    // return events = AsyncStorage.getItem('events')
-    // .then((events) => events? JSON.parse(events) : [])
-    // .then((events) => {
-    //     return Promise.all(
-    //         events.map(
-    //             readEventDetails
-    //         )
-    //     )
-    // });
-
+    return nativeStorage.get('events').pipe(switchMap((events) =>
+        _.isNil(events)  ? of([]) : forkJoin((events).map(readEventDetails))
+    ));
     function readEventDetails(eventCode) {
-        return nativeStorage.get(`event-${eventCode}`).switchMap((event) => {
-            return Observable.of(event || {})
-        })
+        return nativeStorage.get(`event-${eventCode}`).pipe(switchMap((event) => of(event)))
     }
 }
 
 function deleteEventFromStorage(eventToDelete) {
     return readEventsFromStorage()
-        .switchMap((events) => {
+        .pipe(switchMap((events) => {
             const updatedEventsList = events.filter(
                 (event) => event.code != eventToDelete.code
             )
             const updatedEventsCodeList = updatedEventsList.map(
                 (event) => event.code
             )
-            return Observable.forkJoin([,
+            return forkJoin([
                 nativeStorage.remove(`event-${eventToDelete.code}`),
                 nativeStorage.save('events', updatedEventsCodeList)
             ])
-                .switchMap(() => Observable.of(updatedEventsList));
-        });
+                .pipe(switchMap(() => of(updatedEventsList)));
+        }));
 }
 
 
@@ -88,7 +75,7 @@ function selectEvent(e) {
 
     return {
         type: actions.SELECT_EVENT,
-        payload: fetchTalks(e),
+        payload: fetchTalks(e).toPromise(),
     }
 }
 

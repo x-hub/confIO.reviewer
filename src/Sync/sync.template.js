@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import {
     Text,
     View,
-    ScrollView,
     FlatList
 } from 'react-native';
 import {
@@ -12,15 +11,14 @@ import {
     Left,
     Right,
     Button,
-    Icon,
+    Icon
 } from 'native-base';
-import Animation from 'lottie-react-native';
 import { AutoPlayAnimation } from 'shared';
-import PullToRefresh from 'react-native-pull-refresh';
 import style from './sync.style';
 import animations from 'shared/animations';
 
 export default class Sync extends Component {
+    
     componentWillUnmount() {
         this.props.resetSync()
     }
@@ -37,7 +35,7 @@ function renderSync(props) {
     const actionsFromParams = props.navigation.state.params.actions;
     const actions = actionsDirty? actionsFromProps : actionsFromParams;
     const { goBack, navigate } = props.navigation;
-    const SyncBody = syncSuccess? SyncSuccess : !!actions.length? ActionsList : EmptyActionsList;
+    const SyncBody = syncSuccess ? SyncSuccess : !!(actions || []).length ? ActionsList : EmptyActionsList;
     return (
         <Container>
             <Header style={ style.header }>
@@ -47,14 +45,28 @@ function renderSync(props) {
 					</Button>
 				</Left>
                 <Text style={ style.sceneTitle }>Synchronize</Text>
+                <SyncButton />
             </Header>
             <Content>
-                <SyncBody />
+               <SyncBody />
             </Content>
         </Container>
     );
 
+    function SyncButton() {
+        return ((actions || []).length == 0 ? <Text></Text>  :   <Right>
+            <Button onPress={()=> !isRefreshing && syncActions(event, actions, removeResponseAnimation) } transparent>
+                <Icon style={ style.goBackIcon } name='md-sync' />
+            </Button>
+        </Right>)
+    }
+
     function ActionsList() {
+       return(
+               <RenderContent />
+           );
+        /*
+
         return (
             <PullToRefresh
             isRefreshing={ isRefreshing }
@@ -68,6 +80,7 @@ function renderSync(props) {
             onEndRefreshAnimationSrc={ animations.coffee_end }
             />
         )
+        */
     }
 
     function EmptyActionsList() {
@@ -94,12 +107,13 @@ function renderSync(props) {
         )
     }
 
-    function renderContent() {
+    function RenderContent() {
         return (
-            <View>
+            <View style={{flex:1}}>
                 <FlatList
                     data={ actions }
                     renderItem={ renderAction }
+                    refreshing={isRefreshing}
                     keyExtractor={ ({ timestamp }) => timestamp }
                 />
             </View>

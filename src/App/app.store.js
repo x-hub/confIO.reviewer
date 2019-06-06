@@ -1,6 +1,7 @@
-import { createStore, combineReducers, applyMiddleware } from 'redux';
+import { createStore, combineReducers, applyMiddleware ,compose} from 'redux';
 import * as reducers from './app.reducers';
 import promise from 'redux-promise';
+import { composeWithDevTools } from 'remote-redux-devtools';
 
 function reactNavigationPayloadFlatmap({ getState }) {
     const navigationActionType = 'Navigation/NAVIGATE'
@@ -15,11 +16,11 @@ function reactNavigationPayloadFlatmap({ getState }) {
         return next(resultAction)
     }
 }
-
+const composeEnhancers = composeWithDevTools({realtime: true, port: 9090 });
 export default createStore(
     combineReducers(reducers),
-    applyMiddleware(
+    composeEnhancers(applyMiddleware(
         promise,
         reactNavigationPayloadFlatmap,
-    )
+    ))
 )

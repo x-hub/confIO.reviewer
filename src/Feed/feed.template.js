@@ -1,15 +1,16 @@
 import React, {Component} from "react"
 import {Container, Header, Content, Spinner} from 'native-base';
 import _ from "lodash"
-import {Observable} from "rxjs"
+import {throwError, forkJoin, of} from "rxjs"
+import {catchError, mergeMap, switchMap, tap} from 'rxjs/operators';
 import * as EventService from "app/App/Services/EventService"
 import nativeStorage from "app/App/Services/nativeStorage"
 import NetInfo from "app/App/Services/NetworkInfo"
 import {colors} from "shared/theme"
-import Http from "app/App/Services/Http"
+import * as Http from "app/App/Services/Http"
 import {preFetchImg} from "./index"
-import loading from "shared/components/loading"
-import error from "shared/components/error"
+import FeedLoading from "shared/components/loading"
+import FeedError from "shared/components/error"
 
 export default class Template extends Component {
     constructor(props) {
@@ -18,7 +19,7 @@ export default class Template extends Component {
             feeding: false
         };
     }
-    NetworkStatusHandler(payload){
+    networkStatusHandler(payload){
         let condition = payload.type != "none"
         this.props.changeStatus(condition)
         if(condition) {
@@ -26,131 +27,91 @@ export default class Template extends Component {
                 this.setState(
                     state => ({ ...state, feeding: true}),
                     () => this.feedData()
+
                 )
             }
         }
     }
-    getEventDetail(eventDetailsEndpoint){
-        return Http.getBody(eventDetailsEndpoint)
-    }
-    getAllStoredEvents(){
-        return nativeStorage.get('events');
-    }
-    Authenticate(authEndpoint,authToken){
-        return Http.post(authEndpoint, {
-            headers: {'content-type': 'application/json'},
-            body: JSON.stringify({token: authToken}),
-            credentials: 'include'
-        });
-    }
-    AuthAndGetEventDetail(){
-        const {authToken, authEndpoint, eventDetailsEndpoint} = this.props.navigation.state.params;
-        let eventDetail = this.getEventDetail(eventDetailsEndpoint);
-        let events = this.getAllStoredEvents()
-        let auth = this.Authenticate(authEndpoint,authToken)
-        return   Observable.forkJoin([eventDetail, events, auth])
-            .switchMap(([event, eventsString]) => {
-                const events = eventsString ? eventsString : [];
-                if (!events.includes(event.code)) {
-                    events.push(event.code);
-                    return nativeStorage.save('events', events).switchMap((e) => {
-                        nativeStorage.save(`event-${event.code}`, event);
-                        return Http.getBody(event.baseUrl.concat("cfp/profile.json"))
-                            .switchMap((user)=>{
-                                nativeStorage.save(`${event.code}-user`,user)
-                                return Observable.of(event)
-                            })
 
-                    });
-                } else {
-                    return Observable.throw(event)
-                }
-            })
+    getEvent = (eventDetailsEndpoint) => {
+        return Http.getBody(eventDetailsEndpoint).toPromise()
     }
-    initTalkAndActivity(event,keys,talks){
-        nativeStorage.save(`${event.code}-talks`,keys)
-        nativeStorage.save(`${event.code}-talks-reviewed`,[])
-        nativeStorage.save(`${event.code}-talks-later`,[])
-        nativeStorage.save(`${event.code}-activity`,[])
-        let Keys = keys.map((key)=>`${event.code}-talk-${key}`)
-        nativeStorage.save(Keys,talks)
+    getAllStoredEvents = () => nativeStorage.get('events').toPromise()
+
+    getAndPersistEventData =  async ()=> {
+        const {authToken, authEndpoint, eventDetailsEndpoint} = this.props.navigation.state.params;
+        let event  = await this.getEvent(eventDetailsEndpoint)
+        let eventCollection = await this.getAllStoredEvents() || [];
+        if(eventCollection.includes(event.code)){
+            return event;
+        }
+        await Http.getBody(event.baseUrl.concat('cfp/profile.json'))
+            .pipe(mergeMap((user)=>nativeStorage.save(`${event.code}-user`,user))).toPromise()
+        const { notReviewedTalksUUIDs, reviewedTalksUUIDs, talks } = await EventService.firstSync(event).toPromise()
+        await EventService.persistTalks(event, talks, reviewedTalksUUIDs || [], notReviewedTalksUUIDs || [])
+        let conferenceAPIBaseUrl  = event.baseUrl.concat("api/conferences/", event.code);
+        let speakersCollection   = await Http.getBody(conferenceAPIBaseUrl.concat("/speakers/"))
+            .pipe(mergeMap((speakers)=> forkJoin(...speakers.map((speaker) => Http.getBody(speaker.links[0].href))))).toPromise()
+        await forkJoin(this.saveSpeakers(event,speakersCollection),this.cacheSpeakersImages(speakersCollection)).toPromise()
+
+        await nativeStorage.save('events',_.concat(eventCollection,event.code))
+        await nativeStorage.save(`event-${event.code}`,event);
+        return event;
     }
-    initCache(event, talks, reviewedTalks, notReviewedTalks) {
-        nativeStorage.save(`${event.code}-talks`, notReviewedTalks)
-        nativeStorage.save(`${event.code}-talks-reviewed`, reviewedTalks)
-        nativeStorage.save(`${event.code}-talks-later`, [])
-        const keys = talks.map(talk => `${event.code}-talk-${talk.id}`)
-        nativeStorage.save(keys, talks)
+
+    cacheSpeakersImages = (speakers) => {
+        let imgs = speakers.map((speaker)=>preFetchImg(speaker.avatarURL))
+        return forkJoin(imgs)
     }
-    cacheSpeakersImages(speakers){
-        let imgs= speakers.map((speaker)=>preFetchImg(speaker.avatarURL))
-        return Observable.forkJoin(imgs)
-    }
-    saveSpeakers(event,speakers){
+    saveSpeakers = (event,speakers) => {
         let keys = speakers.map((speaker) => `${event.code}-speaker-${speaker.uuid}`)
         let uuids = speakers.map((speaker)=>speaker.uuid)
-        return Observable.forkJoin([nativeStorage.save(keys,speakers),nativeStorage.save(`${event.code}-speakers`,uuids)])
+        return forkJoin([nativeStorage.save(keys,speakers),nativeStorage.save(`${event.code}-speakers`,uuids)])
     }
-    feedData(){
-        this.AuthAndGetEventDetail().switchMap((event) => {
-            let BaseUrl = event.baseUrl.concat("api/conferences/", event.code);
-            let SpeakersUrl = BaseUrl.concat("/speakers/")
-            return EventService.firstSync(event).switchMap(({ notReviewedTalksUUIDs, reviewedTalksUUIDs, talks }) => {
-                this.initCache(event, talks, reviewedTalksUUIDs, notReviewedTalksUUIDs)
-                return Http.getBody(SpeakersUrl)
-            }).switchMap((speakers) => {
-                let AllSpeakersRequest = speakers.map((speaker) => Http.getBody(speaker.links[0].href))
-                return Observable.forkJoin(AllSpeakersRequest)
-            }).switchMap((fullSpeakersDetail) => {
-                return  this.cacheSpeakersImages(fullSpeakersDetail).switchMap(()=>{
-                    return this.saveSpeakers(event,fullSpeakersDetail).switchMap(()=>{
-                        return Observable.of(event);
-                    })
-                },(e)=>{
-                    return Observable.of(event)
-                })
 
-            })
-        }).subscribe(({value}) => {
-            this.goToHome(value)
-        }, (event) => {
-            if(JSON.stringify(event) == JSON.stringify({})) return;
-            this.goToHome(event)
-        })
+    async feedData(){
+        try {
+            let event = await this.getAndPersistEventData()
+            this.props.toggleAnimation(true)
+            this.props.goHome(event)
+        }catch (e) {
+            // TODO : handle error fetch
+            console.warn("Something goes wrong !!")
+        }
     }
-    goToHome(event){
-        this.props.toggleAnimation(true)
-        setTimeout(()=>{
-            this.props.GOTOHome(event)
-        },1500)
-    }
+
     componentWillUnmount(){
-        NetInfo.UnsubscribeToChange();
+        NetInfo.unsubscribeToChange();
         this.props.toggleAnimation(false)
+        _.invoke(this.networkSubscription,'unsubscribe',null)
     }
+
     componentWillMount() {
-        NetInfo.SubscribeToChange(this.NetworkStatusHandler.bind(this))
-        NetInfo.Info().switchMap((e)=>{
-            if(e.type == "none")
-                return Observable.throw(false);
-            else  return Observable.of(true)
-        }).subscribe((e)=>{
+        NetInfo.subscribeToChange(this.networkStatusHandler.bind(this))
+        this.networkSubscription = NetInfo.status().pipe(
+            switchMap((e)=>{
+                if(e.type == "none")
+                    return throwError(false);
+                else  return of(true)
+            })
+        ).subscribe((e)=>{
             if(e){
                 this.props.changeStatus(e)
                 if(!this.state.feeding) {
                     this.setState(
                         state => ({ ...state, feeding: true}),
                         () => this.feedData()
+
                     )
                 }
             }
         },(err)=>{
             this.props.changeStatus(err)
         })
-
     }
+
     render() {
-        const ContentContainer = this.props.online ? loading : error
+        const ContentContainer = this.props.online ? FeedLoading : FeedError
         return (<Container style={{backgroundColor:colors.primary}}>
             <ContentContainer {...this.props} />
         </Container>);

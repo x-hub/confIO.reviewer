@@ -7,23 +7,23 @@ import template from './feed.template';
 import {creators as navActionCreators} from 'app/Navigator/navigator.actions';
 import {actions} from "app/Login/LoginWithSavedSession/index"
 
-import {Observable} from "rxjs"
 import {fetchTalks} from 'app/App/Services/EventService';
-
-export const defaultImgUrl = "http://blog.xebia.fr/images/devoxxuk-2014-logo.png";
+import {from} from "rxjs";
+// TODO : handle fallback image
+export const defaultImgUrl = "https://www.baeldung.com/wp-content/uploads/2017/03/6bc93da96862fbfe63a25437a03d9bf2_400x400.png";
 const actionCreators = {
-    GOTOHome,
+    goHome,
     toggleAnimation,
     changeStatus
 };
 
 export function preFetchImg(url) {
-    return Observable.fromPromise(Image.prefetch(url).catch((e) => Image.prefetch(defaultImgUrl)))
+    return from(Image.prefetch(url).catch((e) => Image.prefetch(defaultImgUrl)))
 }
 
-export function GOTOHome(event) {
+export function goHome(event) {
     return navActionCreators.navigateToHome(
-        fetchTalks(event)
+        fetchTalks(event).toPromise()
     )
 }
 

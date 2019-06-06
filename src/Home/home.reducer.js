@@ -1,6 +1,7 @@
 import { ACTIONS } from 'app/App/actionsType';
 import {actions} from "app/Login/LoginWithSavedSession/"
 import navActions from 'app/Navigator/navigator.actions';
+import {actions as SyncActions} from "../Sync"
 
 const INITIAL_STATE = {
     event:{},
@@ -38,6 +39,12 @@ export default (state = INITIAL_STATE, { type, payload, routeName, params }) => 
                 ...state,
                 ...payload
             }
+        case SyncActions.SYNC_ACTIONS : {
+            return {
+                ...state,
+                ...payload.synchronizedTalks
+            }
+        }
         default:
             return {
                 ...state

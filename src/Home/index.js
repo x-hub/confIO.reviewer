@@ -6,13 +6,14 @@ import navActions, { creators as navActionCreators } from 'app/Navigator/navigat
 import template from './home.template';
 import {  fetchActivities } from 'app/App/Services/EventService';
 import nativeStorage from "app/App/Services/nativeStorage"
-import {Observable} from "rxjs"
 import _ from 'lodash'
+import {of} from "rxjs";
+import { switchMap } from 'rxjs/operators';
 
-export const talkStatus = {
-    NotReviewed:"",
-    Reviewed:"reviewed",
-    Later:"later"
+export const TALK_STATUS = {
+    NOT_REVIEWED:"",
+    REVIEWED:"reviewed",
+    LATER:"later"
 }
 const actionCreators = {
     toNotReviewedTalks,
@@ -22,39 +23,35 @@ const actionCreators = {
 };
 
 function fetchActionsAndNavigateToSync(event) {
-    const payload = fetchActivities(event.code)
-    .then(({ actions }) => _.merge({}, { event }, { actions })) 
-    return navActionCreators.navigateToSync(
-        payload
-    )
+    const payload = fetchActivities(event.code).toPromise()
+    .then(({ actions }) => ({event,actions}))
+    return navActionCreators.navigateToSync(payload)
 }
 
 function fetchTalkDetail(event,talksId,type) {
     let ids = talksId.map((id)=>`${event.code}-talk-${id}`);
-    const payload = nativeStorage.getArray(ids).switchMap((e)=>{
-        return Observable.of({
+    const payload = nativeStorage.getArray(ids).pipe(switchMap((e)=>{
+        return of({
             talks:e,
             event,
             type
         })
-    }).toPromise()
+    })).toPromise()
     return navActionCreators.navigateToSwiper(
         payload
     )
 }
 function toReviewedTalks(event,talksId) {
-    return fetchTalkDetail(event,talksId,talkStatus.Reviewed)
+    return fetchTalkDetail(event,talksId,TALK_STATUS.REVIEWED)
 }
 function toReviewedLaterTalks(event,talksId) {
-    return fetchTalkDetail(event,talksId,talkStatus.Later)
+    return fetchTalkDetail(event,talksId,TALK_STATUS.LATER)
 }
 function toNotReviewedTalks(event,talksId) {
-    return fetchTalkDetail(event,talksId,talkStatus.NotReviewed)
+    return fetchTalkDetail(event,talksId,TALK_STATUS.NOT_REVIEWED)
 }
 function mapStateToProps(state) {
-    return {
-        ...state.home
-    };
+    return state.home;
 }
 
 function mapDispatchToProps(dispatch) {

@@ -1,8 +1,9 @@
 {
-  "presets": ["babel-preset-react-native"],
+  "presets": ["react-native"],
   "plugins": [
     ["module-resolver", {
-        "root": ["./src"],
+      "root": ["./src"],
+      "cwd": "babelrc",
         "alias": {
             "app": "./src",
             "assets": "./assets",
